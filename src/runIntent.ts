@@ -3,11 +3,14 @@ import { join as pathJoin } from "path";
 import PTPlugin from "./main";
 import { Intent } from "./types";
 import { getIntentTemplate } from "./templates";
+import { getVariableValues } from "./template_variables";
 import * as path from "path";
 
 
 export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFile) {
   console.log("Running", intent);
+
+  const variablesToGather = [...intent.newNoteProperties.variables];
 
   // If templates configured
   let newFileContents = "";
@@ -33,7 +36,16 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
     }
 
     newFileContents = await this.app.vault.cachedRead(templateFile);
+    variablesToGather.push(...chosenTemplate.newNoteProperties.variables);
   }
+
+  const gatheredValues = await getVariableValues(plugin.app, variablesToGather);
+
+
+  // replace variables with values
+  newFileContents = Object.keys(gatheredValues).reduce((text, varName)=>
+    text.replaceAll(new RegExp(`\{\{\s*${varName}\s*\}\}`, "g"), gatheredValues[varName])
+    , newFileContents);
 
   const newFileName = intent.newNoteProperties.note_name || intent.name;
 

@@ -1,5 +1,5 @@
 import { App, TFile, FrontMatterCache } from "obsidian";
-import { Intent, Template, NewNoteProperties } from "./types";
+import { Intent, Template, NewNoteProperties, TemplateVariable, TemplateVariableType } from "./types";
 
 
 export function getIntentsFromFM(fm: FrontMatterCache): Intent[] {
@@ -28,7 +28,20 @@ function getNewNoteProperties(fm: any): NewNoteProperties {
   return {
     output_path: fm.output_path,
     note_name: fm.note_name,
+    variables: getVariablesFromFM(fm),
   }
+}
+
+export function getVariablesFromFM(fm:any){
+  return (fm?.variables || []).map((v: any): TemplateVariable => {
+    const type: TemplateVariableType = TemplateVariableType[v.type as keyof typeof TemplateVariableType]
+      || TemplateVariableType.text;
+
+    return {
+      name: v.name,
+      type: type,
+    }
+  })
 }
 
 

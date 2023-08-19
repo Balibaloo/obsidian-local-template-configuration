@@ -1,3 +1,5 @@
+import { TemplateVariable } from "./";
+
 export type hasNewNoteProperties = {
 	newNoteProperties: NewNoteProperties;
 }
@@ -5,4 +7,5 @@ export type hasNewNoteProperties = {
 export type NewNoteProperties = {
 	output_path: string,
 	note_name: string,
+	variables: TemplateVariable[],
 }
