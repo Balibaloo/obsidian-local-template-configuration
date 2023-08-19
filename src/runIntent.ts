@@ -35,8 +35,8 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
     newFileContents = await this.app.vault.cachedRead(templateFile);
   }
 
-  const newFileName = intent.name;
-  
+  const newFileName = intent.newNoteProperties.note_name || intent.name;
+
   const newFileFolderPath = resolveFilePath(intent.newNoteProperties.output_path, projectFile);
   if (!newFileFolderPath){
     new Notice(`Error: Failed to determine ${intent.name} output path`);
