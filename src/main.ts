@@ -1,7 +1,7 @@
 import { Plugin, Notice, TFile } from 'obsidian';
 import { DEFAULT_SETTINGS, PTSettingTab } from './config';
 import { Intent, PTSettings } from './types/';
-import { getFrontmatter, getIntentsFromFM } from './frontmatter';
+import { getFrontmatter, getIntentsFromFM, namedObjectDeepMerge } from './frontmatter';
 import { runIntent } from './runIntent';
 
 
@@ -58,7 +58,24 @@ export default class PTPlugin extends Plugin {
 			id: commandID,
 			name: `Create a new ${intent.name} note`,
 			callback: async () => {
-				runIntent(this, intent);
+				const projectNote = await (this.app as any).plugins.plugins["filtered-note-opener"].api()
+				if (!(projectNote instanceof TFile)) {
+					new Notice("Error: Project note is not a file");
+					console.log("Project note", projectNote);
+					return;
+				}
+
+				// include project config
+				const projectIntents = getIntentsFromFM(await getFrontmatter(this.app, projectNote));
+				const settingsWithProjectIntents = namedObjectDeepMerge(this.settings.intents, projectIntents) as Intent[];
+				const chosenIntent = settingsWithProjectIntents.find(i => i.name === intent.name);
+
+				if (!chosenIntent){
+					new Notice(`Error: Failed to get ${intent.name} project intent`);
+					return;
+				}
+
+				runIntent(this, chosenIntent, projectNote);
 			}
 		})
 	}
