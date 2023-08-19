@@ -1,5 +1,5 @@
-import { hasNewNoteProperties } from "./newNoteProperties";
-import { Template } from "./template";
+import { hasNewNoteProperties } from "./";
+import { Template } from "./";
 
 export type Intent = hasNewNoteProperties & {
 	name: string;

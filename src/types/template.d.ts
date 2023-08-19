@@ -1,4 +1,4 @@
-import { hasNewNoteProperties } from "./newNoteProperties";
+import { hasNewNoteProperties } from "./";
 
 export type Template = hasNewNoteProperties & {
   name: string;
