@@ -1,4 +1,4 @@
-import { Notice, TFile } from "obsidian";
+import { Notice, TFile, TFolder } from "obsidian";
 import * as path from "path";
 import PTPlugin from "./main";
 import { Intent } from "./types";
@@ -14,6 +14,11 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
   if (!newFileFolderPath){
     new Notice(`Error: Failed to determine ${intent.name} output path`);
     return;
+  }
+
+  // create folder if not exists
+  if (!(this.app.vault.getAbstractFileByPath(newFileFolderPath) instanceof TFolder)) {
+    await this.app.vault.createFolder(newFileFolderPath);
   }
 
   const newFilePath = path.join(newFileFolderPath, newFileName).replaceAll("\\", "/");
