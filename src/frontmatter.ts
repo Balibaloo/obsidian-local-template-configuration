@@ -1,17 +1,36 @@
 import { App, TFile, FrontMatterCache } from "obsidian";
-import { Intent } from "./types";
+import { Intent, Template, NewNoteProperties } from "./types";
 
 
 export function getIntentsFromFM(fm: FrontMatterCache): Intent[] {
   const newIntents: Intent[] = (fm?.intents || []).map((iFm: any): Intent => {
     return {
       name: iFm.name,
-      output_path: iFm.output_path,
+      templates: getFMTemplates(iFm),
+      newNoteProperties: getNewNoteProperties(iFm),
     }
   });
 
   return newIntents;
 }
+
+function getFMTemplates(fm: any): Template[] {
+  return (fm?.templates || []).map((tFm: any): Template =>
+  ({
+    name: tFm.name,
+    path: tFm.path,
+    newNoteProperties: getNewNoteProperties(tFm),
+  })
+  );
+}
+
+function getNewNoteProperties(fm: any): NewNoteProperties {
+  return {
+    output_path: fm.output_path,
+    note_name: fm.note_name,
+  }
+}
+
 
 
 export async function getFrontmatter(app: App, file: TFile): Promise<FrontMatterCache> {
