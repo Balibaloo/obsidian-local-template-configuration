@@ -6,6 +6,7 @@ import { PTSettings } from "./types";
 export const DEFAULT_SETTINGS: PTSettings = {
   pluginConfigFile: '',
   pluginConfigured: false,
+  intents: [],
 }
 
 

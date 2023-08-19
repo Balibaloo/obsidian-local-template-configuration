@@ -1,3 +1,4 @@
+import { Intent } from "./intent"
 import { PTSettings } from "./settings"
 
-export type { PTSettings };
+export type { PTSettings, Intent };

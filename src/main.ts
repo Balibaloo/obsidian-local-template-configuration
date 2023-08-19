@@ -1,6 +1,8 @@
 import { Plugin, Notice, TFile } from 'obsidian';
-import { DEFAULT_SETTINGS, PTSettingTab} from './config';
-import { PTSettings } from './types/';
+import { DEFAULT_SETTINGS, PTSettingTab } from './config';
+import { Intent, PTSettings } from './types/';
+import { getFrontmatter, getIntentsFromFM } from './frontmatter';
+import { runIntent } from './runIntent';
 
 
 const PLUGIN_LONG_NAME = "Project Templater";
@@ -11,9 +13,9 @@ export default class PTPlugin extends Plugin {
 
 	async onload() {
 		await this.loadSettings();
+		this.settings.intents.forEach(i => this.createCommandForIntent(i));
 
 		this.addSettingTab(new PTSettingTab(this.app, this));
-
 
 		this.addCommand({
 			id: `trigger-${PLUGIN_ACRONYM}`,
@@ -34,13 +36,31 @@ export default class PTPlugin extends Plugin {
 					return this.saveSettings();
 				}
 
-				console.log("Loading file", pluginConfigFile);
-				
+				const fm = await getFrontmatter(this.app, pluginConfigFile);
+
+				this.settings.intents = getIntentsFromFM(fm);
+				this.settings.intents.forEach((intent) => {
+					this.createCommandForIntent(intent);
+				});
+
+
+				console.log("Loaded intents", this.settings.intents);
 				this.settings.pluginConfigured = true;
 				return this.saveSettings();
 			}
-		});
+		});		
+	}
 
+	createCommandForIntent(intent: Intent) {
+		const commandID = `create-${intent.name.toLowerCase().replaceAll(/\s/g, "-")}`;
+
+		this.addCommand({
+			id: commandID,
+			name: `Create a new ${intent.name} note`,
+			callback: async () => {
+				runIntent(this, intent);
+			}
+		})
 	}
 
 
