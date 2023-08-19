@@ -1,6 +1,6 @@
 import { Plugin, Notice, TFile } from 'obsidian';
 import { DEFAULT_SETTINGS, PTSettingTab } from './config';
-import { Intent, PTSettings } from './types/';
+import { Intent, PTSettings, ReservedVariableName, TemplateVariableType } from './types/';
 import { getFrontmatter, getIntentsFromFM, namedObjectDeepMerge } from './frontmatter';
 import { runIntent } from './runIntent';
 
@@ -39,6 +39,11 @@ export default class PTPlugin extends Plugin {
 				const fm = await getFrontmatter(this.app, pluginConfigFile);
 
 				this.settings.intents = getIntentsFromFM(fm);
+				this.settings.intents.forEach(i=>
+					i.newNoteProperties.variables.push({
+						name: ReservedVariableName.newNoteName,
+						type: TemplateVariableType.text,
+					}))
 				this.settings.intents.forEach((intent) => {
 					this.createCommandForIntent(intent);
 				});

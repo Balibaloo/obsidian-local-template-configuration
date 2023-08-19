@@ -1,7 +1,7 @@
 import { Notice, TFile, TFolder } from "obsidian";
 import { join as pathJoin } from "path";
 import PTPlugin from "./main";
-import { Intent } from "./types";
+import { Intent, ReservedVariableName } from "./types";
 import { getIntentTemplate } from "./templates";
 import { getVariableValues } from "./template_variables";
 import * as path from "path";
@@ -47,7 +47,8 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
     text.replaceAll(new RegExp(`\{\{\s*${varName}\s*\}\}`, "g"), gatheredValues[varName])
     , newFileContents);
 
-  const newFileName = intent.newNoteProperties.note_name || intent.name;
+  const newFileName = gatheredValues[ReservedVariableName.newNoteName] ||
+    intent.newNoteProperties.note_name || intent.name;
 
   const newFileFolderPath = resolveFilePath(intent.newNoteProperties.output_path, projectFile);
   if (!newFileFolderPath){
