@@ -43,8 +43,8 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
   for (let variable of variablesToGather){
     console.log(variable.name, gatheredValues[variable.name]);
     if (variable.required && (
-      gatheredValues[variable.name] === "" ||
-      gatheredValues[variable.name] === undefined
+      gatheredValues[variable.name] === undefined ||
+      gatheredValues[variable.name].length === 0 
     )){
       new Notice(`Error: missing required variable ${variable.name}`);
       return;
