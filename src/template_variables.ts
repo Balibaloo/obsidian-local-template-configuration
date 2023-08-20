@@ -8,6 +8,9 @@ export async function getVariableValues(app:App, variables:TemplateVariable[]) {
     let val;
     if (variable.type == TemplateVariableType.text) {
 			val = await GenericInputPrompt.Prompt(app, variable.name);
+      if (val === "" && variable.required){
+        return gatheredValues;
+      }
 		}
     
     gatheredValues[variable.name] = val;

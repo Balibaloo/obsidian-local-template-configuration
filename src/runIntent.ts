@@ -40,7 +40,16 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
   }
 
   const gatheredValues = await getVariableValues(plugin.app, variablesToGather);
-
+  for (let variable of variablesToGather){
+    console.log(variable.name, gatheredValues[variable.name]);
+    if (variable.required && (
+      gatheredValues[variable.name] === "" ||
+      gatheredValues[variable.name] === undefined
+    )){
+      new Notice(`Error: missing required variable ${variable.name}`);
+      return;
+    }
+  }
 
   // replace variables with values
   newFileContents = Object.keys(gatheredValues).reduce((text, varName)=>
