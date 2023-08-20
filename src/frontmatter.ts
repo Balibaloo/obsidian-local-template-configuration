@@ -28,6 +28,7 @@ function getNewNoteProperties(fm: any): NewNoteProperties {
   return {
     output_path: fm.output_path,
     note_name: fm.note_name,
+    note_name_template: fm.note_name_template,
     variables: getVariablesFromFM(fm),
   }
 }

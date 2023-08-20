@@ -51,13 +51,9 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
     }
   }
 
-  // replace variables with values
-  newFileContents = Object.keys(gatheredValues).reduce((text, varName)=>
-    text.replaceAll(new RegExp(`\{\{\s*${varName}\s*\}\}`, "g"), gatheredValues[varName])
-    , newFileContents);
+  newFileContents = getReplacedVariablesText(newFileContents, gatheredValues);
 
-  const newFileName = gatheredValues[ReservedVariableName.newNoteName] ||
-    intent.newNoteProperties.note_name || intent.name;
+  const newFileName = getNewFileName(intent, gatheredValues);
 
   const newFileFolderPath = resolveFilePath(intent.newNoteProperties.output_path, projectFile);
   if (!newFileFolderPath){
@@ -98,4 +94,23 @@ function resolveFilePath(path: string | void, projectFile: TFile): string | void
     return newFileFolderPath.slice(0, -1);
 
   return newFileFolderPath;
+}
+
+function getReplacedVariablesText(text: string, values:{[key: string]: string}): string{
+  return Object.keys(values).reduce((text, varName)=>
+    text.replaceAll(new RegExp(`\{\{\s*${varName}\s*\}\}`, "g"), values[varName])
+    , text);
+}
+
+function getNewFileName(intent:Intent, values:{[key: string]: string}):string{
+  if (intent.newNoteProperties.note_name_template)
+    return getReplacedVariablesText(intent.newNoteProperties.note_name_template, values);
+
+  if (values[ReservedVariableName.newNoteName])
+    return values[ReservedVariableName.newNoteName];
+  
+  if (intent.newNoteProperties.note_name)
+    return intent.newNoteProperties.note_name; 
+  
+  return intent.name;
 }
