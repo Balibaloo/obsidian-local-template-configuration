@@ -40,7 +40,7 @@ export function getVariablesFromFM(fm:any){
     return {
       name: v.name,
       type: type,
-      required: v?.required instanceof Boolean ? v?.required : 
+      required: typeof v?.required === "boolean" ? v?.required : 
         Boolean(v?.required?.[0]?.toUpperCase() === "T"),
     }
   })
