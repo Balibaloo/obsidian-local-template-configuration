@@ -11,18 +11,21 @@ export class GenericInputPrompt extends Modal {
 	private inputComponent: TextComponent;
 	private input: string;
 	private readonly placeholder: string;
+	private readonly required: boolean;
 
 	public static Prompt(
 		app: App,
 		header: string,
 		placeholder?: string,
-		value?: string
+		value?: string,
+		required?: boolean,
 	): Promise<string> {
 		const newPromptModal = new GenericInputPrompt(
 			app,
 			header,
 			placeholder,
-			value
+			value,
+			required
 		);
 		return newPromptModal.waitForClose;
 	}
@@ -31,11 +34,13 @@ export class GenericInputPrompt extends Modal {
 		app: App,
 		private header: string,
 		placeholder?: string,
-		value?: string
+		value?: string,
+		required?: boolean,
 	) {
 		super(app);
 		this.placeholder = placeholder ?? "";
 		this.input = value ?? "";
+		this.required = required ?? false;
 
 		this.waitForClose = new Promise<string>((resolve, reject) => {
 			this.resolvePromise = resolve;
@@ -52,11 +57,16 @@ export class GenericInputPrompt extends Modal {
 		this.contentEl.empty();
 		this.titleEl.textContent = this.header;
 
+		if (this.required){
+			this.titleEl.addClass("requiredInputHeader");
+		}
+
 		const mainContentContainer: HTMLDivElement = this.contentEl.createDiv();
 		this.inputComponent = this.createInputField(
 			mainContentContainer,
 			this.placeholder,
-			this.input
+			this.input,
+			this.required
 		);
 		this.createButtonBar(mainContentContainer);
 	}
@@ -64,16 +74,21 @@ export class GenericInputPrompt extends Modal {
 	protected createInputField(
 		container: HTMLElement,
 		placeholder?: string,
-		value?: string
+		value?: string,
+		required?: boolean,
 	) {
 		const textComponent = new TextComponent(container);
 
 		textComponent.inputEl.style.width = "100%";
 		textComponent
-			.setPlaceholder(placeholder ?? "")
-			.setValue(value ?? "")
-			.onChange((value) => (this.input = value))
-			.inputEl.addEventListener("keydown", this.submitEnterCallback);
+		.setPlaceholder(placeholder ?? "")
+		.setValue(value ?? "")
+		.onChange((value) => (this.input = value))
+		.inputEl.addEventListener("keydown", this.submitEnterCallback);
+		
+		if (required){
+			textComponent.inputEl.addClass("requiredInput");
+		}
 
 		return textComponent;
 	}
