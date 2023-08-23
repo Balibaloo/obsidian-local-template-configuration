@@ -45,6 +45,7 @@ export function getVariablesFromFM(fm:any){
         Boolean(v?.required?.[0]?.toUpperCase() === "T"),
       min: parseFloat(v.min),
       max: parseFloat(v.max),
+      placeholder: v.placeholder,
     }
   })
 }

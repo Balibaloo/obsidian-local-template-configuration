@@ -8,7 +8,7 @@ export async function getVariableValues(app:App, variables:TemplateVariable[]) {
     let val = "";
     if (variable.type == TemplateVariableType.text) {
       try {
-        val = await GenericInputPrompt.Prompt(app, variable.name, undefined, undefined, variable.required);
+        val = await GenericInputPrompt.Prompt(app, variable.name, variable.placeholder, undefined, variable.required);
       } catch {}
       
       if (variable.required && (val === "" || !val)) {
@@ -17,7 +17,7 @@ export async function getVariableValues(app:App, variables:TemplateVariable[]) {
     } else if (variable.type === TemplateVariableType.number) {
       const minString = variable.min ? `${variable.min} <= ` : "";
       const maxString = variable.max ? ` <= ${variable.max}` : "";
-      const placeholderString = minString + variable.name + maxString;
+      const placeholderString = variable.placeholder || minString + variable.name + maxString;
 
       try {
         val = await GenericInputPrompt.Prompt(app, variable.name, placeholderString, undefined, variable.required);
@@ -44,7 +44,7 @@ export async function getVariableValues(app:App, variables:TemplateVariable[]) {
       }
     } else if (variable.type === TemplateVariableType.natural_date) {
       try {
-        val = await GenericInputPrompt.Prompt(app, variable.name, undefined, undefined, variable.required);
+        val = await GenericInputPrompt.Prompt(app, variable.name, variable.placeholder, undefined, variable.required);
       } catch { }
 
       const NLDates = (app as any).plugins.getPlugin("nldates-obsidian");

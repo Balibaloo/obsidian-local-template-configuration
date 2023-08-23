@@ -6,4 +6,5 @@ export type TemplateVariable = {
   required: boolean,
   min?: number,
   max?: number,
+  placeholder?: string,
 }
