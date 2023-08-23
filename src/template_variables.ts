@@ -42,6 +42,23 @@ export async function getVariableValues(app:App, variables:TemplateVariable[]) {
           throw new Error(`Error: The value entered for ${variable.name} (${parsedNum}) is above the maximum (${variable.max})`);
         }
       }
+    } else if (variable.type === TemplateVariableType.natural_date) {
+      try {
+        val = await GenericInputPrompt.Prompt(app, variable.name, undefined, undefined, variable.required);
+      } catch { }
+
+      const NLDates = (app as any).plugins.getPlugin("nldates-obsidian");
+
+      const parsedDate = NLDates.parseDate(val);
+      if (!parsedDate.moment.isValid()){
+        val = "";
+
+        if (variable.required) {
+          throw new Error(`Error: missing required date variable ${variable.name}`);
+        }
+      } else {
+        val = parsedDate.formattedString;
+      }
     }
     
     gatheredValues[variable.name] = val;
