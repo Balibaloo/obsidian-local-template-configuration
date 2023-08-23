@@ -43,6 +43,8 @@ export function getVariablesFromFM(fm:any){
       type: type,
       required: typeof v?.required === "boolean" ? v?.required : 
         Boolean(v?.required?.[0]?.toUpperCase() === "T"),
+      min: parseFloat(v.min),
+      max: parseFloat(v.max),
     }
   })
 }
