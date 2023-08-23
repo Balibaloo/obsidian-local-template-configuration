@@ -11,10 +11,10 @@ export async function getVariableValues(app:App, variables:TemplateVariable[]) {
         val = await GenericInputPrompt.Prompt(app, variable.name, undefined, undefined, variable.required);
       } catch {}
       
-      if ( variable.required && (val === "" || val === undefined || val === null)){
-        return gatheredValues;
+      if (variable.required && (val === "" || !val)) {
+        throw new Error(`Error: missing required text variable ${variable.name}`);
       }
-		}
+    }
     
     gatheredValues[variable.name] = val;
   }

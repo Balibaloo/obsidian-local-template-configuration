@@ -39,17 +39,14 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
     variablesToGather.push(...chosenTemplate.newNoteProperties.variables);
   }
 
-  const gatheredValues = await getVariableValues(plugin.app, variablesToGather);
-  for (let variable of variablesToGather){
-    console.log(variable.name, gatheredValues[variable.name]);
-    if (variable.required && (
-      gatheredValues[variable.name] === undefined ||
-      gatheredValues[variable.name].length === 0 
-    )){
-      new Notice(`Error: missing required variable ${variable.name}`);
-      return;
-    }
+  let gatheredValues;
+  try {
+    gatheredValues = await getVariableValues(plugin.app, variablesToGather);
+  } catch (e) {
+    new Notice(e);
+    return console.log("Failed to gather all variables");
   }
+  
 
   newFileContents = getReplacedVariablesText(newFileContents, gatheredValues);
 
