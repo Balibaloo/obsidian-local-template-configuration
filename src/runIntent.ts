@@ -5,12 +5,13 @@ import { Intent, ReservedVariableName } from "./types";
 import { getIntentTemplate } from "./templates";
 import { getVariableValues } from "./template_variables";
 import * as path from "path";
+import { namedObjectDeepMerge } from "./frontmatter";
 
 
 export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFile) {
   console.log("Running", intent);
 
-  const variablesToGather = [...intent.newNoteProperties.variables];
+  let variablesToGather = intent.newNoteProperties.variables;
 
   // If templates configured
   let newFileContents = "";
@@ -36,7 +37,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
     }
 
     newFileContents = await this.app.vault.cachedRead(templateFile);
-    variablesToGather.push(...chosenTemplate.newNoteProperties.variables);
+    variablesToGather = namedObjectDeepMerge(variablesToGather, chosenTemplate.newNoteProperties.variables);
   }
 
   let gatheredValues;
