@@ -41,7 +41,8 @@ export function getVariablesFromFM(fm:any){
     return {
       name: v.name,
       type: type,
-      required: typeof v?.required === "boolean" ? v?.required : 
+      required: typeof v?.required === "undefined" ? undefined :
+        typeof v?.required === "boolean" ? v?.required : 
         Boolean(v?.required?.[0]?.toUpperCase() === "T"),
       min: parseFloat(v.min),
       max: parseFloat(v.max),
