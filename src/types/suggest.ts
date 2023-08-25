@@ -77,7 +77,6 @@ export class GenericInputPrompt extends Modal {
 			mainContentContainer,
 			this.input,
 			this.placeholder,
-			this.required
 		);
 		this.createButtonBar(mainContentContainer);
 	}
@@ -86,7 +85,6 @@ export class GenericInputPrompt extends Modal {
 		container: HTMLElement,
 		value: string,
 		placeholder?: string,
-		required?: boolean,
 	) {
 		const textComponent = new TextComponent(container);
 		textComponent.inputEl.style.width = "100%";
@@ -95,22 +93,24 @@ export class GenericInputPrompt extends Modal {
     .setValue( value.toString() )
 		.onChange((value) => {
       this.input = value
-      if (this.validator){
-        if (this.validator(value)){
-          textComponent.inputEl.removeClass("requiredInput");
-        } else {
-          textComponent.inputEl.addClass("requiredInput");
-        }
-      }
+      this.updateInputValidation(textComponent, value);
     })
 		.inputEl.addEventListener("keydown", this.submitEnterCallback);
 		
-		if (required){
-			textComponent.inputEl.addClass("requiredInput");
-		}
-
+    this.updateInputValidation(textComponent, value);
+		
 		return textComponent;
 	}
+
+  protected updateInputValidation(textComponent:TextComponent, value:string){
+    if (this.validator){
+      if (this.validator(value)){
+        textComponent.inputEl.removeClass("requiredInput");
+      } else {
+        textComponent.inputEl.addClass("requiredInput");
+      }
+    }
+  }
 
 	private createButton(
 		container: HTMLElement,

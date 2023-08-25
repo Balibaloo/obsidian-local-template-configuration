@@ -8,5 +8,6 @@
 }
 
 .requiredInput{
-  border-color: var(--required) !important
+  border-color: var(--required) !important;
+  border-width: revert !important;
 }
