@@ -15,6 +15,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
 
   const selection:string = plugin.app.workspace.activeEditor?.editor?.getSelection() ?? "";
   const selectionSplit = selection.split(new RegExp("[,|]","g")).map(v=>v.trim());
+  const usingSelection:boolean = selection !== "";
 
 
   // If templates configured
@@ -82,6 +83,9 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
     newFilePath.endsWith(".md") ? newFilePath : newFilePath + ".md",
     newFileContents
   );
+
+  if (usingSelection)
+    plugin.app.workspace.activeEditor?.editor?.replaceSelection(`[[${newFileName}]]`);
 
   // open new file in tab
   const newLeaf = this.app.workspace.getLeaf("tab");
