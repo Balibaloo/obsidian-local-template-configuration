@@ -55,18 +55,18 @@ export async function getVariableValues(app: App, variables: TemplateVariable[],
 }
 
 function validateText(variable: TemplateVariable, value: string, throwErrors: boolean): boolean {
-  if (variable.required) {
-    if (variable.regex && !Boolean(value.match(variable.regex))) {
-      if (throwErrors)
-        throw new Error(`Error: value for ${variable.name} doesn't match the regular expression "${variable.regex}"`)
-      return false;
 
-    } else if (value === "" || !value) {
-      if (throwErrors)
-        throw new Error(`Error: missing required text variable ${variable.name}`);
-      return false;
-    }
+  if (variable.regex && !Boolean(value.match(variable.regex))) {
+    if (variable.required && throwErrors)
+      throw new Error(`Error: value for ${variable.name} doesn't match the regular expression "${variable.regex}"`)
+    return false;
+
+  } else if (value === "" || !value) {
+    if (variable.required && throwErrors)
+      throw new Error(`Error: missing required text variable ${variable.name}`);
+    return false;
   }
+
 
   return true;
 }
@@ -74,41 +74,33 @@ function validateText(variable: TemplateVariable, value: string, throwErrors: bo
 function validateNumber(variable: TemplateVariable, value: string, throwErrors: boolean): boolean {
   const parsedNum = parseFloat(value);
   const isValidNum: boolean = Boolean(parsedNum);
-  if (variable.required && !isValidNum) {
-    if (throwErrors)
+  if (!isValidNum) {
+    if (variable.required && throwErrors)
       throw new Error(`Error: missing required number variable ${variable.name}`);
     return false;
   }
 
   if (variable.min && parsedNum < variable.min) {
     value = "";
-    if (variable.required) {
-      if (throwErrors)
-        throw new Error(`Error: The value entered for ${variable.name} (${parsedNum}) is below the minimum (${variable.min})`);
-      return false;
-    }
+    if (variable.required && throwErrors)
+      throw new Error(`Error: The value entered for ${variable.name} (${parsedNum}) is below the minimum (${variable.min})`);
+    return false;
   }
-
   if (variable.max && parsedNum > variable.max) {
     value = "";
-    if (variable.required) {
-      if (throwErrors)
-        throw new Error(`Error: The value entered for ${variable.name} (${parsedNum}) is above the maximum (${variable.max})`);
-      return false;
-    }
+    if (variable.required && throwErrors)
+      throw new Error(`Error: The value entered for ${variable.name} (${parsedNum}) is above the maximum (${variable.max})`);
+    return false;
   }
-
   return true;
 }
 function validateNaturalDate(variable: TemplateVariable, val: string, throwErrors: boolean): boolean {
   const NLDates = (app as any).plugins.getPlugin("nldates-obsidian");
   const parsedDate = NLDates.parseDate(val);
   if (!parsedDate.moment.isValid()) {
-    if (variable.required) {
-      if (throwErrors)
-        throw new Error(`Error: missing required date variable ${variable.name}`);
-      return false;
-    }
+    if (variable.required && throwErrors)
+      throw new Error(`Error: missing required date variable ${variable.name}`);
+    return false;
   }
 
   return true;
