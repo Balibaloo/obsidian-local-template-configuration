@@ -1,5 +1,6 @@
 // https://github.com/chhoumann/quickadd/blob/master/src/gui/GenericInputPrompt/GenericInputPrompt.ts#L24
-import { App, Modal, TextComponent, ButtonComponent } from "obsidian";
+import { test } from "node:test";
+import { App, Modal, TextComponent, ButtonComponent, Notice } from "obsidian";
 
 
 export class GenericInputPrompt extends Modal {
@@ -12,6 +13,8 @@ export class GenericInputPrompt extends Modal {
 	private input: string;
 	private readonly placeholder: string;
 	private readonly required: boolean;
+	private validator: ((text:string) => boolean) | undefined;
+  private errorMessage: string;
 
 	public static Prompt(
 		app: App,
@@ -19,13 +22,17 @@ export class GenericInputPrompt extends Modal {
 		placeholder?: string,
 		value?: string,
 		required?: boolean,
+    validator?: (text:string) => boolean,
+    validationErrorMessage?: string,
 	): Promise<string> {
 		const newPromptModal = new GenericInputPrompt(
 			app,
 			header,
 			placeholder,
 			value,
-			required
+			required,
+      validator,
+      validationErrorMessage,
 		);
 		return newPromptModal.waitForClose;
 	}
@@ -36,11 +43,15 @@ export class GenericInputPrompt extends Modal {
 		placeholder?: string,
 		value?: string,
 		required?: boolean,
+    validator?: (text:string) => boolean,
+    validationErrorMessage?: string,
 	) {
 		super(app);
 		this.placeholder = placeholder ?? "";
 		this.input = value ?? "";
 		this.required = required ?? false;
+    this.validator = validator;
+    this.errorMessage = validationErrorMessage ?? "Error: Input invalid";
 
 		this.waitForClose = new Promise<string>((resolve, reject) => {
 			this.resolvePromise = resolve;
@@ -83,7 +94,16 @@ export class GenericInputPrompt extends Modal {
 		textComponent
 		.setPlaceholder(placeholder ?? "")
 		.setValue(value ?? "")
-		.onChange((value) => (this.input = value))
+		.onChange((value) => {
+      this.input = value
+      if (this.validator){
+        if (this.validator(value)){
+          textComponent.inputEl.removeClass("requiredInput");
+        } else {
+          textComponent.inputEl.addClass("requiredInput");
+        }
+      }
+    })
 		.inputEl.addEventListener("keydown", this.submitEnterCallback);
 		
 		if (required){
@@ -136,6 +156,9 @@ export class GenericInputPrompt extends Modal {
 	};
 
 	private submit() {
+    if (this.validator && !this.validator(this.input))
+      return new Notice(this.errorMessage);
+    
 		this.didSubmit = true;
 
 		this.close();

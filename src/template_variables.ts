@@ -8,7 +8,9 @@ export async function getVariableValues(app:App, variables:TemplateVariable[]) {
     let val = "";
     if (variable.type == TemplateVariableType.text) {
       try {
-        val = await GenericInputPrompt.Prompt(app, variable.name, variable.placeholder, undefined, variable.required);
+        val = await GenericInputPrompt.Prompt(app, variable.name, variable.placeholder, undefined, variable.required, text => 
+          text.length > 0,
+          );
       } catch {}
       
       if (variable.required && (val === "" || !val)) {
@@ -20,7 +22,13 @@ export async function getVariableValues(app:App, variables:TemplateVariable[]) {
       const placeholderString = variable.placeholder || minString + variable.name + maxString;
 
       try {
-        val = await GenericInputPrompt.Prompt(app, variable.name, placeholderString, undefined, variable.required);
+        val = await GenericInputPrompt.Prompt(app, variable.name, placeholderString, undefined, variable.required, text => {
+          const parsed = parseFloat(text);
+          return Boolean(parsed) &&
+            (variable.min ? variable.min <= parsed : true) &&
+            (variable.max ? parsed <= variable.max : true)
+          }, `Error: Please enter a number` + ((variable.min || variable.max)? `in the range ${minString } x ${maxString}`: "")
+            );
       } catch { }
 
       const parsedNum = parseFloat(val);
@@ -43,11 +51,14 @@ export async function getVariableValues(app:App, variables:TemplateVariable[]) {
         }
       }
     } else if (variable.type === TemplateVariableType.natural_date) {
+      const NLDates = (app as any).plugins.getPlugin("nldates-obsidian");
+
       try {
-        val = await GenericInputPrompt.Prompt(app, variable.name, variable.placeholder, undefined, variable.required);
+        val = await GenericInputPrompt.Prompt(app, variable.name, variable.placeholder, undefined, variable.required, text => {
+          return NLDates.parseDate(text).moment.isValid();
+        }, "Error: Please enter a valid natural language date");
       } catch { }
 
-      const NLDates = (app as any).plugins.getPlugin("nldates-obsidian");
 
       const parsedDate = NLDates.parseDate(val);
       if (!parsedDate.moment.isValid()){
