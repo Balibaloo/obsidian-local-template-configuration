@@ -8,7 +8,7 @@ export async function getVariableValues(app:App, variables:TemplateVariable[]) {
     let val = "";
     if (variable.type == TemplateVariableType.text) {
       try {
-        val = await GenericInputPrompt.Prompt(app, variable.name, variable.placeholder, undefined, variable.required, text => 
+        val = await GenericInputPrompt.Prompt(app, variable.name, variable.placeholder, variable.initial, variable.required, text => 
           text.length > 0,
           );
       } catch {}
@@ -22,7 +22,7 @@ export async function getVariableValues(app:App, variables:TemplateVariable[]) {
       const placeholderString = variable.placeholder || minString + variable.name + maxString;
 
       try {
-        val = await GenericInputPrompt.Prompt(app, variable.name, placeholderString, undefined, variable.required, text => {
+        val = await GenericInputPrompt.Prompt(app, variable.name, placeholderString, variable.initial, variable.required, text => {
           const parsed = parseFloat(text);
           return Boolean(parsed) &&
             (variable.min ? variable.min <= parsed : true) &&
@@ -54,7 +54,7 @@ export async function getVariableValues(app:App, variables:TemplateVariable[]) {
       const NLDates = (app as any).plugins.getPlugin("nldates-obsidian");
 
       try {
-        val = await GenericInputPrompt.Prompt(app, variable.name, variable.placeholder, undefined, variable.required, text => {
+        val = await GenericInputPrompt.Prompt(app, variable.name, variable.placeholder, variable.initial, variable.required, text => {
           return NLDates.parseDate(text).moment.isValid();
         }, "Error: Please enter a valid natural language date");
       } catch { }

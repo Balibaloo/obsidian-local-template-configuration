@@ -45,6 +45,7 @@ export function getVariablesFromFM(fm:any){
         typeof v?.required === "boolean" ? v?.required : 
         Boolean(v?.required?.[0]?.toUpperCase() === "T"),
       min: parseFloat(v.min),
+      initial: v.initial,
       max: parseFloat(v.max),
       placeholder: v.placeholder,
     }

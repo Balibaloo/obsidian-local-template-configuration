@@ -75,8 +75,8 @@ export class GenericInputPrompt extends Modal {
 		const mainContentContainer: HTMLDivElement = this.contentEl.createDiv();
 		this.inputComponent = this.createInputField(
 			mainContentContainer,
-			this.placeholder,
 			this.input,
+			this.placeholder,
 			this.required
 		);
 		this.createButtonBar(mainContentContainer);
@@ -84,16 +84,15 @@ export class GenericInputPrompt extends Modal {
 
 	protected createInputField(
 		container: HTMLElement,
+		value: string,
 		placeholder?: string,
-		value?: string,
 		required?: boolean,
 	) {
 		const textComponent = new TextComponent(container);
-
 		textComponent.inputEl.style.width = "100%";
 		textComponent
 		.setPlaceholder(placeholder ?? "")
-		.setValue(value ?? "")
+    .setValue( value.toString() )
 		.onChange((value) => {
       this.input = value
       if (this.validator){
