@@ -48,6 +48,7 @@ export function getVariablesFromFM(fm:any){
       initial: v.initial,
       max: parseFloat(v.max),
       placeholder: v.placeholder,
+      regex: v.regex,
     }
   })
 }

@@ -9,12 +9,18 @@ export async function getVariableValues(app:App, variables:TemplateVariable[]) {
     if (variable.type == TemplateVariableType.text) {
       try {
         val = await GenericInputPrompt.Prompt(app, variable.name, variable.placeholder, variable.initial, variable.required, text => 
-          text.length > 0,
+          text.length > 0 && (variable.regex ? Boolean(text.match(variable.regex)) : true),
+          "Error: Please enter text" + ( variable.regex ? ` that matches the following regex "${variable.regex}"` : "")
           );
       } catch {}
       
-      if (variable.required && (val === "" || !val)) {
-        throw new Error(`Error: missing required text variable ${variable.name}`);
+      if (variable.required){
+        if (variable.regex && !Boolean(val.match(variable.regex))){
+          throw new Error(`Error: value for ${variable.name} doesn't match the regular expression "${variable.regex}"`)
+        
+        } else if (val === "" || !val) {
+          throw new Error(`Error: missing required text variable ${variable.name}`);
+        }
       }
     } else if (variable.type === TemplateVariableType.number) {
       const minString = variable.min ? `${variable.min} <= ` : "";
