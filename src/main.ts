@@ -44,6 +44,7 @@ export default class PTPlugin extends Plugin {
 						name: ReservedVariableName.newNoteName,
 						type: TemplateVariableType.text,
 						required: true,
+						use_selection: true,
 					}))
 				this.settings.intents.forEach((intent) => {
 					this.createCommandForIntent(intent);
