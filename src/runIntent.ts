@@ -1,7 +1,7 @@
 import { Notice, TFile, TFolder } from "obsidian";
 import { join as pathJoin } from "path";
 import PTPlugin from "./main";
-import { Intent, ReservedVariableName } from "./types";
+import { Intent, ReservedVariableName, TemplateVariable, TemplateVariableType } from "./types";
 import { getIntentTemplate } from "./templates";
 import { getVariableValues } from "./template_variables";
 import * as path from "path";
@@ -12,6 +12,11 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
   console.log("Running", intent);
 
   let variablesToGather = intent.newNoteProperties.variables;
+
+  const selection:string = plugin.app.workspace.activeEditor?.editor?.getSelection() ?? "";
+  const selectionSplit = selection.split(new RegExp("[,|]","g")).map(v=>v.trim());
+  const usingSelection:boolean = selection !== "";
+
 
   // If templates configured
   let newFileContents = "";
@@ -40,9 +45,17 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
     variablesToGather = namedObjectDeepMerge(variablesToGather, chosenTemplate.newNoteProperties.variables);
   }
 
+  const variablesToSelect = variablesToGather.filter(v => v.use_selection);
+  const selectionVariables = variablesToSelect.reduce((acc:any, variable:TemplateVariable, index) => {
+    acc[variable.name] = selectionSplit[index] ?? "";
+    return acc;
+  }, {});
+  console.log("section", selectionVariables);
+
+
   let gatheredValues;
   try {
-    gatheredValues = await getVariableValues(plugin.app, variablesToGather);
+    gatheredValues = await getVariableValues(plugin.app, variablesToGather, selectionVariables);
   } catch (e) {
     new Notice(e);
     return console.log("Failed to gather all variables");
@@ -70,6 +83,9 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
     newFilePath.endsWith(".md") ? newFilePath : newFilePath + ".md",
     newFileContents
   );
+
+  if (usingSelection)
+    plugin.app.workspace.activeEditor?.editor?.replaceSelection(`[[${newFileName}]]`);
 
   // open new file in tab
   const newLeaf = this.app.workspace.getLeaf("tab");
