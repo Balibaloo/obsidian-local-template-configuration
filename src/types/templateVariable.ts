@@ -8,5 +8,5 @@ export type TemplateVariable = {
   initial?: string,
   max?: number,
   placeholder?: string,
-  regex: string,
+  regex?: string,
 }
