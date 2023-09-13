@@ -40,12 +40,15 @@ export default class PTPlugin extends Plugin {
 
 				this.settings.intents = getIntentsFromFM(fm);
 				this.settings.intents.forEach(i=>
-					i.newNoteProperties.variables.push({
-						name: ReservedVariableName.newNoteName,
-						type: TemplateVariableType.text,
-						required: true,
-						use_selection: true,
-					}))
+					i.newNoteProperties.variables = namedObjectDeepMerge(
+						[{
+							name: ReservedVariableName.newNoteName,
+							type: TemplateVariableType.text,
+							required: true,
+							use_selection: true,
+						}],
+						i.newNoteProperties.variables
+					))
 				this.settings.intents.forEach((intent) => {
 					this.createCommandForIntent(intent);
 				});
