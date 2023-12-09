@@ -7,7 +7,7 @@ import { getVariableValues } from "./template_variables";
 import { namedObjectDeepMerge } from "./frontmatter";
 
 
-export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFile) {
+export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFile|TFolder) {
   console.log("Running", intent);
 
   let variablesToGather = intent.newNoteProperties.variables;
@@ -93,12 +93,13 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
 
 }
 
-function resolvePathRelativeToProject(path: string | void, projectFile: TFile): string | void {
+function resolvePathRelativeToProject(path: string | void, projectFile: TFile|TFolder): string | void {
   if (!path)
     return;
 
+  const parentFolder = projectFile instanceof TFile ? projectFile.parent : projectFile;
   const newFileFolderPath: string | void = path[0] === "." ?
-    joinPath(projectFile.parent?.path as string, path).replaceAll("\\", "/") :
+    joinPath(parentFolder?.path as string, path).replaceAll("\\", "/") :
     path;
   if (!newFileFolderPath)
     return;
