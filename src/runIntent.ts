@@ -42,6 +42,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
 
     newFileContents = await this.app.vault.cachedRead(templateFile);
     variablesToGather = namedObjectDeepMerge(variablesToGather, chosenTemplate.newNoteProperties.variables);
+    intent.newNoteProperties = namedObjectDeepMerge(intent.newNoteProperties, chosenTemplate.newNoteProperties);
   }
 
   const variablesToSelect = variablesToGather.filter(v => v.use_selection);
