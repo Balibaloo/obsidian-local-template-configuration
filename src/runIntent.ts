@@ -1,10 +1,9 @@
 import { Notice, TFile, TFolder } from "obsidian";
-import { join as pathJoin } from "path";
+import { join as joinPath } from "path";
 import PTPlugin from "./main";
 import { Intent, ReservedVariableName, TemplateVariable, TemplateVariableType } from "./types";
 import { getIntentTemplate } from "./templates";
 import { getVariableValues } from "./template_variables";
-import * as path from "path";
 import { namedObjectDeepMerge } from "./frontmatter";
 
 
@@ -29,7 +28,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
     }
 
     // get template
-    const templatePath: string | void = resolveFilePath(chosenTemplate.path, projectFile);
+    const templatePath: string | void = resolvePathRelativeToProject(chosenTemplate.path, projectFile);
     if (!templatePath) {
       new Notice(`Error: Please configure a valid path for the ${intent.name} - ${chosenTemplate.name} template`);
       return;
@@ -66,7 +65,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
 
   const newFileName = getNewFileName(intent, gatheredValues);
 
-  const newFileFolderPath = resolveFilePath(intent.newNoteProperties.output_path, projectFile);
+  const newFileFolderPath = resolvePathRelativeToProject(intent.newNoteProperties.output_path, projectFile);
   if (!newFileFolderPath){
     new Notice(`Error: Failed to determine ${intent.name} output path`);
     return;
@@ -77,7 +76,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
     await this.app.vault.createFolder(newFileFolderPath);
   }
 
-  const newFilePath = path.join(newFileFolderPath, newFileName).replaceAll("\\", "/");
+  const newFilePath = joinPath(newFileFolderPath, newFileName).replaceAll("\\", "/");
 
   const newFile = await this.app.vault.create(
     newFilePath.endsWith(".md") ? newFilePath : newFilePath + ".md",
@@ -94,17 +93,18 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
 
 }
 
-function resolveFilePath(path: string | void, projectFile: TFile): string | void {
+function resolvePathRelativeToProject(path: string | void, projectFile: TFile): string | void {
   if (!path)
     return;
 
   const newFileFolderPath: string | void = path[0] === "." ?
-    pathJoin(projectFile.parent?.path as string, path).replaceAll("\\", "/") :
+    joinPath(projectFile.parent?.path as string, path).replaceAll("\\", "/") :
     path;
   if (!newFileFolderPath)
     return;
 
-  if (newFileFolderPath.endsWith("/"))
+  // Remove directory trailing "/"
+  if (newFileFolderPath.endsWith("/")) 
     return newFileFolderPath.slice(0, -1);
 
   return newFileFolderPath;
