@@ -5,8 +5,7 @@ export type hasNewNoteProperties = {
 }
 
 export type NewNoteProperties = {
-	output_path: string,
-	note_name: string,
-	note_name_template: string,
+	output_pathname: string,
+	output_pathname_template: string,
 	variables: TemplateVariable[],
 }

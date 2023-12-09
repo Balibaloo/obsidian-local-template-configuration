@@ -63,28 +63,26 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
 
   newFileContents = getReplacedVariablesText(newFileContents, gatheredValues);
 
-  const newFileName = getNewFileName(intent, gatheredValues);
-
-  const newFileFolderPath = resolvePathRelativeToProject(intent.newNoteProperties.output_path, projectFile);
-  if (!newFileFolderPath){
+  const newFilePathName = getNewFilePathName(intent, gatheredValues);
+  const newFilePathNameResolved = resolvePathRelativeToProject(newFilePathName, projectFile);
+  if (!newFilePathNameResolved){
     new Notice(`Error: Failed to determine ${intent.name} output path`);
     return;
   }
 
   // create folder if not exists
-  if (!(this.app.vault.getAbstractFileByPath(newFileFolderPath) instanceof TFolder)) {
-    await this.app.vault.createFolder(newFileFolderPath);
+  const newFileResolvedDir = newFilePathNameResolved.split("/").slice(0,-1).join("/");
+  if (!(this.app.vault.getAbstractFileByPath(newFileResolvedDir) instanceof TFolder)) {
+    await this.app.vault.createFolder(newFileResolvedDir);
   }
 
-  const newFilePath = joinPath(newFileFolderPath, newFileName).replaceAll("\\", "/");
-
   const newFile = await this.app.vault.create(
-    newFilePath.endsWith(".md") ? newFilePath : newFilePath + ".md",
+    newFilePathNameResolved.endsWith(".md") ? newFilePathNameResolved : newFilePathNameResolved + ".md",
     newFileContents
   );
 
   if (usingSelection)
-    plugin.app.workspace.activeEditor?.editor?.replaceSelection(`[[${newFileName}]]`);
+    plugin.app.workspace.activeEditor?.editor?.replaceSelection(`[[${newFilePathName}]]`);
 
   // open new file in tab
   const newLeaf = this.app.workspace.getLeaf("tab");
@@ -117,15 +115,15 @@ function getReplacedVariablesText(text: string, values:{[key: string]: string}):
     , text);
 }
 
-function getNewFileName(intent:Intent, values:{[key: string]: string}):string{
-  if (intent.newNoteProperties.note_name_template)
-    return getReplacedVariablesText(intent.newNoteProperties.note_name_template, values);
-
-  if (values[ReservedVariableName.newNoteName])
-    return values[ReservedVariableName.newNoteName];
+function getNewFilePathName(intent:Intent, values:{[key: string]: string}):string{
+  if (intent.newNoteProperties.output_pathname_template?.trim() != "")
+    return getReplacedVariablesText(intent.newNoteProperties.output_pathname_template, values);
   
-  if (intent.newNoteProperties.note_name)
-    return intent.newNoteProperties.note_name; 
+  if (intent.newNoteProperties.output_pathname?.trim() != "")
+    return intent.newNoteProperties.output_pathname; 
+
+  if (values[ReservedVariableName.newNoteName]?.trim() != "")
+    return "./"+values[ReservedVariableName.newNoteName];
   
   return intent.name;
 }

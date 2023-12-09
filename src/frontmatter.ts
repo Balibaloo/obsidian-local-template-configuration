@@ -26,9 +26,8 @@ function getFMTemplates(fm: any): Template[] {
 
 function getNewNoteProperties(fm: any): NewNoteProperties {
   return {
-    output_path: fm.output_path,
-    note_name: fm.note_name,
-    note_name_template: fm.note_name_template,
+    output_pathname: fm.output_pathname,
+    output_pathname_template: fm.output_pathname_template,
     variables: getVariablesFromFM(fm),
   }
 }
