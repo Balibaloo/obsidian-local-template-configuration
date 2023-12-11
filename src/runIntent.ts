@@ -117,13 +117,13 @@ function getReplacedVariablesText(text: string, values:{[key: string]: string}):
 }
 
 function getNewFilePathName(intent:Intent, values:{[key: string]: string}):string{
-  if (intent.newNoteProperties.output_pathname_template?.trim() != "")
+  if (intent.newNoteProperties.output_pathname_template?.trim())
     return getReplacedVariablesText(intent.newNoteProperties.output_pathname_template, values);
   
-  if (intent.newNoteProperties.output_pathname?.trim() != "")
+  if (intent.newNoteProperties.output_pathname?.trim())
     return intent.newNoteProperties.output_pathname; 
 
-  if (values[ReservedVariableName.newNoteName]?.trim() != "")
+  if (values[ReservedVariableName.newNoteName]?.trim())
     return "./"+values[ReservedVariableName.newNoteName];
   
   return intent.name;
