@@ -36,22 +36,26 @@ export default class PTPlugin extends Plugin {
 					return this.saveSettings();
 				}
 
-				const fm = await getFrontmatter(this.app, pluginConfigFile);
+				try {
+					const fm = await getFrontmatter(this.app, pluginConfigFile);
 
-				this.settings.intents = getIntentsFromFM(fm);
-				this.settings.intents.forEach(i=>
-					i.newNoteProperties.variables = namedObjectDeepMerge(
-						[{
-							name: ReservedVariableName.new_note_name,
-							type: TemplateVariableType.text,
-							required: true,
-							use_selection: true,
-						}],
-						i.newNoteProperties.variables
-					))
-				this.settings.intents.forEach((intent) => {
-					this.createCommandForIntent(intent);
-				});
+					this.settings.intents = getIntentsFromFM(fm);
+					this.settings.intents.forEach(i =>
+						i.newNoteProperties.variables = namedObjectDeepMerge(
+							[{
+								name: ReservedVariableName.new_note_name,
+								type: TemplateVariableType.text,
+								required: true,
+								use_selection: true,
+							}],
+							i.newNoteProperties.variables
+						))
+					this.settings.intents.forEach((intent) => {
+						this.createCommandForIntent(intent);
+					});
+				} catch (e) {
+					new Notice(e);
+				}
 
 
 				console.log("Loaded intents", this.settings.intents);
@@ -101,16 +105,20 @@ export default class PTPlugin extends Plugin {
 				}
 
 				// include project config
-				const projectIntents = getIntentsFromFM(await getFrontmatter(this.app, projectNote));
-				const settingsWithProjectIntents = namedObjectDeepMerge(this.settings.intents, projectIntents) as Intent[];
-				const chosenIntent = settingsWithProjectIntents.find(i => i.name === intent.name);
+				try {
+					const projectIntents = getIntentsFromFM(await getFrontmatter(this.app, projectNote));
+					const settingsWithProjectIntents = namedObjectDeepMerge(this.settings.intents, projectIntents) as Intent[];
+					const chosenIntent = settingsWithProjectIntents.find(i => i.name === intent.name);
 
-				if (!chosenIntent){
-					new Notice(`Error: Failed to get ${intent.name} project intent`);
-					return;
+					if (!chosenIntent) {
+						new Notice(`Error: Failed to get ${intent.name} project intent`);
+						return;
+					}
+
+					runIntent(this, chosenIntent, projectNote);
+				} catch (e) {
+					new Notice(e);
 				}
-
-				runIntent(this, chosenIntent, projectNote);
 			}
 		})
 	}
