@@ -109,9 +109,12 @@ export async function getFrontmatter(app: App, file: TFile, visited: string[]| n
           continue;
         }
 
-        const fmI = await getFrontmatter(app, importFile, [...visited, resolvedPath])
-
-        fmImports = namedObjectDeepMerge(fmImports, fmI);
+        try {
+          const fmI = await getFrontmatter(app, importFile, [...visited, resolvedPath])
+          fmImports = namedObjectDeepMerge(fmImports, fmI);
+        } catch (e){
+          reject(e)
+        }
       }
 
       resolve(namedObjectDeepMerge(fmImports, fm));
