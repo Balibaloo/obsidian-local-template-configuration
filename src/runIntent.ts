@@ -82,8 +82,10 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
     newFileContents
   );
 
-  if (usingSelection)
-    plugin.app.workspace.activeEditor?.editor?.replaceSelection(`[[${newFilePathName}]]`);
+  if (usingSelection){
+    const noteName = newFilePathName.split("/").at(-1)?.replace(".md","");
+    plugin.app.workspace.activeEditor?.editor?.replaceSelection(`[[${noteName}]]`);
+  }
 
   // open new file in tab
   const newLeaf = this.app.workspace.getLeaf("tab");
