@@ -1,7 +1,6 @@
 import { App, FuzzySuggestModal, Notice, TAbstractFile, TFile, TFolder } from "obsidian";
-import { join as joinPath } from "path";
 import { Intent, ReservedVariableName, TemplateVariable } from "..";
-import { namedObjectDeepMerge } from "../frontmatter";
+import { namedObjectDeepMerge, resolvePathRelativeToAbstractFile } from "../frontmatter";
 import PTPlugin from "../main";
 import { getIntentTemplate } from "../template/templates";
 import { getVariableValues } from "../variables/template_variables";
@@ -123,23 +122,6 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, configAbstractF
 
 }
 
-function resolvePathRelativeToAbstractFile(path: string | void, projectFile: TAbstractFile): string | void {
-  if (!path)
-    return;
-
-  const parentFolder = projectFile instanceof TFile ? projectFile.parent : projectFile;
-  const newFileFolderPath: string | void = path[0] === "." ?
-    joinPath(parentFolder?.path as string, path).replaceAll("\\", "/") :
-    path;
-  if (!newFileFolderPath)
-    return;
-
-  // Remove directory trailing "/"
-  if (newFileFolderPath.endsWith("/")) 
-    return newFileFolderPath.slice(0, -1);
-
-  return newFileFolderPath;
-}
 
 function getReplacedVariablesText(text: string, values:{[key: string]: string}): string{
   return Object.keys(values).reduce((text, varName)=>

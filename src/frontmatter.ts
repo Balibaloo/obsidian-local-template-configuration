@@ -1,4 +1,4 @@
-import { App, FrontMatterCache, TFile } from "obsidian";
+import { App, FrontMatterCache, TAbstractFile, TFile } from "obsidian";
 import {
   Intent,
   NewNoteProperties,
@@ -7,6 +7,7 @@ import {
   TemplateVariableType,
   TemplateVariableVariablesLut
 } from ".";
+import { join as joinPath } from "path";
 
 
 export function getIntentsFromFM(fm: FrontMatterCache): Intent[] {
@@ -85,12 +86,51 @@ export function getVariablesFromFM(fm: any) {
 
 export async function getFrontmatter(app: App, file: TFile): Promise<FrontMatterCache> {
   return new Promise((resolve, reject) => {
-    app.fileManager.processFrontMatter(file, fm => {
-      resolve(fm);
+    app.fileManager.processFrontMatter(file, async fm => {
+      
+      // Resolve file import contents
+      const importPathsConfig: string[] | string[][] = [fm.intent_import || []];
+      const importsPaths: string[] = importPathsConfig.flat();
+
+      let fmImports = {}
+      for (let path of importsPaths) {
+        const resolvedPath = resolvePathRelativeToAbstractFile(path, file) + ".md";
+        const importFile = app.vault.getAbstractFileByPath(resolvedPath);
+
+        console.log("Importing:", resolvedPath);
+        if (!(importFile instanceof TFile)) {
+          console.log(resolvedPath, "is not a file");
+          continue;
+        }
+
+        const fmI = await getFrontmatter(app, importFile)
+
+        fmImports = namedObjectDeepMerge(fmImports, fmI);
+      }
+
+      resolve(namedObjectDeepMerge(fmImports, fm));
     })
   })
 }
 
+
+export function resolvePathRelativeToAbstractFile(path: string | void, projectFile: TAbstractFile): string | void {
+  if (!path)
+    return;
+
+  const parentFolder = projectFile instanceof TFile ? projectFile.parent : projectFile;
+  const newFileFolderPath: string | void = path[0] === "." ?
+    joinPath(parentFolder?.path as string, path).replaceAll("\\", "/") :
+    path;
+  if (!newFileFolderPath)
+    return;
+
+  // Remove directory trailing "/"
+  if (newFileFolderPath.endsWith("/"))
+    return newFileFolderPath.slice(0, -1);
+
+  return newFileFolderPath;
+}
 
 // https://stackoverflow.com/questions/27936772/how-to-deep-merge-instead-of-shallow-merge
 export function namedObjectDeepMerge(obj1: any, obj2: any) {
