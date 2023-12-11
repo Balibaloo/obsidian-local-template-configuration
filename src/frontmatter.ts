@@ -84,10 +84,11 @@ export function getVariablesFromFM(fm: any) {
 
 
 
-export async function getFrontmatter(app: App, file: TFile): Promise<FrontMatterCache> {
+export async function getFrontmatter(app: App, file: TFile, visited: string[]| null = null): Promise<FrontMatterCache> {
   return new Promise((resolve, reject) => {
     app.fileManager.processFrontMatter(file, async fm => {
-      
+      visited = visited || new Array<string>();
+
       // Resolve file import contents
       const importPathsConfig: string[] | string[][] = [fm.intent_import || []];
       const importsPaths: string[] = importPathsConfig.flat();
@@ -97,13 +98,18 @@ export async function getFrontmatter(app: App, file: TFile): Promise<FrontMatter
         const resolvedPath = resolvePathRelativeToAbstractFile(path, file) + ".md";
         const importFile = app.vault.getAbstractFileByPath(resolvedPath);
 
-        console.log("Importing:", resolvedPath);
+        // Check for circular imports
+        if (visited.contains(resolvedPath)){
+          console.log(resolvedPath,"in", visited);
+          return reject(`Error getting frontmatter: \nCircular import of ${path} in ${file.name}`);
+        }
+
         if (!(importFile instanceof TFile)) {
           console.log(resolvedPath, "is not a file");
           continue;
         }
 
-        const fmI = await getFrontmatter(app, importFile)
+        const fmI = await getFrontmatter(app, importFile, [...visited, resolvedPath])
 
         fmImports = namedObjectDeepMerge(fmImports, fmI);
       }
