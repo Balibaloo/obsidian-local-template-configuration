@@ -1,13 +1,42 @@
-import { Notice, TFile, TFolder } from "obsidian";
+import { App, FuzzySuggestModal, Notice, TAbstractFile, TFile, TFolder } from "obsidian";
 import { join as joinPath } from "path";
-import PTPlugin from "./main";
-import { Intent, ReservedVariableName, TemplateVariable, TemplateVariableType } from "./types";
-import { getIntentTemplate } from "./templates";
-import { getVariableValues } from "./template_variables";
-import { namedObjectDeepMerge } from "./frontmatter";
+import { Intent, ReservedVariableName, TemplateVariable } from "..";
+import { namedObjectDeepMerge } from "../frontmatter";
+import PTPlugin from "../main";
+import { getIntentTemplate } from "../template/templates";
+import { getVariableValues } from "../variables/template_variables";
+
+class IntentSuggestModal extends FuzzySuggestModal<Intent> {
+	constructor(app: App, items: Intent[], callback: (item: Intent) => void) {
+		super(app);
+		this.items = items;
+		this.callback=callback;
+    this.setPlaceholder("Placeholderrrrr");
+	}
+	
+	items: Intent[];
+	callback: (item: Intent) => void;
+
+	getItems(): Intent[] {
+		return this.items;
+	}
+
+	getItemText(item: Intent): string {
+		return `${item.name}`;
+	}
+	onChooseItem(item: Intent, evt: MouseEvent | KeyboardEvent): void {
+		this.callback(item);
+	}
+}
+
+export async function choseIntent(intents:Intent[]):Promise<Intent> {
+  return new Promise((resolve,rejects) => {
+    new IntentSuggestModal(this.app, intents, resolve).open();
+  })
+}
 
 
-export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFile|TFolder) {
+export async function runIntent(plugin:PTPlugin, intent: Intent, configAbstractFile:TAbstractFile) {
   console.log("Running", intent);
 
   let variablesToGather = intent.newNoteProperties.variables;
@@ -28,7 +57,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
     }
 
     // get template
-    const templatePath: string | void = resolvePathRelativeToProject(chosenTemplate.path, projectFile);
+    const templatePath: string | void = resolvePathRelativeToAbstractFile(chosenTemplate.path, configAbstractFile);
     if (!templatePath) {
       new Notice(`Error: Please configure a valid path for the ${intent.name} - ${chosenTemplate.name} template`);
       return;
@@ -65,7 +94,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
   newFileContents = getReplacedVariablesText(newFileContents, gatheredValues);
 
   const newFilePathName = getNewFilePathName(intent, gatheredValues);
-  const newFilePathNameResolved = resolvePathRelativeToProject(newFilePathName, projectFile);
+  const newFilePathNameResolved = resolvePathRelativeToAbstractFile(newFilePathName, configAbstractFile);
   if (!newFilePathNameResolved){
     new Notice(`Error: Failed to determine ${intent.name} output path`);
     return;
@@ -94,7 +123,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, projectFile:TFi
 
 }
 
-function resolvePathRelativeToProject(path: string | void, projectFile: TFile|TFolder): string | void {
+function resolvePathRelativeToAbstractFile(path: string | void, projectFile: TAbstractFile): string | void {
   if (!path)
     return;
 
@@ -125,8 +154,8 @@ function getNewFilePathName(intent:Intent, values:{[key: string]: string}):strin
   if (intent.newNoteProperties.output_pathname?.trim())
     return intent.newNoteProperties.output_pathname; 
 
-  if (values[ReservedVariableName.newNoteName]?.trim())
-    return "./"+values[ReservedVariableName.newNoteName];
+  if (values[ReservedVariableName.new_note_name]?.trim())
+    return "./"+values[ReservedVariableName.new_note_name];
   
   return intent.name;
 }

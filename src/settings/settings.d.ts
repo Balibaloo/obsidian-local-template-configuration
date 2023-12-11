@@ -1,4 +1,4 @@
-import { Intent } from ".";
+import { Intent } from "..";
 
 export interface PTSettings {
 	pluginConfigFile: string;

@@ -1,5 +1,12 @@
-import { App, TFile, FrontMatterCache } from "obsidian";
-import { Intent, Template, NewNoteProperties, TemplateVariable, TemplateVariableType } from "./types";
+import { App, FrontMatterCache, TFile } from "obsidian";
+import {
+  Intent,
+  NewNoteProperties,
+  Template,
+  TemplateVariable,
+  TemplateVariableType,
+  TemplateVariableVariablesLut
+} from ".";
 
 
 export function getIntentsFromFM(fm: FrontMatterCache): Intent[] {
@@ -32,26 +39,45 @@ function getNewNoteProperties(fm: any): NewNoteProperties {
   }
 }
 
-export function getVariablesFromFM(fm:any){
+const variableProviderVariableParsers: {
+  [K in keyof TemplateVariableVariablesLut]: (fm: any) => TemplateVariableVariablesLut[K];
+} = {
+  [TemplateVariableType.text]: (fm) => ({
+    regex: fm.regex,
+  }),
+  [TemplateVariableType.number]: (fm) => ({
+    min: parseFloat(fm.min),
+    max: parseFloat(fm.max),
+  }),
+  [TemplateVariableType.natural_date]: (fm) => ({}),
+  [TemplateVariableType.directory]: (fm) => ({
+    root_dir: fm.root_dir,
+    depth: fm.depth,
+    include_roots: typeof fm?.include_roots === "undefined" ? undefined :
+    typeof fm?.include_roots === "boolean" ? fm?.include_roots :
+      Boolean(fm?.include_roots?.[0]?.toUpperCase() === "T"),
+  }),
+};
+
+export function getVariablesFromFM(fm: any) {
   return (fm?.variables || []).map((v: any): TemplateVariable => {
     const type: TemplateVariableType = TemplateVariableType[v.type as keyof typeof TemplateVariableType]
       || TemplateVariableType.text;
 
-    return {
+    const baseVariables: TemplateVariable = {
       name: v.name,
       type: type,
       required: typeof v?.required === "undefined" ? undefined :
-        typeof v?.required === "boolean" ? v?.required : 
-        Boolean(v?.required?.[0]?.toUpperCase() === "T"),
+        typeof v?.required === "boolean" ? v?.required :
+          Boolean(v?.required?.[0]?.toUpperCase() === "T"),
       use_selection: typeof v?.use_selection === "undefined" ? undefined :
-        typeof v?.use_selection === "boolean" ? v?.use_selection : 
-        Boolean(v?.use_selection?.[0]?.toUpperCase() === "T"),
-      min: parseFloat(v.min),
+        typeof v?.use_selection === "boolean" ? v?.use_selection :
+          Boolean(v?.use_selection?.[0]?.toUpperCase() === "T"),
       initial: v.initial,
-      max: parseFloat(v.max),
       placeholder: v.placeholder,
-      regex: v.regex,
     }
+
+    return Object.assign(baseVariables, variableProviderVariableParsers[type](fm))
   })
 }
 

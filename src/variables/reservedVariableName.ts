@@ -1,3 +1,3 @@
 export enum ReservedVariableName {
-  newNoteName = "new_note_name",
+  new_note_name = "new_note_name",
 }

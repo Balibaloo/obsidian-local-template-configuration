@@ -1,6 +1,5 @@
 // https://github.com/chhoumann/quickadd/blob/master/src/gui/GenericInputPrompt/GenericInputPrompt.ts#L24
-import { test } from "node:test";
-import { App, Modal, TextComponent, ButtonComponent, Notice } from "obsidian";
+import { App, ButtonComponent, Modal, Notice, TextComponent } from "obsidian";
 
 
 export class GenericInputPrompt extends Modal {

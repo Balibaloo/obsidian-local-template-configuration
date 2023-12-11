@@ -1,8 +1,8 @@
-import { Plugin, Notice, TFile } from 'obsidian';
-import { DEFAULT_SETTINGS, PTSettingTab } from './config';
-import { Intent, PTSettings, ReservedVariableName, TemplateVariableType } from './types/';
+import { Notice, Plugin, TFile } from 'obsidian';
+import { Intent, PTSettings, ReservedVariableName, TemplateVariableType } from '.';
 import { getFrontmatter, getIntentsFromFM, namedObjectDeepMerge } from './frontmatter';
-import { runIntent } from './runIntent';
+import { choseIntent, runIntent } from './intent/intents';
+import { DEFAULT_SETTINGS, PTSettingTab } from './settings/config';
 
 
 const PLUGIN_LONG_NAME = "Project Templater";
@@ -42,7 +42,7 @@ export default class PTPlugin extends Plugin {
 				this.settings.intents.forEach(i=>
 					i.newNoteProperties.variables = namedObjectDeepMerge(
 						[{
-							name: ReservedVariableName.newNoteName,
+							name: ReservedVariableName.new_note_name,
 							type: TemplateVariableType.text,
 							required: true,
 							use_selection: true,
@@ -60,7 +60,25 @@ export default class PTPlugin extends Plugin {
 			}
 		});		
 
-		this.app.workspace.onLayoutReady( () => {
+		this.addCommand({
+			id: 'run-global-intent',
+			name: 'Chose global intent',
+			callback: async () => {
+
+				
+				// TODO expose intent config to user
+				// const newProjectFolder = (await (this.app as any).plugins.plugins["picker"].api_getDir()) as TFolder;
+				// if (newProjectFolder == null) return;
+				// DOCS paths are relative to chosen folder
+				const chosenIntent = await choseIntent(this.settings.intents);
+				if (!choseIntent) 
+					return;
+				
+				runIntent(this, chosenIntent, this.app.vault.getRoot());
+			}
+		});
+
+		this.app.workspace.onLayoutReady(() => {
 			const NLDates = (this.app as any).plugins.getPlugin("nldates-obsidian");
 			if (!NLDates) {
 				new Notice("Error: Natural Language dates is required for natural date parsing. Please install it from the community plugin settings");
@@ -75,7 +93,7 @@ export default class PTPlugin extends Plugin {
 			id: commandID,
 			name: `Create a new ${intent.name} note`,
 			callback: async () => {
-				const projectNote = await (this.app as any).plugins.plugins["filtered-note-opener"].api()
+				const projectNote = await (this.app as any).plugins.plugins["picker"].api_getNote()
 				if (!(projectNote instanceof TFile)) {
 					new Notice("Error: Project note is not a file");
 					console.log("Project note", projectNote);
