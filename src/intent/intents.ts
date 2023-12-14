@@ -100,7 +100,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, configAbstractF
   }
 
   // create folder if not exists
-  const newFileResolvedDir = newFilePathNameResolved.split("/").slice(0,-1).join("/");
+  const newFileResolvedDir = newFilePathNameResolved.split("/").slice(0,-1).join("/") || "/";
   if (!(this.app.vault.getAbstractFileByPath(newFileResolvedDir) instanceof TFolder)) {
     await this.app.vault.createFolder(newFileResolvedDir);
   }
