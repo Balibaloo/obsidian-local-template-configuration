@@ -7,6 +7,7 @@ export const DEFAULT_SETTINGS: PTSettings = {
   pluginConfigNote: '',
   pluginConfigured: false,
   intents: [],
+  configNoteFilterSetName: "default"
 }
 
 
@@ -40,5 +41,18 @@ export class PTSettingTab extends PluginSettingTab {
         })
 
       );
+
+    
+
+    new Setting(containerEl)
+        .setName("Configuration Note Filter Set Name")
+        .setDesc("The name of the Note Filter Set in the Picker plugin that defines a Configuration Note")
+        .addText(text => {
+          text.setValue(this.plugin.settings.configNoteFilterSetName)
+          text.onChange(async v => {
+            this.plugin.settings.configNoteFilterSetName = v;
+            await this.plugin.saveSettings();
+          })
+        })
   }
 }

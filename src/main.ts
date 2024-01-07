@@ -91,7 +91,7 @@ export default class PTPlugin extends Plugin {
 			id: commandID,
 			name: `Create a new ${intent.name} note`,
 			callback: async () => {
-				const projectNote = await (this.app as any).plugins.plugins["picker"].api_getNote()
+				const projectNote = await (this.app as any).plugins.plugins["picker"].api_getNote(this.settings.configNoteFilterSetName)
 				if (!(projectNote instanceof TFile)) {
 					new Notice("Error: Configuration note is not a file");
 					console.log("Project note", projectNote);
