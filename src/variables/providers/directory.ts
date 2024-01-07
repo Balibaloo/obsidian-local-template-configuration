@@ -21,7 +21,7 @@ export async function getDirectoryVariableValue(variable: TemplateVariable&Templ
   if (!validateDirectory(variable, existingValue, false)) {
     
     try {
-      const newProjectFolder = (await (this.app as any).plugins.plugins["picker"].api_getDir(variable.root_dir, variable.depth, variable.include_roots, variable.dir_filter_set_name)) as TFolder;
+      const newProjectFolder = (await (app as any).plugins.plugins["picker"].api_getDir(variable.root_dir, variable.depth, variable.include_roots, variable.dir_filter_set_name)) as TFolder;
       existingValue = newProjectFolder.path;
     } catch (e){
       console.log(e);
