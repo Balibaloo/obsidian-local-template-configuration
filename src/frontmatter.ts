@@ -58,7 +58,7 @@ export function getVariablesFromFM(fm: any) {
       placeholder: v.placeholder,
     }
 
-    return Object.assign(baseVariables, variableProviderVariableParsers[type](fm))
+    return Object.assign(baseVariables, variableProviderVariableParsers[type](v))
   })
 }
 
