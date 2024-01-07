@@ -21,15 +21,15 @@ export default class PTPlugin extends Plugin {
 			id: 'reload-config',
 			name: 'Reload config',
 			callback: async () => {
-				const pluginConfigFile = this.app.vault.getAbstractFileByPath(this.settings.pluginConfigFile);
-				if (!(pluginConfigFile instanceof TFile)) {
-					new Notice(`Error: Please add a configuration file for ${PLUGIN_LONG_NAME}`);
+				const pluginConfigNote = this.app.vault.getAbstractFileByPath(this.settings.pluginConfigNote);
+				if (!(pluginConfigNote instanceof TFile)) {
+					new Notice(`Error: Please add a configuration note for ${PLUGIN_LONG_NAME}`);
 					this.settings.pluginConfigured = false;
 					return this.saveSettings();
 				}
 
 				try {
-					const fm = await getFrontmatter(this.app, pluginConfigFile);
+					const fm = await getFrontmatter(this.app, pluginConfigNote);
 
 					this.settings.intents = getIntentsFromFM(fm);
 					this.settings.intents.forEach(i =>
@@ -91,7 +91,7 @@ export default class PTPlugin extends Plugin {
 			callback: async () => {
 				const projectNote = await (this.app as any).plugins.plugins["picker"].api_getNote()
 				if (!(projectNote instanceof TFile)) {
-					new Notice("Error: Project note is not a file");
+					new Notice("Error: Configuration note is not a file");
 					console.log("Project note", projectNote);
 					return;
 				}

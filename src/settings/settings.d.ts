@@ -1,7 +1,7 @@
 import { Intent } from "..";
 
 export interface PTSettings {
-	pluginConfigFile: string;
+	pluginConfigNote: string;
 	pluginConfigured: boolean;
 	intents: Intent[];
 }

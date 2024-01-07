@@ -4,7 +4,7 @@ import PTPlugin from "../main";
 
 
 export const DEFAULT_SETTINGS: PTSettings = {
-  pluginConfigFile: '',
+  pluginConfigNote: '',
   pluginConfigured: false,
   intents: [],
 }
@@ -28,12 +28,12 @@ export class PTSettingTab extends PluginSettingTab {
       .addText(text => 
         
         text.setPlaceholder('Path')
-        .setValue(this.plugin.settings.pluginConfigFile)
+        .setValue(this.plugin.settings.pluginConfigNote)
         .onChange(async (value) => {
           if (value.endsWith(".md")){
-            this.plugin.settings.pluginConfigFile = value;
+            this.plugin.settings.pluginConfigNote = value;
           } else {
-            this.plugin.settings.pluginConfigFile = value+".md";
+            this.plugin.settings.pluginConfigNote = value+".md";
           }
 
           await this.plugin.saveSettings();

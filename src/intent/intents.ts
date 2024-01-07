@@ -46,7 +46,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, configAbstractF
 
 
   // If templates configured
-  let newFileContents = "";
+  let newNoteContents = "";
   if (intent.templates.length !== 0) {
     const chosenTemplate = await getIntentTemplate(intent);
     console.log("Chosen template", chosenTemplate);
@@ -62,13 +62,13 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, configAbstractF
       return;
     }
 
-    const templateFile = this.app.vault.getAbstractFileByPath(templatePath);
-    if (!(templateFile instanceof TFile)) {
-      new Notice("Error: Template is not a file: " + templatePath);
+    const templateNote = this.app.vault.getAbstractFileByPath(templatePath);
+    if (!(templateNote instanceof TFile)) {
+      new Notice("Error: Template does not exist: " + templatePath);
       return;
     }
 
-    newFileContents = await this.app.vault.cachedRead(templateFile);
+    newNoteContents = await this.app.vault.cachedRead(templateNote);
     variablesToGather = namedObjectDeepMerge(variablesToGather, chosenTemplate.newNoteProperties.variables);
     intent.newNoteProperties = namedObjectDeepMerge(intent.newNoteProperties, chosenTemplate.newNoteProperties);
   }
@@ -90,35 +90,35 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, configAbstractF
   }
   
 
-  newFileContents = getReplacedVariablesText(newFileContents, gatheredValues);
+  newNoteContents = getReplacedVariablesText(newNoteContents, gatheredValues);
 
-  const newFilePathName = getNewFilePathName(intent, gatheredValues);
-  const newFilePathNameResolved = resolvePathRelativeToAbstractFile(newFilePathName, configAbstractFile);
-  if (!newFilePathNameResolved){
+  const newNotePathName = getNewNotePathName(intent, gatheredValues);
+  const newNotePathNameResolved = resolvePathRelativeToAbstractFile(newNotePathName, configAbstractFile);
+  if (!newNotePathNameResolved){
     new Notice(`Error: Failed to determine ${intent.name} output path`);
     return;
   }
 
   // create folder if not exists
-  const newFileResolvedDir = newFilePathNameResolved.split("/").slice(0,-1).join("/") || "/";
-  if (!(this.app.vault.getAbstractFileByPath(newFileResolvedDir) instanceof TFolder)) {
-    await this.app.vault.createFolder(newFileResolvedDir);
+  const newNoteResolvedDir = newNotePathNameResolved.split("/").slice(0,-1).join("/") || "/";
+  if (!(this.app.vault.getAbstractFileByPath(newNoteResolvedDir) instanceof TFolder)) {
+    await this.app.vault.createFolder(newNoteResolvedDir);
   }
 
-  const newFile = await this.app.vault.create(
-    newFilePathNameResolved.endsWith(".md") ? newFilePathNameResolved : newFilePathNameResolved + ".md",
-    newFileContents
+  const newNote = await this.app.vault.create(
+    newNotePathNameResolved.endsWith(".md") ? newNotePathNameResolved : newNotePathNameResolved + ".md",
+    newNoteContents
   );
 
   if (usingSelection){
-    const noteName = newFilePathName.split("/").at(-1)?.replace(".md","");
+    const noteName = newNotePathName.split("/").at(-1)?.replace(".md","");
     plugin.app.workspace.activeEditor?.editor?.replaceSelection(`[[${noteName}]]`);
   }
 
-  // open new file in tab
+  // open new note in tab
   const newLeaf = this.app.workspace.getLeaf("tab");
-  await newLeaf.openFile(newFile); // TODO Add toggle setting
-  console.log("New file created");
+  await newLeaf.openFile(newNote); // TODO Add toggle setting
+  console.log("New note created");
 
 }
 
@@ -129,7 +129,7 @@ function getReplacedVariablesText(text: string, values:{[key: string]: string}):
     , text);
 }
 
-function getNewFilePathName(intent:Intent, values:{[key: string]: string}):string{
+function getNewNotePathName(intent:Intent, values:{[key: string]: string}):string{
   const newNoteProps = intent.newNoteProperties;
 
   if (newNoteProps.output_pathname_template &&

@@ -84,28 +84,28 @@ export function getVariablesFromFM(fm: any) {
 
 
 
-export async function getFrontmatter(app: App, file: TFile, visited: string[]| null = null): Promise<FrontMatterCache> {
+export async function getFrontmatter(app: App, note: TFile, visited: string[]| null = null): Promise<FrontMatterCache> {
   return new Promise((resolve, reject) => {
-    app.fileManager.processFrontMatter(file, async fm => {
+    app.fileManager.processFrontMatter(note, async fm => {
       visited = visited || new Array<string>();
 
-      // Resolve file import contents
+      // Resolve note import contents
       const importPathsConfig: string[] | string[][] = [fm.intent_import || []];
       const importsPaths: string[] = importPathsConfig.flat();
 
       let fmImports = {}
       for (let path of importsPaths) {
-        const resolvedPath = resolvePathRelativeToAbstractFile(path, file) + ".md";
+        const resolvedPath = resolvePathRelativeToAbstractFile(path, note) + ".md";
         const importFile = app.vault.getAbstractFileByPath(resolvedPath);
 
         // Check for circular imports
         if (visited.contains(resolvedPath)){
           console.log(resolvedPath,"in", visited);
-          return reject(`Error getting frontmatter: \nCircular import of ${path} in ${file.name}`);
+          return reject(`Error getting frontmatter: \nCircular import of ${path} in ${note.name}`);
         }
 
         if (!(importFile instanceof TFile)) {
-          console.log(resolvedPath, "is not a file");
+          console.log(resolvedPath, "is not a note");
           continue;
         }
 
@@ -128,17 +128,17 @@ export function resolvePathRelativeToAbstractFile(path: string | void, projectFi
     return;
 
   const parentFolder = projectFile instanceof TFile ? projectFile.parent : projectFile;
-  const newFileFolderPath: string | void = path[0] === "." ?
+  const newNoteFolderPath: string | void = path[0] === "." ?
     joinPath(parentFolder?.path as string, path).replaceAll("\\", "/") :
     path;
-  if (!newFileFolderPath)
+  if (!newNoteFolderPath)
     return;
 
   // Remove directory trailing "/"
-  if (newFileFolderPath.endsWith("/"))
-    return newFileFolderPath.slice(0, -1);
+  if (newNoteFolderPath.endsWith("/"))
+    return newNoteFolderPath.slice(0, -1);
 
-  return newFileFolderPath;
+  return newNoteFolderPath;
 }
 
 // https://stackoverflow.com/questions/27936772/how-to-deep-merge-instead-of-shallow-merge
