@@ -3,11 +3,10 @@ import {
   Intent,
   NewNoteProperties,
   Template,
-  TemplateVariable,
-  TemplateVariableType,
-  TemplateVariableVariablesLut
 } from ".";
 import { join as joinPath } from "path";
+import { TemplateVariable } from "./variables";
+import { TemplateVariableType, variableProviderVariableParsers } from "./variables/providers";
 
 
 export function getIntentsFromFM(fm: FrontMatterCache): Intent[] {
@@ -40,25 +39,6 @@ function getNewNoteProperties(fm: any): NewNoteProperties {
   }
 }
 
-const variableProviderVariableParsers: {
-  [K in keyof TemplateVariableVariablesLut]: (fm: any) => TemplateVariableVariablesLut[K];
-} = {
-  [TemplateVariableType.text]: (fm) => ({
-    regex: fm.regex,
-  }),
-  [TemplateVariableType.number]: (fm) => ({
-    min: parseFloat(fm.min),
-    max: parseFloat(fm.max),
-  }),
-  [TemplateVariableType.natural_date]: (fm) => ({}),
-  [TemplateVariableType.directory]: (fm) => ({
-    root_dir: fm.root_dir,
-    depth: fm.depth,
-    include_roots: typeof fm?.include_roots === "undefined" ? undefined :
-    typeof fm?.include_roots === "boolean" ? fm?.include_roots :
-      Boolean(fm?.include_roots?.[0]?.toUpperCase() === "T"),
-  }),
-};
 
 export function getVariablesFromFM(fm: any) {
   return (fm?.variables || []).map((v: any): TemplateVariable => {

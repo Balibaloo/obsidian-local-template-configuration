@@ -1,7 +1,16 @@
 import { GenericInputPrompt } from "../suggest";
-import { TemplateVariable } from "../templateVariable";
-import { TemplateVariableVariables_Number } from "../templateVariableVariables";
+import { TemplateVariable } from "../templateVariables";
 
+
+export type TemplateVariableVariables_Number = {
+  min?: number,
+  max?: number,
+};
+
+export const parseNumberVariableFrontmatter = (fm: any) => ({
+  min: parseFloat(fm.min),
+  max: parseFloat(fm.max),
+})
 
 export async function getNumberVariableValue(variable: TemplateVariable&TemplateVariableVariables_Number, existingValue:string):Promise<string>{
   if (!validateNumber(variable, existingValue, false)) {

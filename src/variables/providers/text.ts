@@ -1,7 +1,13 @@
 import { GenericInputPrompt } from "../suggest";
-import { TemplateVariable } from "../templateVariable";
-import { TemplateVariableVariables_Text } from "../templateVariableVariables";
+import { TemplateVariable } from "../templateVariables";
 
+export type TemplateVariableVariables_Text = {
+  regex ?: string,
+};
+
+export const parseTextVariableFrontmatter = (fm:any) => ({
+  regex: fm.regex,
+})
 
 export async function getTextVariableValue(variable: TemplateVariable&TemplateVariableVariables_Text, existingValue:string):Promise<string>{
   if (!validateText(variable, existingValue, false)) {

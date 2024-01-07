@@ -1,6 +1,11 @@
 import { GenericInputPrompt } from "../suggest";
-import { TemplateVariable } from "../templateVariable";
-import { TemplateVariableVariables_NaturalDate } from "../templateVariableVariables";
+import { TemplateVariable } from "../templateVariables";
+
+export type TemplateVariableVariables_NaturalDate = {
+};
+
+export const parseNaturalDateVariableFrontmatter = (fm: any) => ({
+});
 
 export async function getNaturalDateVariableValue(variable: TemplateVariable&TemplateVariableVariables_NaturalDate, existingValue:string): Promise<string>{
   if (!validateNaturalDate(variable, existingValue, false)) {

@@ -1,8 +1,10 @@
 import { Notice, Plugin, TFile } from 'obsidian';
-import { Intent, PTSettings, ReservedVariableName, TemplateVariableType } from '.';
+import { Intent, PTSettings } from '.';
 import { getFrontmatter, getIntentsFromFM, namedObjectDeepMerge } from './frontmatter';
 import { choseIntent, runIntent } from './intent/intents';
 import { DEFAULT_SETTINGS, PTSettingTab } from './settings/config';
+import { TemplateVariableType } from './variables/providers';
+import { ReservedVariableName } from './variables/templateVariables';
 
 
 const PLUGIN_LONG_NAME = "Project Templater";
