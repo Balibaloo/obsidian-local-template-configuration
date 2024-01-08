@@ -76,12 +76,6 @@ export default class PTPlugin extends Plugin {
 			}
 		});
 
-		this.app.workspace.onLayoutReady(() => {
-			const NLDates = (this.app as any).plugins.getPlugin("nldates-obsidian");
-			if (!NLDates) {
-				new Notice("Error: Natural Language dates is required for natural date parsing. Please install it from the community plugin settings");
-			}
-	});
 	}
 
 	createCommandForIntent(intent: Intent) {
