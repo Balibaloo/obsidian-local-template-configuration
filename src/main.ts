@@ -76,6 +76,29 @@ export default class PTPlugin extends Plugin {
 			}
 		});
 
+		this.addCommand({
+			id: 'run-local-intent',
+			name: 'Chose local intent',
+			callback: async () => {
+
+				const configNote = await (this.app as any).plugins.plugins["picker"].api_getNote(this.settings.configNoteFilterSetName)
+				if (!(configNote instanceof TFile)) {
+					new Notice("Error: Configuration note is not a file");
+					console.log("Project note", configNote);
+					return;
+				}
+
+				const noteIntents = getIntentsFromFM(await getFrontmatter(this.app, configNote));
+
+				const chosenIntent = await choseIntent(noteIntents);
+				if (!choseIntent) 
+					return;
+				
+				runIntent(this, chosenIntent, this.app.vault.getRoot());
+				
+			}
+		});
+
 	}
 
 	createCommandForIntent(intent: Intent) {
