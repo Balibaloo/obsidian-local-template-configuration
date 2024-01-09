@@ -14,23 +14,23 @@ import {
   parseNaturalDateVariableFrontmatter
 } from "./natural_date";
 import {
-  TemplateVariableVariables_Directory,
-  getDirectoryVariableValue,
-  parseDirectoryVariableFrontmatter
-} from "./directory";
+  TemplateVariableVariables_Folder,
+  getFolderVariableValue,
+  parseFolderVariableFrontmatter
+} from "./folder";
 
 export enum TemplateVariableType {
   text = "text",
   number = "number",
   natural_date = "natural_date",
-  directory = "directory",
+  folder = "folder",
 }
 
 export type TemplateVariableVariables =
   | TemplateVariableVariables_Text
   | TemplateVariableVariables_Number
   | TemplateVariableVariables_NaturalDate
-  | TemplateVariableVariables_Directory;
+  | TemplateVariableVariables_Folder;
 
 
 export type TemplateVariableVariablesLut = {
@@ -38,7 +38,7 @@ export type TemplateVariableVariablesLut = {
     [TemplateVariableType.text]: TemplateVariableVariables_Text,
     [TemplateVariableType.number]: TemplateVariableVariables_Number,
     [TemplateVariableType.natural_date]: TemplateVariableVariables_NaturalDate,
-    [TemplateVariableType.directory]: TemplateVariableVariables_Directory,
+    [TemplateVariableType.folder]: TemplateVariableVariables_Folder,
   }[T]
 };
 
@@ -49,7 +49,7 @@ export const variableProviderVariableParsers: {
   [TemplateVariableType.text]: parseTextVariableFrontmatter,
   [TemplateVariableType.number]: parseNumberVariableFrontmatter,
   [TemplateVariableType.natural_date]: parseNaturalDateVariableFrontmatter,
-  [TemplateVariableType.directory]: parseDirectoryVariableFrontmatter,
+  [TemplateVariableType.folder]: parseFolderVariableFrontmatter,
 };
 
 export const variableProviderVariableGetters: {
@@ -58,6 +58,6 @@ export const variableProviderVariableGetters: {
   [TemplateVariableType.text]: getTextVariableValue,
   [TemplateVariableType.number]: getNumberVariableValue,
   [TemplateVariableType.natural_date]: getNaturalDateVariableValue,
-  [TemplateVariableType.directory]: getDirectoryVariableValue,
+  [TemplateVariableType.folder]: getFolderVariableValue,
 };
 
