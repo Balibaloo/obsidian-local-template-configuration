@@ -77,7 +77,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, configAbstractF
       return;
     }
 
-    const templateNote = this.app.vault.getAbstractFileByPath(templatePath);
+    const templateNote = this.app.vault.getAbstractFileByPath(templatePath+".md");
     if (!(templateNote instanceof TFile)) {
       new Notice("Error: Template does not exist: " + templatePath);
       return;
@@ -121,7 +121,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, configAbstractF
   }
 
   const newNote = await this.app.vault.create(
-    newNotePathNameResolved.endsWith(".md") ? newNotePathNameResolved : newNotePathNameResolved + ".md",
+    newNotePathNameResolved+".md",
     newNoteContents
   );
 

@@ -124,7 +124,7 @@ export function resolvePathRelativeToAbstractFile(path: string | void, projectFi
   if (newNoteFolderPath.endsWith("/"))
     return newNoteFolderPath.slice(0, -1);
 
-  return newNoteFolderPath;
+  return newNoteFolderPath.replace(new RegExp("\.md$",), "");
 }
 
 // https://stackoverflow.com/questions/27936772/how-to-deep-merge-instead-of-shallow-merge
