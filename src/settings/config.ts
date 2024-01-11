@@ -24,8 +24,8 @@ export class PTSettingTab extends PluginSettingTab {
     containerEl.empty();
 
     new Setting(containerEl)
-      .setName('Config note path')
-      .setDesc('Path to plugin configuration note')
+      .setName('Global Configuration Note Path')
+      .setDesc('Path to global configuration note')
       .addText(text => 
         
         text.setPlaceholder('Path')
