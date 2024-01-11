@@ -60,7 +60,7 @@ export default class PTPlugin extends Plugin {
 
 		this.addCommand({
 			id: 'run-global-intent',
-			name: 'Chose global intent',
+			name: 'Run global intent',
 			callback: async () => {
 
 				
@@ -78,7 +78,7 @@ export default class PTPlugin extends Plugin {
 
 		this.addCommand({
 			id: 'run-local-intent',
-			name: 'Chose local intent',
+			name: 'Run local intent',
 			callback: async () => {
 
 				const configNote = await (this.app as any).plugins.plugins["picker"].api_getNote(this.settings.configNoteFilterSetName)
