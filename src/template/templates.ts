@@ -8,10 +8,17 @@ export async function getIntentTemplate(intent: Intent): Promise<Template | null
     return null;
   }
   
-  if (intent.templates.length == 1)
-    return intent.templates[0];
+	const shownTemplates = intent.templates.filter(t => !t.hide);
+	if (shownTemplates.length == 0) {
+		new Notice(`Error: All ${intent.name} templates are hidden`);
+		return null;
+	}
 
-  const selectedTemplate = await runTemplateSelectModal(this.app, intent.templates);
+	if (shownTemplates.length == 1) {
+		return shownTemplates[0];
+	}
+
+  const selectedTemplate = await runTemplateSelectModal(this.app, shownTemplates);
   if (!selectedTemplate){
     return null;
   }

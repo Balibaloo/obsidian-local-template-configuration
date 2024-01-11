@@ -31,7 +31,21 @@ class IntentSuggestModal extends FuzzySuggestModal<Intent> {
 
 export async function choseIntent(intents:Intent[]):Promise<Intent> {
   return new Promise((resolve,rejects) => {
-    new IntentSuggestModal(this.app, intents, resolve).open();
+    if (intents.length === 0) {
+      new Notice(`Error: No intents found`);
+      return rejects("No intents found");
+    }
+
+    const shownIntents = intents.filter(i => !i.hide);
+    if (shownIntents.length === 0) {
+      new Notice(`Error: All intents are hidden`);
+      return rejects("All intents are hidden");
+    }
+
+    if (shownIntents.length === 1) {
+      return resolve(shownIntents[0]);
+    }
+    new IntentSuggestModal(this.app, shownIntents, resolve).open();
   })
 }
 
