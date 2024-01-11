@@ -21,11 +21,11 @@ export default class PTPlugin extends Plugin {
 
 		this.addCommand({
 			id: 'reload-config',
-			name: 'Reload config',
+			name: 'Reload global configuration note',
 			callback: async () => {
 				const pluginConfigNote = this.app.vault.getAbstractFileByPath(this.settings.pluginConfigNote);
 				if (!(pluginConfigNote instanceof TFile)) {
-					new Notice(`Error: Please add a configuration note for ${PLUGIN_LONG_NAME}`);
+					new Notice(`Error: Please add a global configuration note for ${PLUGIN_LONG_NAME}`);
 					this.settings.pluginConfigured = false;
 					return this.saveSettings();
 				}
