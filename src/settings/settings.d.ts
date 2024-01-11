@@ -5,4 +5,5 @@ export interface PTSettings {
 	pluginConfigured: boolean;
 	intents: Intent[];
 	configNoteFilterSetName: string;
+	selectionDelimiters: string;
 }

@@ -56,7 +56,8 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, configAbstractF
   let variablesToGather = intent.newNoteProperties.variables;
 
   const selection:string = plugin.app.workspace.activeEditor?.editor?.getSelection() ?? "";
-  const selectionSplit = selection.split(new RegExp("[,|]","g")).map(v=>v.trim());
+  const selectionSplit = selection.split(new RegExp(`[${plugin.settings.selectionDelimiters}]`,"g"))
+    .map(v=>v.trim());
   const usingSelection:boolean = selection !== "";
 
 

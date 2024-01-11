@@ -7,7 +7,8 @@ export const DEFAULT_SETTINGS: PTSettings = {
   pluginConfigNote: '',
   pluginConfigured: false,
   intents: [],
-  configNoteFilterSetName: "default"
+  configNoteFilterSetName: "default",
+  selectionDelimiters: ",|",
 }
 
 
@@ -50,5 +51,17 @@ export class PTSettingTab extends PluginSettingTab {
             await this.plugin.saveSettings();
           })
         })
+
+    new Setting(containerEl)
+      .setName("Selection Delimiters")
+      .setDesc(`The set of characters that will be used to split the selection into separate values. Used with the "use_selection" variable property.`)
+      .addText(text => {
+        text.setValue(this.plugin.settings.selectionDelimiters)
+        text.onChange(async v => {
+          if (v === "") return;
+          this.plugin.settings.selectionDelimiters = v;
+          await this.plugin.saveSettings();
+        })
+      })
   }
 }
