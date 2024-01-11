@@ -54,6 +54,9 @@ export function getVariablesFromFM(fm: any) {
     const baseVariables: TemplateVariable = {
       name: v.name,
       type: type,
+      hide: typeof v?.hide === "undefined" ? undefined :
+        typeof v?.hide === "boolean" ? v?.hide :
+          Boolean(v?.hide?.[0]?.toUpperCase() === "T"),
       required: typeof v?.required === "undefined" ? undefined :
         typeof v?.required === "boolean" ? v?.required :
           Boolean(v?.required?.[0]?.toUpperCase() === "T"),

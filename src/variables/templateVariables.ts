@@ -9,6 +9,7 @@ export enum ReservedVariableName {
 export type TemplateVariable = {
   name: string,
   type: TemplateVariableType,
+  hide: boolean,
   required?: boolean,
   use_selection?: boolean,
   initial?: string,

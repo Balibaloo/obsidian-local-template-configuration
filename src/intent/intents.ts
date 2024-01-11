@@ -88,6 +88,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, configAbstractF
     intent.newNoteProperties = namedObjectDeepMerge(intent.newNoteProperties, chosenTemplate.newNoteProperties);
   }
 
+  variablesToGather = variablesToGather.filter(v => !v.hide);
   const variablesToSelect = variablesToGather.filter(v => v.use_selection);
   const selectionVariables = variablesToSelect.reduce((acc:any, variable:TemplateVariable, index) => {
     acc[variable.name] = selectionSplit[index] ?? "";
