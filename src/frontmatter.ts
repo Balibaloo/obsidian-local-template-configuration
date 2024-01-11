@@ -70,7 +70,7 @@ export async function getFrontmatter(app: App, note: TFile, visited: string[]| n
       visited = visited || new Array<string>();
 
       // Resolve note import contents
-      const importPathsConfig: string[] | string[][] = [fm.intent_import || []];
+      const importPathsConfig: string[] | string[][] = [fm.intents_import || []];
       const importsPaths: string[] = importPathsConfig.flat();
 
       let fmImports = {}
