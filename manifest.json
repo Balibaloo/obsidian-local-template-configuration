@@ -1,9 +1,9 @@
 {
-	"id": "project-templater",
-	"name": "Project Templater",
-	"version": "0.0.0",
+	"id": "local-template-configuration",
+	"name": "Local Template Configuration",
+	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Project and project note templating",
+	"description": "Configure note templating locally in frontmatter and insert values using prompts",
 	"author": "Roman Kubiv",
 	"authorUrl": "https://roman.kubiv.com",
 	"fundingUrl": "buymeacoffee.com/romankubiv",
