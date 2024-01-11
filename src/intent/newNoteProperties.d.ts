@@ -1,4 +1,4 @@
-import { TemplateVariable } from "..";
+import { TemplateVariable } from "../variables";
 
 export type hasNewNoteProperties = {
 	newNoteProperties: NewNoteProperties;
