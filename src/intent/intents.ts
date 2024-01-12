@@ -36,7 +36,7 @@ export async function choseIntent(intents:Intent[]):Promise<Intent> {
       return rejects("No intents found");
     }
 
-    const shownIntents = intents.filter(i => !i.hide);
+    const shownIntents = intents.filter(i => !i.disable);
     if (shownIntents.length === 0) {
       new Notice(`Error: All intents are hidden`);
       return rejects("All intents are hidden");
@@ -89,7 +89,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, configAbstractF
     intent.newNoteProperties = namedObjectDeepMerge(intent.newNoteProperties, chosenTemplate.newNoteProperties);
   }
 
-  variablesToGather = variablesToGather.filter(v => !v.hide);
+  variablesToGather = variablesToGather.filter(v => !v.disable);
   const variablesToSelect = variablesToGather.filter(v => v.use_selection);
   const selectionVariables = variablesToSelect.reduce((acc:any, variable:TemplateVariable, index) => {
     acc[variable.name] = selectionSplit[index] ?? "";

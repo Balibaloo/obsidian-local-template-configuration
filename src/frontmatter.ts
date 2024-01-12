@@ -13,9 +13,9 @@ export function getIntentsFromFM(fm: FrontMatterCache): Intent[] {
   const newIntents: Intent[] = (fm?.intents || []).map((iFm: any): Intent => {
     return {
       name: iFm.name,
-      hide: typeof iFm?.hide === "undefined" ? undefined :
-      typeof iFm?.hide === "boolean" ? iFm?.hide :
-        Boolean(iFm?.hide?.[0]?.toUpperCase() === "T"),
+      disable: typeof iFm?.disable === "undefined" ? undefined :
+      typeof iFm?.disable === "boolean" ? iFm?.disable :
+        Boolean(iFm?.disable?.[0]?.toUpperCase() === "T"),
       templates: getFMTemplates(iFm),
       newNoteProperties: getNewNoteProperties(iFm),
     }
@@ -28,9 +28,9 @@ function getFMTemplates(fm: any): Template[] {
   return (fm?.templates || []).map((tFm: any): Template =>
   ({
     name: tFm.name,
-    hide: typeof tFm?.hide === "undefined" ? undefined :
-    typeof tFm?.hide === "boolean" ? tFm?.hide :
-      Boolean(tFm?.hide?.[0]?.toUpperCase() === "T"),
+    disable: typeof tFm?.disable === "undefined" ? undefined :
+    typeof tFm?.disable === "boolean" ? tFm?.disable :
+      Boolean(tFm?.disable?.[0]?.toUpperCase() === "T"),
     path: tFm.path,
     newNoteProperties: getNewNoteProperties(tFm),
   })
@@ -54,9 +54,9 @@ export function getVariablesFromFM(fm: any) {
     const baseVariables: TemplateVariable = {
       name: v.name,
       type: type,
-      hide: typeof v?.hide === "undefined" ? undefined :
-        typeof v?.hide === "boolean" ? v?.hide :
-          Boolean(v?.hide?.[0]?.toUpperCase() === "T"),
+      disable: typeof v?.disable === "undefined" ? undefined :
+        typeof v?.disable === "boolean" ? v?.disable :
+          Boolean(v?.disable?.[0]?.toUpperCase() === "T"),
       required: typeof v?.required === "undefined" ? undefined :
         typeof v?.required === "boolean" ? v?.required :
           Boolean(v?.required?.[0]?.toUpperCase() === "T"),
