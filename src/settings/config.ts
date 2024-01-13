@@ -32,8 +32,7 @@ export class PTSettingTab extends PluginSettingTab {
         text.setPlaceholder('Path')
         .setValue(this.plugin.settings.pluginConfigNote)
         .onChange(async (value) => {
-          this.plugin.settings.pluginConfigNote = value + !value.endsWith(".md") ? ".md" : "";
-
+          this.plugin.settings.pluginConfigNote = value + (!value.endsWith(".md") ? ".md" : "");
           await this.plugin.saveSettings();
         })
 
