@@ -1,9 +1,9 @@
 import { Intent } from "..";
 
 export interface PTSettings {
-	pluginConfigNote: string;
+	globalIntentsNotePath: string;
 	pluginConfigured: boolean;
 	intents: Intent[];
-	configNoteFilterSetName: string;
+	intentNotesFilterSetName: string;
 	selectionDelimiters: string;
 }

@@ -50,7 +50,7 @@ export async function choseIntent(intents:Intent[]):Promise<Intent> {
 }
 
 
-export async function runIntent(plugin:PTPlugin, intent: Intent, configAbstractFile:TAbstractFile) {
+export async function runIntent(plugin:PTPlugin, intent: Intent, abstractFileOfIntent:TAbstractFile) {
   console.log("Running", intent);
 
   let variablesToGather = intent.newNoteProperties.variables;
@@ -72,9 +72,9 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, configAbstractF
     }
 
     // get template
-    const templatePath: string | void = resolvePathRelativeToAbstractFile(chosenTemplate.path, configAbstractFile);
+    const templatePath: string | void = resolvePathRelativeToAbstractFile(chosenTemplate.path, abstractFileOfIntent);
     if (!templatePath) {
-      new Notice(`Error: Please configure a valid path for the ${intent.name} - ${chosenTemplate.name} template`);
+      new Notice(`Error: Invalid path for the ${chosenTemplate.name} template of the ${intent.name} intent`);
       return;
     }
 
@@ -110,7 +110,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, configAbstractF
   newNoteContents = getReplacedVariablesText(newNoteContents, gatheredValues);
 
   const newNotePathName = getNewNotePathName(intent, gatheredValues);
-  const newNotePathNameResolved = resolvePathRelativeToAbstractFile(newNotePathName, configAbstractFile);
+  const newNotePathNameResolved = resolvePathRelativeToAbstractFile(newNotePathName, abstractFileOfIntent);
   if (!newNotePathNameResolved){
     new Notice(`Error: Failed to determine ${intent.name} output path`);
     return;

@@ -20,18 +20,18 @@ export default class PTPlugin extends Plugin {
 		this.addSettingTab(new PTSettingTab(this.app, this));
 
 		this.addCommand({
-			id: 'reload-config',
-			name: 'Reload global configuration note',
+			id: 'reload-global-intents',
+			name: 'Reload global intents',
 			callback: async () => {
-				const pluginConfigNote = this.app.vault.getAbstractFileByPath(this.settings.pluginConfigNote);
-				if (!(pluginConfigNote instanceof TFile)) {
-					new Notice(`Error: Please add a global configuration note for ${PLUGIN_LONG_NAME}`);
+				const globalIntentsNote = this.app.vault.getAbstractFileByPath(this.settings.globalIntentsNotePath);
+				if (!(globalIntentsNote instanceof TFile)) {
+					new Notice(`Error: Please configure the note containing global intents for ${PLUGIN_LONG_NAME}`);
 					this.settings.pluginConfigured = false;
 					return this.saveSettings();
 				}
 
 				try {
-					const fm = await getFrontmatter(this.app, pluginConfigNote);
+					const fm = await getFrontmatter(this.app, globalIntentsNote);
 
 					this.settings.intents = getIntentsFromFM(fm);
 					this.settings.intents.forEach(i =>
@@ -81,14 +81,14 @@ export default class PTPlugin extends Plugin {
 			name: 'Run local intent',
 			callback: async () => {
 
-				const configNote = await (this.app as any).plugins.plugins["picker"].api_getNote(this.settings.configNoteFilterSetName)
-				if (!(configNote instanceof TFile)) {
-					new Notice("Error: Configuration note is not a file");
-					console.log("Project note", configNote);
+				const intentNote = await (this.app as any).plugins.plugins["picker"].api_getNote(this.settings.intentNotesFilterSetName);
+				if (!(intentNote instanceof TFile)) {
+					new Notice("Error: Note does not exist");
+					console.error("Intent Note", intentNote);
 					return;
 				}
 
-				const noteIntents = getIntentsFromFM(await getFrontmatter(this.app, configNote));
+				const noteIntents = getIntentsFromFM(await getFrontmatter(this.app, intentNote));
 
 				const chosenIntent = await choseIntent(noteIntents);
 				if (!choseIntent) 
@@ -108,25 +108,24 @@ export default class PTPlugin extends Plugin {
 			id: commandID,
 			name: `Create a new ${intent.name} note`,
 			callback: async () => {
-				const projectNote = await (this.app as any).plugins.plugins["picker"].api_getNote(this.settings.configNoteFilterSetName)
-				if (!(projectNote instanceof TFile)) {
-					new Notice("Error: Configuration note is not a file");
-					console.log("Project note", projectNote);
+				const intentNote = await (this.app as any).plugins.plugins["picker"].api_getNote(this.settings.intentNotesFilterSetName);
+				if (!(intentNote instanceof TFile)) {
+					new Notice("Error: Note does not exist");
+					console.error("Intent Note", intentNote);
 					return;
 				}
 
-				// include project config
 				try {
-					const projectIntents = getIntentsFromFM(await getFrontmatter(this.app, projectNote));
-					const settingsWithProjectIntents = namedObjectDeepMerge(this.settings.intents, projectIntents) as Intent[];
-					const chosenIntent = settingsWithProjectIntents.find(i => i.name === intent.name);
+					const noteIntents = getIntentsFromFM(await getFrontmatter(this.app, intentNote));
+					const noteIntentsWithGlobalIntents = namedObjectDeepMerge(this.settings.intents, noteIntents) as Intent[];
+					const chosenIntent = noteIntentsWithGlobalIntents.find(i => i.name === intent.name);
 
 					if (!chosenIntent) {
-						new Notice(`Error: Failed to get ${intent.name} project intent`);
+						new Notice(`Error: Failed to get ${intent.name} intent`);
 						return;
 					}
 
-					runIntent(this, chosenIntent, projectNote);
+					runIntent(this, chosenIntent, intentNote);
 				} catch (e) {
 					new Notice(e);
 				}

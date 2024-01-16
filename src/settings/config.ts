@@ -4,10 +4,10 @@ import PTPlugin from "../main";
 
 
 export const DEFAULT_SETTINGS: PTSettings = {
-  pluginConfigNote: '',
+  globalIntentsNotePath: '',
   pluginConfigured: false,
   intents: [],
-  configNoteFilterSetName: "default",
+  intentNotesFilterSetName: "default",
   selectionDelimiters: ",|",
 }
 
@@ -25,14 +25,14 @@ export class PTSettingTab extends PluginSettingTab {
     containerEl.empty();
 
     new Setting(containerEl)
-      .setName('Global Configuration Note Path')
-      .setDesc('Path to global configuration note')
+      .setName('Global Intents Note Path')
+      .setDesc('Path to note containing global intents')
       .addText(text => 
         
         text.setPlaceholder('Path')
-        .setValue(this.plugin.settings.pluginConfigNote)
+        .setValue(this.plugin.settings.globalIntentsNotePath)
         .onChange(async (value) => {
-          this.plugin.settings.pluginConfigNote = value + (!value.endsWith(".md") ? ".md" : "");
+          this.plugin.settings.globalIntentsNotePath = value + (!value.endsWith(".md") ? ".md" : "");
           await this.plugin.saveSettings();
         })
 
@@ -41,12 +41,12 @@ export class PTSettingTab extends PluginSettingTab {
     
 
     new Setting(containerEl)
-        .setName("Configuration Note Filter Set Name")
-        .setDesc("The name of the Note Filter Set in the Picker plugin that defines a Configuration Note")
+        .setName("Intent Note Filter Set Name")
+        .setDesc("The name of the Picker File Filter Set used to display a list of notes with intents.")
         .addText(text => {
-          text.setValue(this.plugin.settings.configNoteFilterSetName)
+          text.setValue(this.plugin.settings.intentNotesFilterSetName)
           text.onChange(async v => {
-            this.plugin.settings.configNoteFilterSetName = v;
+            this.plugin.settings.intentNotesFilterSetName = v;
             await this.plugin.saveSettings();
           })
         })
