@@ -108,7 +108,7 @@ export default class PTPlugin extends Plugin {
 
 		this.addCommand({
 			id: commandID,
-			name: `Create a new ${intent.name} note`,
+			name: `Create local ${intent.name} note`,
 			callback: async () => {
 				const intentNote = await (this.app as any).plugins.plugins["picker"].api_getNote(this.settings.intentNotesFilterSetName);
 				if (!(intentNote instanceof TFile)) {
