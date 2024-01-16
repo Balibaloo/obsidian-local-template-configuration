@@ -141,8 +141,11 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, abstractFileOfI
 
 
 function getReplacedVariablesText(text: string, values:{[key: string]: string}): string{
+  function escapeRegExp(str:string) {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
   return Object.keys(values).reduce((text, varName)=>
-    text.replaceAll(new RegExp(`\{\{\s*${varName}\s*\}\}`, "g"), values[varName])
+    text.replaceAll(new RegExp(`\\{\\{\\s*${escapeRegExp(varName)}\\s*\\}\\}`, "g"), values[varName])
     , text);
 }
 
