@@ -102,7 +102,9 @@ export default class PTPlugin extends Plugin {
 	}
 
 	createCommandForIntent(intent: Intent) {
-		const commandID = `create-${intent.name.toLowerCase().replaceAll(/\s/g, "-")}`;
+		const normalizedIntentName = intent.name.toLowerCase()
+			.replaceAll(/[^\w\s]/g,"").replace(/\s+/g,' ').replace(/\s/g,'-');
+		const commandID = `create-${normalizedIntentName}`;
 
 		this.addCommand({
 			id: commandID,
