@@ -18,11 +18,17 @@ import {
   getFolderVariableValue,
   parseFolderVariableFrontmatter
 } from "./folder";
+import { 
+  TemplateVariableVariables_Note, 
+  getNoteVariableValue, 
+  parseNoteVariableFrontmatter 
+} from "./note";
 
 export enum TemplateVariableType {
   text = "text",
   number = "number",
   natural_date = "natural_date",
+  note = "note",
   folder = "folder",
 }
 
@@ -38,6 +44,7 @@ export type TemplateVariableVariablesLut = {
     [TemplateVariableType.text]: TemplateVariableVariables_Text,
     [TemplateVariableType.number]: TemplateVariableVariables_Number,
     [TemplateVariableType.natural_date]: TemplateVariableVariables_NaturalDate,
+    [TemplateVariableType.note]: TemplateVariableVariables_Note,
     [TemplateVariableType.folder]: TemplateVariableVariables_Folder,
   }[T]
 };
@@ -49,6 +56,7 @@ export const variableProviderVariableParsers: {
   [TemplateVariableType.text]: parseTextVariableFrontmatter,
   [TemplateVariableType.number]: parseNumberVariableFrontmatter,
   [TemplateVariableType.natural_date]: parseNaturalDateVariableFrontmatter,
+  [TemplateVariableType.note]: parseNoteVariableFrontmatter,
   [TemplateVariableType.folder]: parseFolderVariableFrontmatter,
 };
 
@@ -58,6 +66,7 @@ export const variableProviderVariableGetters: {
   [TemplateVariableType.text]: getTextVariableValue,
   [TemplateVariableType.number]: getNumberVariableValue,
   [TemplateVariableType.natural_date]: getNaturalDateVariableValue,
+  [TemplateVariableType.note]: getNoteVariableValue,
   [TemplateVariableType.folder]: getFolderVariableValue,
 };
 
