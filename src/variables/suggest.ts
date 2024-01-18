@@ -24,7 +24,7 @@ export class GenericInputPrompt extends Modal {
 	): Promise<string> {
 		const newPromptModal = new GenericInputPrompt(
 			app,
-			variable.name,
+			variable.prompt || variable.name,
 			variable.placeholder,
 			variable.initial,
 			variable.required,

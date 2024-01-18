@@ -65,6 +65,7 @@ export function getVariablesFromFM(fm: any) {
           Boolean(v?.use_selection?.[0]?.toUpperCase() === "T"),
       initial: v.initial,
       placeholder: v.placeholder,
+      prompt: v.prompt,
     }
 
     return Object.assign(baseVariables, variableProviderVariableParsers[type](v))

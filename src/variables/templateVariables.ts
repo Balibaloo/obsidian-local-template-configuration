@@ -14,6 +14,7 @@ export type TemplateVariable = {
   use_selection?: boolean,
   initial?: string,
   placeholder?: string,
+  prompt?: string,
 } & TemplateVariableVariables
 
 
