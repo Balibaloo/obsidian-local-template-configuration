@@ -9,6 +9,13 @@ import { ReservedVariableName } from './variables/templateVariables';
 
 const PLUGIN_LONG_NAME = "Local Template Configuration";
 
+const DEFAULT_VARIABLES = [{
+	name: ReservedVariableName.new_note_name,
+	type: TemplateVariableType.text,
+	required: true,
+	use_selection: true,
+}]
+
 export default class PTPlugin extends Plugin {
 	settings: PTSettings;
 
@@ -36,12 +43,7 @@ export default class PTPlugin extends Plugin {
 					this.settings.intents = getIntentsFromFM(fm);
 					this.settings.intents.forEach(i =>
 						i.newNoteProperties.variables = namedObjectDeepMerge(
-							[{
-								name: ReservedVariableName.new_note_name,
-								type: TemplateVariableType.text,
-								required: true,
-								use_selection: true,
-							}],
+							DEFAULT_VARIABLES,
 							i.newNoteProperties.variables
 						))
 					this.settings.intents.forEach((intent) => {
@@ -89,6 +91,11 @@ export default class PTPlugin extends Plugin {
 				}
 
 				const noteIntents = getIntentsFromFM(await getFrontmatter(this.app, intentNote));
+				noteIntents.forEach(i =>
+					i.newNoteProperties.variables = namedObjectDeepMerge(
+						DEFAULT_VARIABLES,
+						i.newNoteProperties.variables
+					))
 
 				const chosenIntent = await choseIntent(noteIntents);
 				if (!choseIntent) 
