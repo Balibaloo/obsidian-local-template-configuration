@@ -19,7 +19,7 @@ export async function getNumberVariableValue(variable: TemplateVariable&Template
     const placeholderString = variable.placeholder || minString + variable.name + maxString;
 
     try {
-      existingValue = await GenericInputPrompt.Prompt(app, variable.name, placeholderString, variable.initial, variable.required,
+      existingValue = await GenericInputPrompt.Prompt(app, variable,
         text => validateNumber(variable, text, false)
         , `Error: Please enter a number` + ((variable.min || variable.max) ? `in the range ${minString} x ${maxString}` : "")
       );

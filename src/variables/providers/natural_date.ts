@@ -11,7 +11,7 @@ export const parseNaturalDateVariableFrontmatter = (fm: any) => ({
 export async function getNaturalDateVariableValue(variable: TemplateVariable&TemplateVariableVariables_NaturalDate, existingValue:string): Promise<string>{
   if (!validateNaturalDate(variable, existingValue, false)) {
     try {
-      existingValue = await GenericInputPrompt.Prompt(app, variable.name, variable.placeholder, variable.initial, variable.required,
+      existingValue = await GenericInputPrompt.Prompt(app, variable,
         text => validateNaturalDate(variable, text, false),
         "Error: Please enter a valid natural language date");
     } catch (e){

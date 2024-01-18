@@ -1,5 +1,6 @@
 // https://github.com/chhoumann/quickadd/blob/master/src/gui/GenericInputPrompt/GenericInputPrompt.ts#L24
 import { App, ButtonComponent, Modal, Notice, TextComponent } from "obsidian";
+import { TemplateVariable } from "./templateVariables";
 
 
 export class GenericInputPrompt extends Modal {
@@ -17,19 +18,16 @@ export class GenericInputPrompt extends Modal {
 
 	public static Prompt(
 		app: App,
-		header: string,
-		placeholder?: string,
-		value?: string,
-		required?: boolean,
+		variable: TemplateVariable,
     validator?: (text:string) => boolean,
     validationErrorMessage?: string,
 	): Promise<string> {
 		const newPromptModal = new GenericInputPrompt(
 			app,
-			header,
-			placeholder,
-			value,
-			required,
+			variable.name,
+			variable.placeholder,
+			variable.initial,
+			variable.required,
       validator,
       validationErrorMessage,
 		);
