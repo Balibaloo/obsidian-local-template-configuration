@@ -11,3 +11,7 @@
   border-color: var(--required) !important;
   border-width: revert !important;
 }
+
+.modal-description {
+  padding-bottom: 40px;
+}

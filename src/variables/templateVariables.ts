@@ -15,6 +15,7 @@ export type TemplateVariable = {
   initial?: string,
   placeholder?: string,
   prompt?: string,
+  description?: string,
 } & TemplateVariableVariables
 
 

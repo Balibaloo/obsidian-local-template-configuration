@@ -25,6 +25,7 @@ export class GenericInputPrompt extends Modal {
 		const newPromptModal = new GenericInputPrompt(
 			app,
 			variable.prompt || variable.name,
+			variable.description,
 			variable.placeholder,
 			variable.initial,
 			variable.required,
@@ -37,6 +38,7 @@ export class GenericInputPrompt extends Modal {
 	protected constructor(
 		app: App,
 		private header: string,
+		private description?: string,
 		placeholder?: string,
 		value?: string,
 		required?: boolean,
@@ -61,7 +63,6 @@ export class GenericInputPrompt extends Modal {
 	}
 
 	private display() {
-		this.containerEl.addClass("quickAddModal", "qaInputPrompt");
 		this.contentEl.empty();
 		this.titleEl.textContent = this.header;
 
@@ -69,7 +70,11 @@ export class GenericInputPrompt extends Modal {
 			this.titleEl.addClass("requiredInputHeader");
 		}
 
+		
 		const mainContentContainer: HTMLDivElement = this.contentEl.createDiv();
+		if (this.description){
+			mainContentContainer.createDiv({text:this.description, cls:"modal-description"});
+		}
 		this.inputComponent = this.createInputField(
 			mainContentContainer,
 			this.input,
