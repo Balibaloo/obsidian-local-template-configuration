@@ -7,8 +7,7 @@ import { TemplateVariableType } from './variables/providers';
 import { ReservedVariableName } from './variables/templateVariables';
 
 
-const PLUGIN_LONG_NAME = "Project Templater";
-const PLUGIN_ACRONYM = "pt";
+const PLUGIN_LONG_NAME = "Local Template Configuration";
 
 export default class PTPlugin extends Plugin {
 	settings: PTSettings;
@@ -24,6 +23,7 @@ export default class PTPlugin extends Plugin {
 			name: 'Reload global intents',
 			callback: async () => {
 				const globalIntentsNote = this.app.vault.getAbstractFileByPath(this.settings.globalIntentsNotePath);
+				console.log("Global intents note", globalIntentsNote);
 				if (!(globalIntentsNote instanceof TFile)) {
 					new Notice(`Error: Please configure the note containing global intents for ${PLUGIN_LONG_NAME}`);
 					this.settings.pluginConfigured = false;
