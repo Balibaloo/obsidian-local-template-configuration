@@ -67,12 +67,6 @@ export default class PTPlugin extends Plugin {
 			id: 'run-global-intent',
 			name: 'Run global intent',
 			callback: async () => {
-
-				
-				// TODO expose intent config to user
-				// const newProjectFolder = (await (this.app as any).plugins.plugins["picker"].api_getDir()) as TFolder;
-				// if (newProjectFolder == null) return;
-				// DOCS paths are relative to chosen folder
 				const chosenIntent = await choseIntent(this.settings.intents);
 				if (!choseIntent) 
 					return;
