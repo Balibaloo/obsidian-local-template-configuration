@@ -129,6 +129,10 @@ export function resolvePathRelativeToAbstractFile(path: string | void, projectFi
   if (newNoteFolderPath.endsWith("/"))
     return newNoteFolderPath.slice(0, -1);
 
+  // Remove leading "/"
+  if (newNoteFolderPath.startsWith("/"))
+    return newNoteFolderPath.slice(1);
+
   return newNoteFolderPath.replace(new RegExp("\.md$",), "");
 }
 
