@@ -4,16 +4,18 @@ import { getFrontmatter, getIntentsFromFM, namedObjectDeepMerge } from './frontm
 import { choseIntent, runIntent } from './intent/intents';
 import { DEFAULT_SETTINGS, PTSettingTab } from './settings/config';
 import { TemplateVariableType } from './variables/providers';
-import { ReservedVariableName } from './variables/templateVariables';
+import { ReservedVariableName, TemplateVariable } from './variables/templateVariables';
 
 
 const PLUGIN_LONG_NAME = "Local Template Configuration";
 
-const DEFAULT_VARIABLES = [{
+const DEFAULT_VARIABLES: TemplateVariable[] = [{
 	name: ReservedVariableName.new_note_name,
 	type: TemplateVariableType.text,
 	required: true,
 	use_selection: true,
+	disable: false,
+	prompt: "New note name",
 }]
 
 export default class PTPlugin extends Plugin {
