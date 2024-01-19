@@ -57,6 +57,7 @@ export default class PTPlugin extends Plugin {
 
 
 				console.log("Loaded intents", this.settings.intents);
+        new Notice(`Success: Loaded ${this.settings.intents.length} intents`);
 				this.settings.pluginConfigured = true;
 				return this.saveSettings();
 			}
