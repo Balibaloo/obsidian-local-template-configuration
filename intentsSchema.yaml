@@ -2,7 +2,7 @@ intents_imported_from: "'text'|['text']"
 intents_to:
   - make_a: "text"
     is_disabled: "true/false"
-    output_pathname: "text"
+    outputs_to_pathname: "text"
     output_pathname_template: "text"
     with_variables:
       - called: "text"
@@ -18,7 +18,7 @@ intents_to:
       - called: "text"
         is_disabled: "true/false"
         at_path: "text"
-        output_pathname: "text"
+        outputs_to_pathname: "text"
         output_pathname_template: "text"
         with_variables:
           - called: "text"
