@@ -4,7 +4,7 @@ intents_to:
     is_disabled: "true/false"
     output_pathname: "text"
     output_pathname_template: "text"
-    variables:
+    with_variables:
       - called: "text"
         of_type: "text"
         is_required: "true/false"
@@ -20,7 +20,7 @@ intents_to:
         path: "text"
         output_pathname: "text"
         output_pathname_template: "text"
-        variables:
+        with_variables:
           - called: "text"
             of_type: "text"
             is_required: "true/false"

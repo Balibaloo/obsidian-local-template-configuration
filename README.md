@@ -110,7 +110,7 @@ The properties of new notes are:
 | ---- | ---- | ---- | ---- |
 | `output_pathname` | No | A note called `new_note_name` in the same folder as the context note | The output location and name of the new note |
 | `output_pathname_template` | No | `./{{new_note_name}}` is the template representation of the above | An alternative for `output_pathname` that allows [using variable values](#using-variable-values). The example below uses the [new_note_name](#new_note_name) variable to format the name of the new note |
-| `variables` | No |  | A list of [variables](#variables) |
+| `with_variables` | No |  | A list of [variables](#variables) |
 | `is_disabled` | No | false | see [disabling intents, templates and variables](#disabling-intents-templates-and-variables) |
 
 
@@ -124,7 +124,7 @@ Example:
 intents_to:
   - make_a: task ✅
     output_pathname_template: ./✔ tasks/✅ {{new_note_name}}
-    variables:
+    with_variables:
       - called: deadline
         of_type: natural_date
     templates:
@@ -133,14 +133,14 @@ intents_to:
       - called: graded 🎓
         path: Templates/graded task template.md
         output_pathname_template: ./✔ tasks/🎓 {{new_note_name}}
-        variables:
+        with_variables:
           - called: date_released
             of_type: natural_date
           - called: percent
       - called: worksheet 📃
         path: Templates/worksheet task template.md
         output_pathname_template: "./📃 worksheets/📃 Worksheet #{{worksheet_number}} - {{new_note_name}}"
-        variables:
+        with_variables:
           - called: worksheet_number
             of_type: number
             min: 1
@@ -177,7 +177,7 @@ Text is the default variable type.
 Example:
 ```yaml
 ---
-variables:
+with_variables:
   - called: word_starting_with_auto
     of_type: text
     regex: ^auto
@@ -196,7 +196,7 @@ Any number including integers and floats.
 Example:
 ```yaml
 ---
-variables:
+with_variables:
   - called: a_number
     of_type: number
     min: -10.8
@@ -217,7 +217,7 @@ A natural date provided the [natural language dates](https://github.com/argenos/
 Example:
 ```yaml
 ---
-variables:
+with_variables:
   - called: some_date
     of_type: natural_date
     after: yesterday # today or later
@@ -236,7 +236,7 @@ The Picker plugin takes the name of the filter set (`note_filter_set_name`) to d
 Example:
 ```yaml
 ---
-variables:
+with_variables:
   - called: some_note
     of_type: note
 	note_filter_set_name: maps of content
@@ -259,7 +259,7 @@ The Picker plugin takes the name of the filter set (`folder_filter_set_name`) to
 Example:
 ```yaml
 ---
-variables:
+with_variables:
   - called: a_project_folder
     of_type: folder
     root_folder: "/🏗 projects"
@@ -396,7 +396,7 @@ Chose a folder and place a task in its own folder in that folder.
 ---
 intents_to:
   - make_a: task
-    variables:
+    with_variables:
       - called: output_folder
         is_required: true
         of_type: folder
@@ -439,7 +439,7 @@ This intent disables `new_note_name` and replaces it with a `new_project_name` v
 ---
 intents_to:
   - make_a: project
-    variables:
+    with_variables:
       - called: new_note_name
         is_disabled: true
       - called: new_project_name
@@ -477,7 +477,7 @@ This intent disables `new_note_name` and replaces it with a `new_project_name` v
 ---
 intents_to:
   - make_a: project
-    variables:
+    with_variables:
       - called: new_note_name
         is_disabled: true
       - called: new_project_name
