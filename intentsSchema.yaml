@@ -6,7 +6,7 @@ intents_to:
     output_pathname_template: "text"
     variables:
       - called: "text"
-        type: "text"
+        of_type: "text"
         required: "true/false"
         prompt: "text"
         description: "text"
@@ -22,7 +22,7 @@ intents_to:
         output_pathname_template: "text"
         variables:
           - called: "text"
-            type: "text"
+            of_type: "text"
             required: "true/false"
             prompt: "text"
             description: "text"

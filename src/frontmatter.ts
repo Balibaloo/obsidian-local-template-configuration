@@ -48,7 +48,7 @@ function getNewNoteProperties(fm: any): NewNoteProperties {
 
 export function getVariablesFromFM(fm: any) {
   return (fm?.variables || []).map((v: any): TemplateVariable => {
-    const type: TemplateVariableType = TemplateVariableType[v.type as keyof typeof TemplateVariableType]
+    const type: TemplateVariableType = TemplateVariableType[v.of_type as keyof typeof TemplateVariableType]
       || TemplateVariableType.text;
 
     const baseVariables: TemplateVariable = {

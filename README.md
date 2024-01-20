@@ -126,7 +126,7 @@ intents_to:
     output_pathname_template: ./✔ tasks/✅ {{new_note_name}}
     variables:
       - called: deadline
-        type: natural_date
+        of_type: natural_date
     templates:
       - called: default ✅
         path: Templates/task template.md
@@ -135,14 +135,14 @@ intents_to:
         output_pathname_template: ./✔ tasks/🎓 {{new_note_name}}
         variables:
           - called: date_released
-            type: natural_date
+            of_type: natural_date
           - called: percent
       - called: worksheet 📃
         path: Templates/worksheet task template.md
         output_pathname_template: "./📃 worksheets/📃 Worksheet #{{worksheet_number}} - {{new_note_name}}"
         variables:
           - called: worksheet_number
-            type: number
+            of_type: number
             min: 1
 ---
 ```
@@ -153,7 +153,7 @@ There are multiple types of variables but all variables contain a common set of 
 | property name | required | Default | description |
 | ---- | ---- | ---- | ---- |
 | `called` | Yes |  | The name of the variable, used when inserting values into templates. see [using variable values](#using-variable-values). <br>For the purpose of demonstration this property uses lowercase and underscores instead of spaces but it can contain any characters eg emojis. |
-| `type` | No | [text](#text) | The type of the variable. See [variable types](#variable-types). |
+| `of_type` | No | [text](#text) | The type of the variable. See [variable types](#variable-types). |
 | `required` | No | false | If `true`, when you enter an invalid value the note creation process will stop and an error message will be shown. |
 | `prompt` | No |  | The text that is displayed when prompting. |
 | `description` | No |  | Text that will be shown bellow the prompt. |
@@ -179,7 +179,7 @@ Example:
 ---
 variables:
   - called: word_starting_with_auto
-    type: text
+    of_type: text
     regex: ^auto
 ---
 ```
@@ -198,7 +198,7 @@ Example:
 ---
 variables:
   - called: a_number
-    type: number
+    of_type: number
     min: -10.8
     max: 11.22
 ---
@@ -219,7 +219,7 @@ Example:
 ---
 variables:
   - called: some_date
-    type: natural_date
+    of_type: natural_date
     after: yesterday # today or later
     before: next year
 ---
@@ -238,7 +238,7 @@ Example:
 ---
 variables:
   - called: some_note
-    type: note
+    of_type: note
 	note_filter_set_name: maps of content
 ---
 ```
@@ -261,7 +261,7 @@ Example:
 ---
 variables:
   - called: a_project_folder
-    type: folder
+    of_type: folder
     root_folder: "/🏗 projects"
 	depth: 1
 	include_roots: false
@@ -399,7 +399,7 @@ intents_to:
     variables:
       - called: output_folder
         required: true
-        type: folder
+        of_type: folder
         root_folder: ✅ tasks
         depth: 1
         include_roots: false
@@ -483,7 +483,7 @@ intents_to:
       - called: new_project_name
       - called: output_folder
         required: true
-        type: folder
+        of_type: folder
         root_folder: 🏗 projects
         depth: 1
         include_roots: false
