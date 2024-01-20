@@ -18,9 +18,9 @@ Example: simple intents
 ```yaml
 ---
 intents_to:
-- name: task ✅
-- name: meeting 🤝
-- name: person 🙋‍♂️
+- make_a: task ✅
+- make_a: meeting 🤝
+- make_a: person 🙋‍♂️
 ---
 ```
 
@@ -72,7 +72,7 @@ Example: intents with templates
 ```yaml
 ---
 intents_to:
-  - name: "task ✅"
+  - make_a: "task ✅"
     templates: 
       - name: "default"
         path: "Templates/task template.md"
@@ -80,7 +80,7 @@ intents_to:
         path: "Templates/graded task template.md"
       - name: "worksheet"
         path: "Templates/worksheet task template.md"
-  - name: "meeting 🤝"
+  - make_a: "meeting 🤝"
     templates: 
       - name: "default"
         path: "Templates/meeting template.md"
@@ -88,7 +88,7 @@ intents_to:
         path: "Templates/project review meeting template.md"
       - name: "standup"
         path: "Templates/standup meeting template.md"
-  - name: "person 🙋‍♂️"
+  - make_a: "person 🙋‍♂️"
     templates: 
       - name: "default"
         path: "Templates/person template.md"
@@ -122,7 +122,7 @@ Example:
 ```yaml
 ---
 intents_to:
-  - name: task ✅
+  - make_a: task ✅
     output_pathname_template: ./✔ tasks/✅ {{new_note_name}}
     variables:
       - name: deadline
@@ -365,7 +365,7 @@ Overwriting properties of imported intents is useful to:
 ```yaml
 ---
 intents_to:
-  - name: task
+  - make_a: task
 ---
 ```
 
@@ -376,7 +376,7 @@ Create an empty note in a folder called `tasks` next to the context note.
 ```yaml
 ---
 intents_to:
-  - name: task
+  - make_a: task
     output_pathname_template: "./tasks/{{new_note_name}}"
 ---
 ```
@@ -386,7 +386,7 @@ Create an empty note in a folder in the root of the vault called `vault tasks`.
 ```yaml
 ---
 intents_to:
-  - name: task
+  - make_a: task
     output_pathname_template: "/vault tasks/{{new_note_name}}"
 ---
 ```
@@ -395,7 +395,7 @@ Chose a folder and place a task in its own folder in that folder.
 ```yaml
 ---
 intents_to:
-  - name: task
+  - make_a: task
     variables:
       - name: output_folder
         required: true
@@ -414,7 +414,7 @@ Adding a simple template.
 ```yaml
 ---
 intents_to:
-  - name: task
+  - make_a: task
     templates:
       - name: simple task
         path: "/path /to /templates folder /simple task template.md"
@@ -425,7 +425,7 @@ Using a template next to a context note.
 ```yaml
 ---
 intents_to:
-  - name: task
+  - make_a: task
     templates:
       - name: simple task
         path: "./simple task template.md"
@@ -438,7 +438,7 @@ This intent disables `new_note_name` and replaces it with a `new_project_name` v
 ```yaml
 ---
 intents_to:
-  - name: project
+  - make_a: project
     variables:
       - name: new_note_name
         disable: true
@@ -456,7 +456,7 @@ Project note template:
 ```yaml
 ---
 intents_to:
-  - name: task
+  - make_a: task
     output_pathname_template: "./tasks/{{new_project_name}}-{{new_note_name}}"
     templates:
       - name: simple task
@@ -476,7 +476,7 @@ This intent disables `new_note_name` and replaces it with a `new_project_name` v
 ```yaml
 ---
 intents_to:
-  - name: project
+  - make_a: project
     variables:
       - name: new_note_name
         disable: true
@@ -499,7 +499,7 @@ Project note template:
 ```yaml
 ---
 intents_to:
-  - name: task
+  - make_a: task
     output_pathname_template: "./tasks/{{new_project_name}}-{{new_note_name}}"
     templates:
       - name: simple task

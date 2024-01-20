@@ -12,7 +12,7 @@ import { TemplateVariableType, variableProviderVariableParsers } from "./variabl
 export function getIntentsFromFM(fm: FrontMatterCache): Intent[] {
   const newIntents: Intent[] = (fm?.intents_to || []).map((iFm: any): Intent => {
     return {
-      name: iFm.name,
+      name: iFm.make_a,
       disable: typeof iFm?.disable === "undefined" ? undefined :
       typeof iFm?.disable === "boolean" ? iFm?.disable :
         Boolean(iFm?.disable?.[0]?.toUpperCase() === "T"),

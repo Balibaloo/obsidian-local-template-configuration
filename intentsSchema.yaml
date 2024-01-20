@@ -1,6 +1,6 @@
 intents_import: "'text'|['text']"
 intents_to:
-  - name: "text"
+  - make_a: "text"
     disable: "true/false"
     output_pathname: "text"
     output_pathname_template: "text"
