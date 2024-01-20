@@ -74,25 +74,25 @@ Example: intents with templates
 intents_to:
   - make_a: "task ✅"
     templates: 
-      - name: "default"
+      - called: "default"
         path: "Templates/task template.md"
-      - name: "graded"
+      - called: "graded"
         path: "Templates/graded task template.md"
-      - name: "worksheet"
+      - called: "worksheet"
         path: "Templates/worksheet task template.md"
   - make_a: "meeting 🤝"
     templates: 
-      - name: "default"
+      - called: "default"
         path: "Templates/meeting template.md"
-      - name: "project review"
+      - called: "project review"
         path: "Templates/project review meeting template.md"
-      - name: "standup"
+      - called: "standup"
         path: "Templates/standup meeting template.md"
   - make_a: "person 🙋‍♂️"
     templates: 
-      - name: "default"
+      - called: "default"
         path: "Templates/person template.md"
-      - name: "work colleague"
+      - called: "work colleague"
         path: "Templates/work colleague person template.md" 
 ---
 ```
@@ -125,23 +125,23 @@ intents_to:
   - make_a: task ✅
     output_pathname_template: ./✔ tasks/✅ {{new_note_name}}
     variables:
-      - name: deadline
+      - called: deadline
         type: natural_date
     templates:
-      - name: default ✅
+      - called: default ✅
         path: Templates/task template.md
-      - name: graded 🎓
+      - called: graded 🎓
         path: Templates/graded task template.md
         output_pathname_template: ./✔ tasks/🎓 {{new_note_name}}
         variables:
-          - name: date_released
+          - called: date_released
             type: natural_date
-          - name: percent
-      - name: worksheet 📃
+          - called: percent
+      - called: worksheet 📃
         path: Templates/worksheet task template.md
         output_pathname_template: "./📃 worksheets/📃 Worksheet #{{worksheet_number}} - {{new_note_name}}"
         variables:
-          - name: worksheet_number
+          - called: worksheet_number
             type: number
             min: 1
 ---
@@ -152,7 +152,7 @@ There are multiple types of variables but all variables contain a common set of 
 
 | property name | required | Default | description |
 | ---- | ---- | ---- | ---- |
-| `name` | Yes |  | Used when inserting values into templates. see [using variable values](#using-variable-values). <br>For the purpose of demonstration this property uses lowercase and underscores instead of spaces but it can contain any characters eg emojis. |
+| `called` | Yes |  | The name of the variable, used when inserting values into templates. see [using variable values](#using-variable-values). <br>For the purpose of demonstration this property uses lowercase and underscores instead of spaces but it can contain any characters eg emojis. |
 | `type` | No | [text](#text) | The type of the variable. See [variable types](#variable-types). |
 | `required` | No | false | If `true`, when you enter an invalid value the note creation process will stop and an error message will be shown. |
 | `prompt` | No |  | The text that is displayed when prompting. |
@@ -178,7 +178,7 @@ Example:
 ```yaml
 ---
 variables:
-  - name: word_starting_with_auto
+  - called: word_starting_with_auto
     type: text
     regex: ^auto
 ---
@@ -197,7 +197,7 @@ Example:
 ```yaml
 ---
 variables:
-  - name: a_number
+  - called: a_number
     type: number
     min: -10.8
     max: 11.22
@@ -218,7 +218,7 @@ Example:
 ```yaml
 ---
 variables:
-  - name: some_date
+  - called: some_date
     type: natural_date
     after: yesterday # today or later
     before: next year
@@ -237,7 +237,7 @@ Example:
 ```yaml
 ---
 variables:
-  - name: some_note
+  - called: some_note
     type: note
 	note_filter_set_name: maps of content
 ---
@@ -260,7 +260,7 @@ Example:
 ```yaml
 ---
 variables:
-  - name: a_project_folder
+  - called: a_project_folder
     type: folder
     root_folder: "/🏗 projects"
 	depth: 1
@@ -397,7 +397,7 @@ Chose a folder and place a task in its own folder in that folder.
 intents_to:
   - make_a: task
     variables:
-      - name: output_folder
+      - called: output_folder
         required: true
         type: folder
         root_folder: ✅ tasks
@@ -416,7 +416,7 @@ Adding a simple template.
 intents_to:
   - make_a: task
     templates:
-      - name: simple task
+      - called: simple task
         path: "/path /to /templates folder /simple task template.md"
 ---
 ```
@@ -427,7 +427,7 @@ Using a template next to a context note.
 intents_to:
   - make_a: task
     templates:
-      - name: simple task
+      - called: simple task
         path: "./simple task template.md"
 ---
 ```
@@ -440,12 +440,12 @@ This intent disables `new_note_name` and replaces it with a `new_project_name` v
 intents_to:
   - make_a: project
     variables:
-      - name: new_note_name
+      - called: new_note_name
         disable: true
-      - name: new_project_name
+      - called: new_project_name
     output_pathname_template: "./{{new_project_name}}/🏗 {{new_project_name}}"
     templates:
-      - name: default
+      - called: default
         path: "/path /to /templates /project template.md"
 ---
 ```
@@ -459,7 +459,7 @@ intents_to:
   - make_a: task
     output_pathname_template: "./tasks/{{new_project_name}}-{{new_note_name}}"
     templates:
-      - name: simple task
+      - called: simple task
         path: "./simple task template.md"
 ---
 
@@ -478,10 +478,10 @@ This intent disables `new_note_name` and replaces it with a `new_project_name` v
 intents_to:
   - make_a: project
     variables:
-      - name: new_note_name
+      - called: new_note_name
         disable: true
-      - name: new_project_name
-      - name: output_folder
+      - called: new_project_name
+      - called: output_folder
         required: true
         type: folder
         root_folder: 🏗 projects
@@ -489,7 +489,7 @@ intents_to:
         include_roots: false
     output_pathname_template: "{{output_folder}}/{{new_project_name}}/🏗 {{new_project_name}}"
     templates:
-      - name: default
+      - called: default
         path: "/path /to /templates /project template.md"
 ---
 ```
@@ -502,7 +502,7 @@ intents_to:
   - make_a: task
     output_pathname_template: "./tasks/{{new_project_name}}-{{new_note_name}}"
     templates:
-      - name: simple task
+      - called: simple task
         path: "./simple task template.md"
 ---
 

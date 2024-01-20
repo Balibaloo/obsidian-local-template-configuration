@@ -27,7 +27,7 @@ export function getIntentsFromFM(fm: FrontMatterCache): Intent[] {
 function getFMTemplates(fm: any): Template[] {
   return (fm?.templates || []).map((tFm: any): Template =>
   ({
-    name: tFm.name,
+    name: tFm.called,
     disable: typeof tFm?.disable === "undefined" ? undefined :
     typeof tFm?.disable === "boolean" ? tFm?.disable :
       Boolean(tFm?.disable?.[0]?.toUpperCase() === "T"),
@@ -52,7 +52,7 @@ export function getVariablesFromFM(fm: any) {
       || TemplateVariableType.text;
 
     const baseVariables: TemplateVariable = {
-      name: v.name,
+      name: v.called,
       type: type,
       disable: typeof v?.disable === "undefined" ? undefined :
         typeof v?.disable === "boolean" ? v?.disable :
