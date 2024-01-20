@@ -40,7 +40,7 @@ function getFMTemplates(fm: any): Template[] {
 function getNewNoteProperties(fm: any): NewNoteProperties {
   return {
     output_pathname: fm.outputs_to_pathname,
-    output_pathname_template: fm.output_pathname_template,
+    output_pathname_template: fm.outputs_to_templated_pathname,
     variables: getVariablesFromFM(fm),
   }
 }

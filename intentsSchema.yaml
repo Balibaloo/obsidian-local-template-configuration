@@ -3,7 +3,7 @@ intents_to:
   - make_a: "text"
     is_disabled: "true/false"
     outputs_to_pathname: "text"
-    output_pathname_template: "text"
+    outputs_to_templated_pathname: "text"
     with_variables:
       - called: "text"
         of_type: "text"
@@ -19,7 +19,7 @@ intents_to:
         is_disabled: "true/false"
         at_path: "text"
         outputs_to_pathname: "text"
-        output_pathname_template: "text"
+        outputs_to_templated_pathname: "text"
         with_variables:
           - called: "text"
             of_type: "text"

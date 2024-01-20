@@ -109,21 +109,21 @@ The properties of new notes are:
 | property name | required | Default | description |
 | ---- | ---- | ---- | ---- |
 | `outputs_to_pathname` | No | A note called `new_note_name` in the same folder as the context note | The output location and name of the new note |
-| `output_pathname_template` | No | `./{{new_note_name}}` is the template representation of the above | An alternative for `outputs_to_pathname` that allows [using variable values](#using-variable-values). The example below uses the [new_note_name](#new_note_name) variable to format the name of the new note |
+| `outputs_to_templated_pathname` | No | `./{{new_note_name}}` is the template representation of the above | An alternative for `outputs_to_pathname` that allows [using variable values](#using-variable-values). The example below uses the [new_note_name](#new_note_name) variable to format the name of the new note |
 | `with_variables` | No |  | A list of [variables](#variables) |
 | `is_disabled` | No | false | see [disabling intents, templates and variables](#disabling-intents-templates-and-variables) |
 
 
 
 Example:
-- A task intent with `output_pathname_template`.
+- A task intent that `outputs_to_templated_pathname`.
 - A "graded task" template with an additional `date_released` variable and a custom output pathname.
 - A "worksheet task" template with an additional `worksheet_number` variable and a custom output pathname.
 ```yaml
 ---
 intents_to:
   - make_a: task ✅
-    output_pathname_template: ./✔ tasks/✅ {{new_note_name}}
+    outputs_to_templated_pathname: ./✔ tasks/✅ {{new_note_name}}
     with_variables:
       - called: deadline
         of_type: natural_date
@@ -132,14 +132,14 @@ intents_to:
         at_path: Templates/task template.md
       - called: graded 🎓
         at_path: Templates/graded task template.md
-        output_pathname_template: ./✔ tasks/🎓 {{new_note_name}}
+        outputs_to_templated_pathname: ./✔ tasks/🎓 {{new_note_name}}
         with_variables:
           - called: date_released
             of_type: natural_date
           - called: percent
       - called: worksheet 📃
         at_path: Templates/worksheet task template.md
-        output_pathname_template: "./📃 worksheets/📃 Worksheet #{{worksheet_number}} - {{new_note_name}}"
+        outputs_to_templated_pathname: "./📃 worksheets/📃 Worksheet #{{worksheet_number}} - {{new_note_name}}"
         with_variables:
           - called: worksheet_number
             of_type: number
@@ -283,7 +283,7 @@ If you are already familiar with the [Templater](https://github.com/SilentVoid13
 ### new_note_name
 This is a [text](#text) variable that is added to every intent automatically.
 
-It holds the name of the new note and can be used in the `output_pathname_template` to add other text around the new note name and use other variables in the note name.
+It holds the name of the new note and can be used in `outputs_to_templated_pathname` to add other text, including other variables, to the new note name.
 
 See [new note properties](#new-note-properties)
 
@@ -377,7 +377,7 @@ Create an empty note in a folder called `tasks` next to the context note.
 ---
 intents_to:
   - make_a: task
-    output_pathname_template: "./tasks/{{new_note_name}}"
+    outputs_to_templated_pathname: "./tasks/{{new_note_name}}"
 ---
 ```
 
@@ -387,7 +387,7 @@ Create an empty note in a folder in the root of the vault called `vault tasks`.
 ---
 intents_to:
   - make_a: task
-    output_pathname_template: "/vault tasks/{{new_note_name}}"
+    outputs_to_templated_pathname: "/vault tasks/{{new_note_name}}"
 ---
 ```
 
@@ -404,7 +404,7 @@ intents_to:
         depth: 1
         include_roots: false
         folder_filter_set_name: default
-    output_pathname_template: "{{output_folder}}/{{new_note_name}}/{{new_note_name}}"
+    outputs_to_templated_pathname: "{{output_folder}}/{{new_note_name}}/{{new_note_name}}"
 ---
 ```
 
@@ -443,7 +443,7 @@ intents_to:
       - called: new_note_name
         is_disabled: true
       - called: new_project_name
-    output_pathname_template: "./{{new_project_name}}/🏗 {{new_project_name}}"
+    outputs_to_templated_pathname: "./{{new_project_name}}/🏗 {{new_project_name}}"
     with_variables:
       - called: default
         at_path: "/path /to /templates /project template.md"
@@ -457,7 +457,7 @@ Project note template:
 ---
 intents_to:
   - make_a: task
-    output_pathname_template: "./tasks/{{new_project_name}}-{{new_note_name}}"
+    outputs_to_templated_pathname: "./tasks/{{new_project_name}}-{{new_note_name}}"
     with_variables:
       - called: simple task
         at_path: "./simple task template.md"
@@ -487,7 +487,7 @@ intents_to:
         root_folder: 🏗 projects
         depth: 1
         include_roots: false
-    output_pathname_template: "{{output_folder}}/{{new_project_name}}/🏗 {{new_project_name}}"
+    outputs_to_templated_pathname: "{{output_folder}}/{{new_project_name}}/🏗 {{new_project_name}}"
     with_variables:
       - called: default
         at_path: "/path /to /templates /project template.md"
@@ -500,7 +500,7 @@ Project note template:
 ---
 intents_to:
   - make_a: task
-    output_pathname_template: "./tasks/{{new_project_name}}-{{new_note_name}}"
+    outputs_to_templated_pathname: "./tasks/{{new_project_name}}-{{new_note_name}}"
     with_variables:
       - called: simple task
         at_path: "./simple task template.md"
