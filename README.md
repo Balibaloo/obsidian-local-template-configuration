@@ -143,7 +143,7 @@ intents_to:
         with_variables:
           - called: worksheet_number
             of_type: number
-            min: 1
+            is_over: 1
 ---
 ```
 
@@ -190,8 +190,8 @@ Any number including integers and floats.
 
 | property name | required | Default | description |
 | ---- | ---- | ---- | ---- |
-|min| No|| the minimum allowed value|
-|max| No|| the maximum allowed value|
+|`is_over`| No|| the minimum allowed value|
+|`is_under`| No|| the maximum allowed value|
 
 Example:
 ```yaml
@@ -199,8 +199,8 @@ Example:
 with_variables:
   - called: a_number
     of_type: number
-    min: -10.8
-    max: 11.22
+    is_over: -10.8
+    is_under: 11.22
 ---
 ```
 

@@ -8,8 +8,8 @@ export type TemplateVariableVariables_Number = {
 };
 
 export const parseNumberVariableFrontmatter = (fm: any) => ({
-  min: parseFloat(fm.min),
-  max: parseFloat(fm.max),
+  min: parseFloat(fm.is_over),
+  max: parseFloat(fm.is_under),
 })
 
 export async function getNumberVariableValue(variable: TemplateVariable&TemplateVariableVariables_Number, existingValue:string):Promise<string>{
