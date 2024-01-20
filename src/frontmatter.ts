@@ -10,7 +10,7 @@ import { TemplateVariableType, variableProviderVariableParsers } from "./variabl
 
 
 export function getIntentsFromFM(fm: FrontMatterCache): Intent[] {
-  const newIntents: Intent[] = (fm?.intents || []).map((iFm: any): Intent => {
+  const newIntents: Intent[] = (fm?.intents_to || []).map((iFm: any): Intent => {
     return {
       name: iFm.name,
       disable: typeof iFm?.disable === "undefined" ? undefined :

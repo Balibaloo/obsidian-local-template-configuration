@@ -1,5 +1,5 @@
 intents_import: "'text'|['text']"
-intents:
+intents_to:
   - name: "text"
     disable: "true/false"
     output_pathname: "text"

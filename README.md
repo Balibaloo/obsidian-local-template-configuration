@@ -17,7 +17,7 @@ The easiest way to edit frontmatter is to enable the [source property display mo
 Example: simple intents
 ```yaml
 ---
-intents:
+intents_to:
 - name: task ✅
 - name: meeting 🤝
 - name: person 🙋‍♂️
@@ -71,7 +71,7 @@ The new note will contain the contents of this template note.
 Example: intents with templates
 ```yaml
 ---
-intents:
+intents_to:
   - name: "task ✅"
     templates: 
       - name: "default"
@@ -121,7 +121,7 @@ Example:
 - A "worksheet task" template with an additional `worksheet_number` variable and a custom output pathname.
 ```yaml
 ---
-intents:
+intents_to:
   - name: task ✅
     output_pathname_template: ./✔ tasks/✅ {{new_note_name}}
     variables:
@@ -364,7 +364,7 @@ Overwriting properties of imported intents is useful to:
 ## simplest runnable intent
 ```yaml
 ---
-intents:
+intents_to:
   - name: task
 ---
 ```
@@ -375,7 +375,7 @@ This intent will create an empty note named the value of [new_note_name](#new_no
 Create an empty note in a folder called `tasks` next to the context note.
 ```yaml
 ---
-intents:
+intents_to:
   - name: task
     output_pathname_template: "./tasks/{{new_note_name}}"
 ---
@@ -385,7 +385,7 @@ intents:
 Create an empty note in a folder in the root of the vault called `vault tasks`.
 ```yaml
 ---
-intents:
+intents_to:
   - name: task
     output_pathname_template: "/vault tasks/{{new_note_name}}"
 ---
@@ -394,7 +394,7 @@ intents:
 Chose a folder and place a task in its own folder in that folder.
 ```yaml
 ---
-intents:
+intents_to:
   - name: task
     variables:
       - name: output_folder
@@ -413,7 +413,7 @@ intents:
 Adding a simple template.
 ```yaml
 ---
-intents:
+intents_to:
   - name: task
     templates:
       - name: simple task
@@ -424,7 +424,7 @@ intents:
 Using a template next to a context note.
 ```yaml
 ---
-intents:
+intents_to:
   - name: task
     templates:
       - name: simple task
@@ -437,7 +437,7 @@ This intent creates a project note with an emoji in the project note name.
 This intent disables `new_note_name` and replaces it with a `new_project_name` variable so that it doesn't replace `new_note_name` in the project note.
 ```yaml
 ---
-intents:
+intents_to:
   - name: project
     variables:
       - name: new_note_name
@@ -455,7 +455,7 @@ Because `new_note_name` is disabled, it wont be replaced but `new_project_name` 
 Project note template:
 ```yaml
 ---
-intents:
+intents_to:
   - name: task
     output_pathname_template: "./tasks/{{new_project_name}}-{{new_note_name}}"
     templates:
@@ -475,7 +475,7 @@ In this case the `🏗 projects` folder contains subfolders that categorize proj
 This intent disables `new_note_name` and replaces it with a `new_project_name` variable so that it doesn't replace `new_note_name` in the project note.
 ```yaml
 ---
-intents:
+intents_to:
   - name: project
     variables:
       - name: new_note_name
@@ -498,7 +498,7 @@ Because `new_note_name` is disabled, it wont be replaced but `new_project_name` 
 Project note template:
 ```yaml
 ---
-intents:
+intents_to:
   - name: task
     output_pathname_template: "./tasks/{{new_project_name}}-{{new_note_name}}"
     templates:
