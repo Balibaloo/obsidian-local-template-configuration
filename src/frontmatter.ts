@@ -65,7 +65,7 @@ export function getVariablesFromFM(fm: any) {
           Boolean(v?.use_selection?.[0]?.toUpperCase() === "T"),
       initial: v.initial,
       placeholder: v.placeholder,
-      prompt: v.prompt,
+      prompt: v.that_prompts,
       description: v.description,
     }
 

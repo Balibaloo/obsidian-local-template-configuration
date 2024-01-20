@@ -155,7 +155,7 @@ There are multiple types of variables but all variables contain a common set of 
 | `called` | Yes |  | The name of the variable, used when inserting values into templates. see [using variable values](#using-variable-values). <br>For the purpose of demonstration this property uses lowercase and underscores instead of spaces but it can contain any characters eg emojis. |
 | `of_type` | No | [text](#text) | The type of the variable. See [variable types](#variable-types). |
 | `is_required` | No | false | If `true`, when you enter an invalid value the note creation process will stop and an error message will be shown. |
-| `prompt` | No |  | The text that is displayed when prompting. |
+| `that_prompts` | No |  | The text that is displayed when prompting. |
 | `description` | No |  | Text that will be shown bellow the prompt. |
 | `initial` | No |  | The value that will be in the prompt initially. |
 | `use_selection` | No | false | See [prepopulating prompts using selection](#prepopulating-prompts-using-selection). |
