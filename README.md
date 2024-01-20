@@ -75,25 +75,25 @@ intents_to:
   - make_a: "task ✅"
     with_variables: 
       - called: "default"
-        path: "Templates/task template.md"
+        at_path: "Templates/task template.md"
       - called: "graded"
-        path: "Templates/graded task template.md"
+        at_path: "Templates/graded task template.md"
       - called: "worksheet"
-        path: "Templates/worksheet task template.md"
+        at_path: "Templates/worksheet task template.md"
   - make_a: "meeting 🤝"
     with_variables: 
       - called: "default"
-        path: "Templates/meeting template.md"
+        at_path: "Templates/meeting template.md"
       - called: "project review"
-        path: "Templates/project review meeting template.md"
+        at_path: "Templates/project review meeting template.md"
       - called: "standup"
-        path: "Templates/standup meeting template.md"
+        at_path: "Templates/standup meeting template.md"
   - make_a: "person 🙋‍♂️"
     with_variables: 
       - called: "default"
-        path: "Templates/person template.md"
+        at_path: "Templates/person template.md"
       - called: "work colleague"
-        path: "Templates/work colleague person template.md" 
+        at_path: "Templates/work colleague person template.md" 
 ---
 ```
 
@@ -129,16 +129,16 @@ intents_to:
         of_type: natural_date
     with_variables:
       - called: default ✅
-        path: Templates/task template.md
+        at_path: Templates/task template.md
       - called: graded 🎓
-        path: Templates/graded task template.md
+        at_path: Templates/graded task template.md
         output_pathname_template: ./✔ tasks/🎓 {{new_note_name}}
         with_variables:
           - called: date_released
             of_type: natural_date
           - called: percent
       - called: worksheet 📃
-        path: Templates/worksheet task template.md
+        at_path: Templates/worksheet task template.md
         output_pathname_template: "./📃 worksheets/📃 Worksheet #{{worksheet_number}} - {{new_note_name}}"
         with_variables:
           - called: worksheet_number
@@ -417,7 +417,7 @@ intents_to:
   - make_a: task
     with_variables:
       - called: simple task
-        path: "/path /to /templates folder /simple task template.md"
+        at_path: "/path /to /templates folder /simple task template.md"
 ---
 ```
 
@@ -428,7 +428,7 @@ intents_to:
   - make_a: task
     with_variables:
       - called: simple task
-        path: "./simple task template.md"
+        at_path: "./simple task template.md"
 ---
 ```
 
@@ -446,7 +446,7 @@ intents_to:
     output_pathname_template: "./{{new_project_name}}/🏗 {{new_project_name}}"
     with_variables:
       - called: default
-        path: "/path /to /templates /project template.md"
+        at_path: "/path /to /templates /project template.md"
 ---
 ```
 
@@ -460,7 +460,7 @@ intents_to:
     output_pathname_template: "./tasks/{{new_project_name}}-{{new_note_name}}"
     with_variables:
       - called: simple task
-        path: "./simple task template.md"
+        at_path: "./simple task template.md"
 ---
 
 # Note for {{new_note_name}} project!
@@ -490,7 +490,7 @@ intents_to:
     output_pathname_template: "{{output_folder}}/{{new_project_name}}/🏗 {{new_project_name}}"
     with_variables:
       - called: default
-        path: "/path /to /templates /project template.md"
+        at_path: "/path /to /templates /project template.md"
 ---
 ```
 
@@ -503,7 +503,7 @@ intents_to:
     output_pathname_template: "./tasks/{{new_project_name}}-{{new_note_name}}"
     with_variables:
       - called: simple task
-        path: "./simple task template.md"
+        at_path: "./simple task template.md"
 ---
 
 # Note for {{new_project_name}} project!

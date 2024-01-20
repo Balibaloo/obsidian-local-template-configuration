@@ -31,7 +31,7 @@ function getFMTemplates(fm: any): Template[] {
     disable: typeof tFm?.is_disabled === "undefined" ? undefined :
     typeof tFm?.is_disabled === "boolean" ? tFm?.is_disabled :
       Boolean(tFm?.is_disabled?.[0]?.toUpperCase() === "T"),
-    path: tFm.path,
+    path: tFm.at_path,
     newNoteProperties: getNewNoteProperties(tFm),
   })
   );
