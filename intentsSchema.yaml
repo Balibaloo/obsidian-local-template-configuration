@@ -11,7 +11,7 @@ intents_to:
         that_prompts: "text"
         described_as: "text"
         is_initially: "text"
-        use_selection: "true/false"
+        uses_selection: "true/false"
         placeholder: "text"
         disable: "true/false"
     templates: 
@@ -27,6 +27,6 @@ intents_to:
             that_prompts: "text"
             described_as: "text"
             is_initially: "text"
-            use_selection: "true/false"
+            uses_selection: "true/false"
             placeholder: "text"
             disable: "true/false"

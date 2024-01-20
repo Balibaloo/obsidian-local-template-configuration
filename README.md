@@ -158,7 +158,7 @@ There are multiple types of variables but all variables contain a common set of 
 | `that_prompts` | No |  | The text that is displayed when prompting. |
 | `described_as` | No |  | Text that will be shown bellow the prompt. |
 | `is_initially` | No |  | The value that will be in the prompt initially. |
-| `use_selection` | No | false | See [prepopulating prompts using selection](#prepopulating-prompts-using-selection). |
+| `uses_selection` | No | false | See [prepopulating prompts using selection](#prepopulating-prompts-using-selection). |
 | `placeholder` | No |  | The value displayed inside the prompt when it is empty. |
 | `disable` | No | false | See [disabling intents, templates and variables](#disabling-intents-templates-and-variables) |
 
@@ -303,7 +303,7 @@ When running an intent, selected text can be used to pre-populate the prompts fo
 
 The selection will be split using the delimiters configured in the plugin settings and then assigned to variables by the order that they appear in the variable list.
 
-To enable this for a variable, set `use_selection` to `true`.
+To enable this for a variable, set `uses_selection` to `true`.
 
 If a variable is assigned a valid value from the selection, the value will be accepted and the variable prompt will be skipped.
 If the value is not valid, the prompt will be shown prepopulated with the selected value.

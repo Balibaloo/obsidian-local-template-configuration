@@ -60,9 +60,9 @@ export function getVariablesFromFM(fm: any) {
       required: typeof v?.is_required === "undefined" ? undefined :
         typeof v?.is_required === "boolean" ? v?.is_required :
           Boolean(v?.is_required?.[0]?.toUpperCase() === "T"),
-      use_selection: typeof v?.use_selection === "undefined" ? undefined :
-        typeof v?.use_selection === "boolean" ? v?.use_selection :
-          Boolean(v?.use_selection?.[0]?.toUpperCase() === "T"),
+      use_selection: typeof v?.uses_selection === "undefined" ? undefined :
+        typeof v?.uses_selection === "boolean" ? v?.uses_selection :
+          Boolean(v?.uses_selection?.[0]?.toUpperCase() === "T"),
       initial: v.is_initially,
       placeholder: v.placeholder,
       prompt: v.that_prompts,
