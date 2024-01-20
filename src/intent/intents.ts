@@ -11,7 +11,6 @@ class IntentSuggestModal extends FuzzySuggestModal<Intent> {
 		super(app);
 		this.items = items;
 		this.callback=callback;
-    this.setPlaceholder("Placeholderrrrr");
 	}
 	
 	items: Intent[];
