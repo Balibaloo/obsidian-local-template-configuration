@@ -172,7 +172,7 @@ Text is the default variable type.
 
 | property name | required | Default | description |
 | ---- | ---- | ---- | ---- |
-|regex| No| |A regular expression used to validate the text
+| `matches_regex`| No| |A regular expression used to validate the text
 
 Example:
 ```yaml
@@ -180,7 +180,7 @@ Example:
 with_variables:
   - called: word_starting_with_auto
     of_type: text
-    regex: ^auto
+    matches_regex: ^auto
 ---
 ```
 

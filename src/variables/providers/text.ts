@@ -6,7 +6,7 @@ export type TemplateVariableVariables_Text = {
 };
 
 export const parseTextVariableFrontmatter = (fm:any) => ({
-  regex: fm.regex,
+  regex: fm.matches_regex,
 })
 
 export async function getTextVariableValue(variable: TemplateVariable&TemplateVariableVariables_Text, existingValue:string):Promise<string>{
