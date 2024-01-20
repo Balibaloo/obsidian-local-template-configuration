@@ -66,7 +66,7 @@ export function getVariablesFromFM(fm: any) {
       initial: v.initial,
       placeholder: v.placeholder,
       prompt: v.that_prompts,
-      description: v.description,
+      description: v.described_as,
     }
 
     return Object.assign(baseVariables, variableProviderVariableParsers[type](v))
