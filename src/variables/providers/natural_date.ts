@@ -11,8 +11,8 @@ export const parseNaturalDateVariableFrontmatter = (fm: any) => {
   const NLDates = (app as any).plugins.getPlugin("nldates-obsidian");
 
   const dateVariable:TemplateVariableVariables_NaturalDate = {
-    after: fm.after,
-    before: fm.before,
+    after: fm.is_after,
+    before: fm.is_before,
   }
   
   if (dateVariable.after && !NLDates.parseDate(dateVariable.after).moment.isValid()){
