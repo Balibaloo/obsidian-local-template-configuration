@@ -14,7 +14,7 @@ intents_to:
         uses_selection: "true/false"
         hinted_as: "text"
         is_disabled: "true/false"
-    templates: 
+    with_templates: 
       - called: "text"
         is_disabled: "true/false"
         path: "text"

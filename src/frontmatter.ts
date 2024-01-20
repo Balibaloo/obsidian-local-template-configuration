@@ -25,7 +25,7 @@ export function getIntentsFromFM(fm: FrontMatterCache): Intent[] {
 }
 
 function getFMTemplates(fm: any): Template[] {
-  return (fm?.templates || []).map((tFm: any): Template =>
+  return (fm?.with_templates || []).map((tFm: any): Template =>
   ({
     name: tFm.called,
     disable: typeof tFm?.is_disabled === "undefined" ? undefined :
