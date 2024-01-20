@@ -63,7 +63,7 @@ export function getVariablesFromFM(fm: any) {
       use_selection: typeof v?.use_selection === "undefined" ? undefined :
         typeof v?.use_selection === "boolean" ? v?.use_selection :
           Boolean(v?.use_selection?.[0]?.toUpperCase() === "T"),
-      initial: v.initial,
+      initial: v.is_initially,
       placeholder: v.placeholder,
       prompt: v.that_prompts,
       description: v.described_as,

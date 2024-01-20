@@ -157,7 +157,7 @@ There are multiple types of variables but all variables contain a common set of 
 | `is_required` | No | false | If `true`, when you enter an invalid value the note creation process will stop and an error message will be shown. |
 | `that_prompts` | No |  | The text that is displayed when prompting. |
 | `described_as` | No |  | Text that will be shown bellow the prompt. |
-| `initial` | No |  | The value that will be in the prompt initially. |
+| `is_initially` | No |  | The value that will be in the prompt initially. |
 | `use_selection` | No | false | See [prepopulating prompts using selection](#prepopulating-prompts-using-selection). |
 | `placeholder` | No |  | The value displayed inside the prompt when it is empty. |
 | `disable` | No | false | See [disabling intents, templates and variables](#disabling-intents-templates-and-variables) |
