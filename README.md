@@ -309,20 +309,20 @@ If a variable is assigned a valid value from the selection, the value will be ac
 If the value is not valid, the prompt will be shown prepopulated with the selected value.
 
 # importing intents
-Notes can import intents from other notes using the `intents_import` property.
+Notes can import intents from other notes using the `intents_imported_from` property.
 
-The `intents_import` property accepts any number of paths to configuration notes.
+The `intents_imported_from` property accepts any number of paths to configuration notes.
 Example: Import single note
 ```yaml
 ---
-intents_import: "some/configuration note.md"
+intents_imported_from: "some/configuration note.md"
 ---
 ```
 
 Example: Import a list of notes
 ```yaml
 ---
-intents_import: ["some/configuration note.md", "other/configuration note.md" ]
+intents_imported_from: ["some/configuration note.md", "other/configuration note.md" ]
 ---
 ```
 

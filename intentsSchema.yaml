@@ -1,4 +1,4 @@
-intents_import: "'text'|['text']"
+intents_imported_from: "'text'|['text']"
 intents_to:
   - make_a: "text"
     is_disabled: "true/false"
