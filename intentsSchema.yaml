@@ -12,7 +12,7 @@ intents_to:
         described_as: "text"
         is_initially: "text"
         uses_selection: "true/false"
-        placeholder: "text"
+        hinted_as: "text"
         disable: "true/false"
     templates: 
       - called: "text"
@@ -28,5 +28,5 @@ intents_to:
             described_as: "text"
             is_initially: "text"
             uses_selection: "true/false"
-            placeholder: "text"
+            hinted_as: "text"
             disable: "true/false"

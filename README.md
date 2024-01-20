@@ -159,7 +159,7 @@ There are multiple types of variables but all variables contain a common set of 
 | `described_as` | No |  | Text that will be shown bellow the prompt. |
 | `is_initially` | No |  | The value that will be in the prompt initially. |
 | `uses_selection` | No | false | See [prepopulating prompts using selection](#prepopulating-prompts-using-selection). |
-| `placeholder` | No |  | The value displayed inside the prompt when it is empty. |
+| `hinted_as` | No |  | The value displayed inside the prompt when it is empty. |
 | `disable` | No | false | See [disabling intents, templates and variables](#disabling-intents-templates-and-variables) |
 
 There are multiple ways to use variable values. See [using variable values](#using-variable-values).
