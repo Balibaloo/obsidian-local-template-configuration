@@ -111,7 +111,7 @@ The properties of new notes are:
 | `output_pathname` | No | A note called `new_note_name` in the same folder as the context note | The output location and name of the new note |
 | `output_pathname_template` | No | `./{{new_note_name}}` is the template representation of the above | An alternative for `output_pathname` that allows [using variable values](#using-variable-values). The example below uses the [new_note_name](#new_note_name) variable to format the name of the new note |
 | `variables` | No |  | A list of [variables](#variables) |
-| `disable` | No | false | see [disabling intents, templates and variables](#disabling-intents-templates-and-variables) |
+| `is_disabled` | No | false | see [disabling intents, templates and variables](#disabling-intents-templates-and-variables) |
 
 
 
@@ -160,7 +160,7 @@ There are multiple types of variables but all variables contain a common set of 
 | `is_initially` | No |  | The value that will be in the prompt initially. |
 | `uses_selection` | No | false | See [prepopulating prompts using selection](#prepopulating-prompts-using-selection). |
 | `hinted_as` | No |  | The value displayed inside the prompt when it is empty. |
-| `disable` | No | false | See [disabling intents, templates and variables](#disabling-intents-templates-and-variables) |
+| `is_disabled` | No | false | See [disabling intents, templates and variables](#disabling-intents-templates-and-variables) |
 
 There are multiple ways to use variable values. See [using variable values](#using-variable-values).
 
@@ -292,11 +292,11 @@ It can also be used with a [folder](#folder) variable to chose the output folder
 If an intent [disables](#disabling-intents-templates-and-variables) `new_note_name` and doesn't set an `output_pathname`, by default the name of the new note will be the name of the intent and it will be created in the same folder as the context note.
 
 ### disabling intents, templates and variables
-Intents, templates and variables can be disabled by setting their `disable` property to `true`.
+Intents, templates and variables can be disabled by setting `is_disabled` to `true`.
 - Disabled intents and templates are ignored and not shown when one must be selected.
 - Disabled variables are ignored, their prompts are not shown and they wont be replaced when [using variable values](#using-variable-values).
 
-Disabled items are still [imported](#importing-intents) and can be un-hidden by setting their `disable` field to `false`.
+Disabled items are still [imported](#importing-intents) and can be un-hidden by setting their `is_disabled` property to `false`.
 
 ### prepopulating prompts using selection
 When running an intent, selected text can be used to pre-populate the prompts for variables.
@@ -441,7 +441,7 @@ intents_to:
   - make_a: project
     variables:
       - called: new_note_name
-        disable: true
+        is_disabled: true
       - called: new_project_name
     output_pathname_template: "./{{new_project_name}}/🏗 {{new_project_name}}"
     templates:
@@ -479,7 +479,7 @@ intents_to:
   - make_a: project
     variables:
       - called: new_note_name
-        disable: true
+        is_disabled: true
       - called: new_project_name
       - called: output_folder
         is_required: true

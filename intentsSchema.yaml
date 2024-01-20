@@ -1,7 +1,7 @@
 intents_import: "'text'|['text']"
 intents_to:
   - make_a: "text"
-    disable: "true/false"
+    is_disabled: "true/false"
     output_pathname: "text"
     output_pathname_template: "text"
     variables:
@@ -13,10 +13,10 @@ intents_to:
         is_initially: "text"
         uses_selection: "true/false"
         hinted_as: "text"
-        disable: "true/false"
+        is_disabled: "true/false"
     templates: 
       - called: "text"
-        disable: "true/false"
+        is_disabled: "true/false"
         path: "text"
         output_pathname: "text"
         output_pathname_template: "text"
@@ -29,4 +29,4 @@ intents_to:
             is_initially: "text"
             uses_selection: "true/false"
             hinted_as: "text"
-            disable: "true/false"
+            is_disabled: "true/false"
