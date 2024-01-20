@@ -7,7 +7,7 @@ intents_to:
     variables:
       - called: "text"
         of_type: "text"
-        required: "true/false"
+        is_required: "true/false"
         prompt: "text"
         description: "text"
         initial: "text"
@@ -23,7 +23,7 @@ intents_to:
         variables:
           - called: "text"
             of_type: "text"
-            required: "true/false"
+            is_required: "true/false"
             prompt: "text"
             description: "text"
             initial: "text"

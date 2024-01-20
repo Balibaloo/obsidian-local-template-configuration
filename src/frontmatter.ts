@@ -57,9 +57,9 @@ export function getVariablesFromFM(fm: any) {
       disable: typeof v?.disable === "undefined" ? undefined :
         typeof v?.disable === "boolean" ? v?.disable :
           Boolean(v?.disable?.[0]?.toUpperCase() === "T"),
-      required: typeof v?.required === "undefined" ? undefined :
-        typeof v?.required === "boolean" ? v?.required :
-          Boolean(v?.required?.[0]?.toUpperCase() === "T"),
+      required: typeof v?.is_required === "undefined" ? undefined :
+        typeof v?.is_required === "boolean" ? v?.is_required :
+          Boolean(v?.is_required?.[0]?.toUpperCase() === "T"),
       use_selection: typeof v?.use_selection === "undefined" ? undefined :
         typeof v?.use_selection === "boolean" ? v?.use_selection :
           Boolean(v?.use_selection?.[0]?.toUpperCase() === "T"),
