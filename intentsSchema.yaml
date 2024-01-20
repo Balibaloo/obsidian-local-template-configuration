@@ -1,3 +1,4 @@
+intents_import: "'text'|['text']"
 intents:
   - name: "text"
     disable: "true/false"
