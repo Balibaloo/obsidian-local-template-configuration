@@ -9,11 +9,11 @@ export type TemplateVariableVariables_Folder = {
 };
 
 export const parseFolderVariableFrontmatter = (fm:any) => ({
-  root_folder: fm.root_folder,
-  depth: fm.depth,
-  include_roots: typeof fm?.include_roots === "undefined" ? undefined :
-    typeof fm?.include_roots === "boolean" ? fm?.include_roots :
-      Boolean(fm?.include_roots?.[0]?.toUpperCase() === "T"),
+  root_folder: fm.in_folder,
+  depth: fm.at_depth,
+  include_roots: typeof fm?.includes_roots === "undefined" ? undefined :
+    typeof fm?.includes_roots === "boolean" ? fm?.includes_roots :
+      Boolean(fm?.includes_roots?.[0]?.toUpperCase() === "T"),
   folder_filter_set_name: fm.folder_filter_set_name,
 })
 

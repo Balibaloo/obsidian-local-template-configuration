@@ -251,9 +251,9 @@ The Picker plugin takes the name of the filter set (`folder_filter_set_name`) to
 
 | property name | required | Default | description |
 | ---- | ---- | ---- | ---- |
-|`root_folder`| No| Vault root folder |A folder to start searching from, defaults to the vault folder.|
-|`depth`| No| Depth configured in Picker  |The depth of folders to include, for a folder structure of `root/inner/leaf`, a depth of 2 will show notes down to the `leaf` level.|
-|`include_roots`|No| `false` | When `false` notes only at the specified depth are shown. When `true` notes at all levels down to the specified depth are shown.|
+|`in_folder`| No| Vault root folder |A folder to start searching from, defaults to the vault folder.|
+|`at_depth`| No| Depth configured in Picker  |The depth of folders to include, for a folder structure of `root/inner/leaf`, a depth of 2 will show notes down to the `leaf` level.|
+|`includes_roots`|No| `false` | When `false` notes only at the specified depth are shown. When `true` notes at all levels down to the specified depth are shown.|
 |`folder_filter_set_name`| No |Allows all folders | The name of the folder filter set.|
 
 Example:
@@ -262,10 +262,10 @@ Example:
 with_variables:
   - called: a_project_folder
     of_type: folder
-    root_folder: "/🏗 projects"
-	depth: 1
-	include_roots: false
-	folder_filter_set_name: default
+    in_folder: "/🏗 projects"
+    at_depth: 1
+    includes_roots: false
+    folder_filter_set_name: default
 ---
 ```
 
@@ -400,9 +400,9 @@ intents_to:
       - called: output_folder
         is_required: true
         of_type: folder
-        root_folder: ✅ tasks
-        depth: 1
-        include_roots: false
+        in_folder: ✅ tasks
+        at_depth: 1
+        includes_roots: false
         folder_filter_set_name: default
     outputs_to_templated_pathname: "{{output_folder}}/{{new_note_name}}/{{new_note_name}}"
 ---
@@ -484,9 +484,9 @@ intents_to:
       - called: output_folder
         is_required: true
         of_type: folder
-        root_folder: 🏗 projects
-        depth: 1
-        include_roots: false
+        in_folder: 🏗 projects
+        at_depth: 1
+        includes_roots: false
     outputs_to_templated_pathname: "{{output_folder}}/{{new_project_name}}/🏗 {{new_project_name}}"
     with_variables:
       - called: default
