@@ -4,6 +4,8 @@ Is this [Obsidian](https://obsidian.md) plugin for you? [You should use this plu
 
 <img src="assets/main.gif" width=800px>
 
+Note: configuration in GIFs uses old YAML property names. All other YAML in this readme is up to date.
+
 
 Notes are created by running intents.
 # Intents
