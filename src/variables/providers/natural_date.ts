@@ -1,6 +1,5 @@
-import { Notice } from "obsidian";
+import { TemplateVariable } from "..";
 import { GenericInputPrompt } from "../suggest";
-import { TemplateVariable } from "../templateVariables";
 
 export type TemplateVariableVariables_NaturalDate = {
   after?: string,

@@ -1,4 +1,5 @@
-import { Intent } from "..";
+import { Intent } from "../intents";
+import { DEFAULT_SETTINGS, PTSettingTab } from "./config";
 
 export interface PTSettings {
 	globalIntentsNotePath: string;
@@ -6,4 +7,9 @@ export interface PTSettings {
 	intents: Intent[];
 	intentNotesFilterSetName: string;
 	selectionDelimiters: string;
+}
+
+export {
+	DEFAULT_SETTINGS,
+	PTSettingTab,
 }

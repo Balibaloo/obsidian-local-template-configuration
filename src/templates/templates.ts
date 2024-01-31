@@ -1,6 +1,6 @@
 import { App, FuzzySuggestModal, Notice } from "obsidian";
-import { Intent, Template } from "..";
-import { namedObjectDeepMerge } from "../frontmatter";
+import { Template } from ".";
+import { Intent, namedObjectDeepMerge } from "../intents";
 
 export async function getIntentTemplate(intent: Intent): Promise<Template | null> {
   if (intent.templates.length == 0) {

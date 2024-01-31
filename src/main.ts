@@ -1,10 +1,14 @@
 import { Notice, Plugin, TFile } from 'obsidian';
-import { Intent, PTSettings } from '.';
-import { getFrontmatter, getIntentsFromFM, namedObjectDeepMerge } from './frontmatter';
-import { choseIntent, runIntent } from './intent/intents';
-import { DEFAULT_SETTINGS, PTSettingTab } from './settings/config';
-import { TemplateVariableType } from './variables/providers';
-import { ReservedVariableName, TemplateVariable } from './variables/templateVariables';
+import { DEFAULT_SETTINGS, PTSettings, PTSettingTab } from './settings';
+import { ReservedVariableName, TemplateVariable, TemplateVariableType } from './variables';
+import { 
+	Intent,
+	getFrontmatter, 
+	getIntentsFromFM, 
+	namedObjectDeepMerge, 
+	choseIntent, 
+	runIntent 
+} from './intents';
 
 
 const PLUGIN_LONG_NAME = "Local Template Configuration";

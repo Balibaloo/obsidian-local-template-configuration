@@ -1,22 +1,6 @@
 import { App } from "obsidian";
-import { TemplateVariableType, TemplateVariableVariables } from "./providers";
+import { TemplateVariable } from ".";
 import { variableProviderVariableGetters } from "./providers";
-
-export enum ReservedVariableName {
-  new_note_name = "new_note_name",
-}
-
-export type TemplateVariable = {
-  name: string,
-  type: TemplateVariableType,
-  disable: boolean,
-  required?: boolean,
-  use_selection?: boolean,
-  initial?: string,
-  placeholder?: string,
-  prompt?: string,
-  description?: string,
-} & TemplateVariableVariables
 
 
 export async function getVariableValues(app: App, variables: TemplateVariable[], existingValues: { [key: string]: string }) {

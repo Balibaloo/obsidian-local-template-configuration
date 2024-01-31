@@ -1,5 +1,5 @@
 import { TFile } from "obsidian";
-import { TemplateVariable } from "../templateVariables";
+import { TemplateVariable } from "..";
 
 export type TemplateVariableVariables_Note = {
   note_filter_set_name: string,

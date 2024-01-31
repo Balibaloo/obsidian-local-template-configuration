@@ -1,9 +1,8 @@
 import { App, FuzzySuggestModal, Notice, TAbstractFile, TFile, TFolder } from "obsidian";
-import { Intent } from "..";
-import { namedObjectDeepMerge, resolvePathRelativeToAbstractFile } from "../frontmatter";
 import PTPlugin from "../main";
-import { getIntentTemplate } from "../template/templates";
-import { ReservedVariableName, TemplateVariable, getVariableValues } from "src/variables/templateVariables";
+import { Intent, namedObjectDeepMerge, resolvePathRelativeToAbstractFile } from ".";
+import { ReservedVariableName, TemplateVariable, getVariableValues } from "../variables";
+import { getIntentTemplate } from "../templates";
 
 
 class IntentSuggestModal extends FuzzySuggestModal<Intent> {

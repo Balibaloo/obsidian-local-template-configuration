@@ -1,5 +1,5 @@
 import { TFolder } from "obsidian";
-import { TemplateVariable } from "../templateVariables";
+import { TemplateVariable } from "..";
 
 export type TemplateVariableVariables_Folder = {
   root_folder: string,

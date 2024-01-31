@@ -1,4 +1,4 @@
-import { TemplateVariable } from "../templateVariables";
+import { TemplateVariable } from "..";
 import { 
   TemplateVariableVariables_Text, 
   getTextVariableValue, 

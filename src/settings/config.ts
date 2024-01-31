@@ -1,6 +1,6 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
-import { PTSettings } from "..";
 import PTPlugin from "../main";
+import { PTSettings } from ".";
 
 
 export const DEFAULT_SETTINGS: PTSettings = {

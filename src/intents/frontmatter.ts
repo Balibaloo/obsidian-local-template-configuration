@@ -1,13 +1,14 @@
 import { App, FrontMatterCache, TAbstractFile, TFile } from "obsidian";
-import {
-  Intent,
-  NewNoteProperties,
-  Template,
-} from ".";
 import { join as joinPath } from "path";
-import { TemplateVariable } from "./variables";
-import { TemplateVariableType, variableProviderVariableParsers } from "./variables/providers";
-
+import { Intent, NewNoteProperties, } from ".";
+import { 
+  Template, 
+} from "../templates";
+import { 
+  TemplateVariable, 
+  TemplateVariableType, 
+  variableProviderVariableParsers,
+} from "../variables";
 
 export function getIntentsFromFM(fm: FrontMatterCache): Intent[] {
   const newIntents: Intent[] = (fm?.intents_to || []).map((iFm: any): Intent => {
@@ -46,7 +47,7 @@ function getNewNoteProperties(fm: any): NewNoteProperties {
 }
 
 
-export function getVariablesFromFM(fm: any) {
+function getVariablesFromFM(fm: any) {
   return (fm?.with_variables || []).map((v: any): TemplateVariable => {
     const type: TemplateVariableType = TemplateVariableType[v.of_type as keyof typeof TemplateVariableType]
       || TemplateVariableType.text;
