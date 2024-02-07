@@ -49,7 +49,7 @@ export async function choseIntent(intents:Intent[]):Promise<Intent> {
 
 
 export async function runIntent(plugin:PTPlugin, intent: Intent, abstractFileOfIntent:TAbstractFile) {
-  console.log("Running", intent);
+  console.log("Running intent:", intent);
 
   let variablesToGather = intent.newNoteProperties.variables;
 
@@ -63,7 +63,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, abstractFileOfI
   let newNoteContents = "";
   if (intent.templates.length !== 0) {
     const chosenTemplate = await getIntentTemplate(intent);
-    console.log("Chosen template", chosenTemplate);
+    console.log("Chosen template:", chosenTemplate);
     if (!chosenTemplate) {
       new Notice("Error: No template selected");
       return;
@@ -93,7 +93,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, abstractFileOfI
     acc[variable.name] = selectionSplit[index] ?? "";
     return acc;
   }, {});
-  console.log("section", selectionVariables);
+  console.log("Found selection variables:", selectionVariables);
 
 
   let gatheredValues;
@@ -101,7 +101,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, abstractFileOfI
     gatheredValues = await getVariableValues(plugin.app, variablesToGather, selectionVariables);
   } catch (e) {
     new Notice(e);
-    return console.log("Failed to gather all variables");
+    return console.error("Error: failed to gather all variables");
   }
   
 
@@ -133,7 +133,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, abstractFileOfI
   // open new note in tab
   const newLeaf = this.app.workspace.getLeaf("tab");
   await newLeaf.openFile(newNote); // TODO Add toggle setting
-  console.log("New note created");
+  console.log("New note created:", newNotePathNameResolved);
 
 }
 

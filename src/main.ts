@@ -38,7 +38,7 @@ export default class PTPlugin extends Plugin {
 			name: 'Reload global intents',
 			callback: async () => {
 				const globalIntentsNote = this.app.vault.getAbstractFileByPath(this.settings.globalIntentsNotePath);
-				console.log("Global intents note", globalIntentsNote);
+				
 				if (!(globalIntentsNote instanceof TFile)) {
 					new Notice(`Error: Please configure the note containing global intents for ${PLUGIN_LONG_NAME}`);
 					this.settings.pluginConfigured = false;
@@ -46,6 +46,7 @@ export default class PTPlugin extends Plugin {
 				}
 
 				try {
+					console.log("Loading global intents from", globalIntentsNote);
 					const fm = await getFrontmatter(this.app, globalIntentsNote);
 
 					this.settings.intents = getIntentsFromFM(fm);
@@ -62,7 +63,7 @@ export default class PTPlugin extends Plugin {
 				}
 
 
-				console.log("Loaded intents", this.settings.intents);
+				console.log("Loaded intents:", this.settings.intents);
         new Notice(`Success: Loaded ${this.settings.intents.length} intents`);
 				this.settings.pluginConfigured = true;
 				return this.saveSettings();
@@ -89,7 +90,7 @@ export default class PTPlugin extends Plugin {
 				const intentNote = await (this.app as any).plugins.plugins["picker"].api_getNote(this.settings.intentNotesFilterSetName);
 				if (!(intentNote instanceof TFile)) {
 					new Notice("Error: Note does not exist");
-					console.error("Intent Note", intentNote);
+					console.error("Error running local intent, note does not exist:", intentNote);
 					return;
 				}
 
@@ -126,7 +127,7 @@ export default class PTPlugin extends Plugin {
 				const intentNote = await (this.app as any).plugins.plugins["picker"].api_getNote(this.settings.intentNotesFilterSetName);
 				if (!(intentNote instanceof TFile)) {
 					new Notice("Error: Note does not exist");
-					console.error("Intent Note", intentNote);
+					console.error("Error running", intent.name ,"intent, note does not exist:", intentNote);
 					return;
 				}
 

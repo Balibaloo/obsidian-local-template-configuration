@@ -11,6 +11,6 @@ export async function getVariableValues(app: App, variables: TemplateVariable[],
     gatheredValues[variable.name] = await variableProviderVariableGetters[variable.type](variable as any, val);
   }
 
-  console.log("Gathered values", gatheredValues);
+  console.log("Gathered variable values:", gatheredValues);
   return gatheredValues;
 }

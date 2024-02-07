@@ -14,8 +14,6 @@ export async function getNoteVariableValue(variable: TemplateVariable&TemplateVa
     
     try {
       const selectedNote = (await (app as any).plugins.plugins["picker"].api_getNote(variable.note_filter_set_name)) as TFile;
-      console.log("got note");
-      console.log(selectedNote);
       existingValue = selectedNote.path;
     } catch (e){
       console.log(e);

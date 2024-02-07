@@ -92,12 +92,12 @@ export async function getFrontmatter(app: App, note: TFile, visited: string[]| n
 
         // Check for circular imports
         if (visited.contains(resolvedPath)){
-          console.log(resolvedPath,"in", visited);
+          console.error("Error: Circular dependency of",resolvedPath,"in", visited);
           return reject(`Error getting frontmatter: \nCircular import of ${path} in ${note.name}`);
         }
 
         if (!(importFile instanceof TFile)) {
-          console.log(resolvedPath, "is not a note");
+          console.error("Error: importing non-note",resolvedPath);
           continue;
         }
 
