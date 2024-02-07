@@ -22,6 +22,8 @@ const DEFAULT_VARIABLES: TemplateVariable[] = [{
 	prompt: "New note name",
 }]
 
+const NOTICE_TIMEOUT = 10_000;	
+
 export default class PTPlugin extends Plugin {
 	settings: PTSettings;
 
@@ -56,7 +58,7 @@ export default class PTPlugin extends Plugin {
 						this.createCommandForIntent(intent);
 					});
 				} catch (e) {
-					new Notice(e);
+					return new Notice(e, NOTICE_TIMEOUT);
 				}
 
 
@@ -137,7 +139,7 @@ export default class PTPlugin extends Plugin {
 
 					runIntent(this, chosenIntent, intentNote);
 				} catch (e) {
-					new Notice(e);
+					return new Notice(e, NOTICE_TIMEOUT);
 				}
 			}
 		})
