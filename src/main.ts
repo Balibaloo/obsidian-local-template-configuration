@@ -11,7 +11,7 @@ import {
 } from './intents';
 
 
-const PLUGIN_LONG_NAME = "Local Template Configuration";
+const PLUGIN_LONG_NAME = "Contextual note templating";
 
 const DEFAULT_VARIABLES: TemplateVariable[] = [{
 	name: ReservedVariableName.new_note_name,

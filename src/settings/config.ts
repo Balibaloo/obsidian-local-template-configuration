@@ -25,7 +25,7 @@ export class PTSettingTab extends PluginSettingTab {
     containerEl.empty();
 
     new Setting(containerEl)
-      .setName('Global Intents Note Path')
+      .setName('Global intents note path')
       .setDesc('Path to note containing global intents')
       .addText(text => 
         
@@ -42,7 +42,7 @@ export class PTSettingTab extends PluginSettingTab {
     
 
     new Setting(containerEl)
-        .setName("Intent Note Filter Set Name")
+        .setName("Intent note filter set name")
         .setDesc("The name of the Picker File Filter Set used to display a list of notes with intents.")
         .addText(text => {
           text.setValue(this.plugin.settings.intentNotesFilterSetName)
@@ -53,7 +53,7 @@ export class PTSettingTab extends PluginSettingTab {
         })
 
     new Setting(containerEl)
-      .setName("Selection Delimiters")
+      .setName("Selection delimiters")
       .setDesc(`The set of characters that will be used to split the selection into separate values. Used with the "use_selection" variable property.`)
       .addText(text => {
         text.setValue(this.plugin.settings.selectionDelimiters)
