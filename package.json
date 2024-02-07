@@ -1,7 +1,7 @@
 {
-	"name": "obsidian-sample-plugin",
-	"version": "1.0.0",
-	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+	"name": "obsidian-contextual-note-templating",
+	"version": "2.0.2",
+	"description": "Contextual note templating with prompts for values and templates",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
