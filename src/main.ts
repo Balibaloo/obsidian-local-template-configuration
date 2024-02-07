@@ -93,19 +93,22 @@ export default class PTPlugin extends Plugin {
 					return;
 				}
 
-				const noteIntents = getIntentsFromFM(await getFrontmatter(this.app, intentNote));
-				noteIntents.forEach(i =>
-					i.newNoteProperties.variables = namedObjectDeepMerge(
-						DEFAULT_VARIABLES,
-						i.newNoteProperties.variables
-					))
-
-				const chosenIntent = await choseIntent(noteIntents);
-				if (!choseIntent) 
-					return;
-				
-				runIntent(this, chosenIntent, this.app.vault.getRoot());
-				
+				try {
+					const noteIntents = getIntentsFromFM(await getFrontmatter(this.app, intentNote));
+					noteIntents.forEach(i =>
+						i.newNoteProperties.variables = namedObjectDeepMerge(
+							DEFAULT_VARIABLES,
+							i.newNoteProperties.variables
+						))
+	
+					const chosenIntent = await choseIntent(noteIntents);
+					if (!choseIntent) 
+						return;
+					
+					runIntent(this, chosenIntent, this.app.vault.getRoot());
+				} catch (e) {
+					return new Notice(e, NOTICE_TIMEOUT);
+				}
 			}
 		});
 
