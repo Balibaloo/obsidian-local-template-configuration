@@ -10,22 +10,22 @@ import {
   variableProviderVariableParsers,
 } from "../variables";
 
-export function getIntentsFromFM(fm: FrontMatterCache): Intent[] {
+export function getIntentsFromFM(app: App, fm: FrontMatterCache): Intent[] {
   const newIntents: Intent[] = (fm?.intents_to || []).map((iFm: any): Intent => {
     return {
       name: iFm.make_a,
       disable: typeof iFm?.is_disabled === "undefined" ? undefined :
       typeof iFm?.is_disabled === "boolean" ? iFm?.is_disabled :
         Boolean(iFm?.is_disabled?.[0]?.toUpperCase() === "T"),
-      templates: getFMTemplates(iFm),
-      newNoteProperties: getNewNoteProperties(iFm),
+      templates: getFMTemplates(app, iFm),
+      newNoteProperties: getNewNoteProperties(app, iFm),
     }
   });
 
   return newIntents;
 }
 
-function getFMTemplates(fm: any): Template[] {
+function getFMTemplates(app: App, fm: any): Template[] {
   return (fm?.with_templates || []).map((tFm: any): Template =>
   ({
     name: tFm.called,
@@ -33,21 +33,21 @@ function getFMTemplates(fm: any): Template[] {
     typeof tFm?.is_disabled === "boolean" ? tFm?.is_disabled :
       Boolean(tFm?.is_disabled?.[0]?.toUpperCase() === "T"),
     path: tFm.at_path,
-    newNoteProperties: getNewNoteProperties(tFm),
+    newNoteProperties: getNewNoteProperties(app, tFm),
   })
   );
 }
 
-function getNewNoteProperties(fm: any): NewNoteProperties {
+function getNewNoteProperties(app: App, fm: any): NewNoteProperties {
   return {
     output_pathname: fm.outputs_to_pathname,
     output_pathname_template: fm.outputs_to_templated_pathname,
-    variables: getVariablesFromFM(fm),
+    variables: getVariablesFromFM(app,fm),
   }
 }
 
 
-function getVariablesFromFM(fm: any) {
+function getVariablesFromFM(app: App, fm: any) {
   return (fm?.with_variables || []).map((v: any): TemplateVariable => {
     const type: TemplateVariableType = TemplateVariableType[v.of_type as keyof typeof TemplateVariableType]
       || TemplateVariableType.text;
@@ -70,7 +70,7 @@ function getVariablesFromFM(fm: any) {
       description: v.described_as,
     }
 
-    return Object.assign(baseVariables, variableProviderVariableParsers[type](v))
+    return Object.assign(baseVariables, variableProviderVariableParsers[type](app,v))
   })
 }
 

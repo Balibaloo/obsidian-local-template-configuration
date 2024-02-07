@@ -49,7 +49,7 @@ export default class PTPlugin extends Plugin {
 					console.log("Loading global intents from", globalIntentsNote);
 					const fm = await getFrontmatter(this.app, globalIntentsNote);
 
-					this.settings.intents = getIntentsFromFM(fm);
+					this.settings.intents = getIntentsFromFM(this.app, fm);
 					this.settings.intents.forEach(i =>
 						i.newNoteProperties.variables = namedObjectDeepMerge(
 							DEFAULT_VARIABLES,
@@ -95,7 +95,7 @@ export default class PTPlugin extends Plugin {
 				}
 
 				try {
-					const noteIntents = getIntentsFromFM(await getFrontmatter(this.app, intentNote));
+					const noteIntents = getIntentsFromFM(this.app, await getFrontmatter(this.app, intentNote));
 					noteIntents.forEach(i =>
 						i.newNoteProperties.variables = namedObjectDeepMerge(
 							DEFAULT_VARIABLES,
@@ -132,7 +132,7 @@ export default class PTPlugin extends Plugin {
 				}
 
 				try {
-					const noteIntents = getIntentsFromFM(await getFrontmatter(this.app, intentNote));
+					const noteIntents = getIntentsFromFM(this.app, await getFrontmatter(this.app, intentNote));
 					const noteIntentsWithGlobalIntents = namedObjectDeepMerge(this.settings.intents, noteIntents) as Intent[];
 					const chosenIntent = noteIntentsWithGlobalIntents.find(i => i.name === intent.name);
 
