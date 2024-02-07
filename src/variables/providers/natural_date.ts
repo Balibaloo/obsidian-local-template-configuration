@@ -1,3 +1,4 @@
+import { App } from "obsidian";
 import { TemplateVariable } from "..";
 import { GenericInputPrompt } from "../suggest";
 
@@ -6,7 +7,7 @@ export type TemplateVariableVariables_NaturalDate = {
   before?: string,
 };
 
-export const parseNaturalDateVariableFrontmatter = (fm: any) => {
+export const parseNaturalDateVariableFrontmatter = (app: App, fm: any) => {
   const NLDates = (app as any).plugins.getPlugin("nldates-obsidian");
 
   const dateVariable:TemplateVariableVariables_NaturalDate = {
@@ -25,11 +26,11 @@ export const parseNaturalDateVariableFrontmatter = (fm: any) => {
   return dateVariable;
 };
 
-export async function getNaturalDateVariableValue(variable: TemplateVariable&TemplateVariableVariables_NaturalDate, existingValue:string): Promise<string>{
-  if (!validateNaturalDate(variable, existingValue, false)) {
+export async function getNaturalDateVariableValue(app: App, variable: TemplateVariable&TemplateVariableVariables_NaturalDate, existingValue:string): Promise<string>{
+  if (!validateNaturalDate(app, variable, existingValue, false)) {
     try {
       existingValue = await GenericInputPrompt.Prompt(app, variable,
-        text => validateNaturalDate(variable, text, false),
+        text => validateNaturalDate(app, variable, text, false),
         "Error: Please enter a valid natural language date"
           + (variable.after ? ` after ${variable.after}` : "")
           + (variable.before && variable.after ? " and" : "")
@@ -38,7 +39,7 @@ export async function getNaturalDateVariableValue(variable: TemplateVariable&Tem
       console.log(e);
     }
 
-    validateNaturalDate(variable, existingValue, true);
+    validateNaturalDate(app, variable, existingValue, true);
   }
 
   const NLDates = (app as any).plugins.getPlugin("nldates-obsidian");
@@ -46,7 +47,7 @@ export async function getNaturalDateVariableValue(variable: TemplateVariable&Tem
   return existingValue;
 }
 
-function validateNaturalDate(variable: TemplateVariable & TemplateVariableVariables_NaturalDate, val: string, throwErrors: boolean): boolean {
+function validateNaturalDate(app: App, variable: TemplateVariable & TemplateVariableVariables_NaturalDate, val: string, throwErrors: boolean): boolean {
   const NLDates = (app as any).plugins.getPlugin("nldates-obsidian");
   if (!NLDates) {
     throw new Error("Natural Language dates is required for natural date parsing. Please install it from the community plugin settings");

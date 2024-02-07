@@ -1,3 +1,4 @@
+import { App } from "obsidian";
 import { TemplateVariable } from "..";
 import { 
   TemplateVariableVariables_Text, 
@@ -51,7 +52,7 @@ export type TemplateVariableVariablesLut = {
 
 
 export const variableProviderVariableParsers: {
-  [K in keyof TemplateVariableVariablesLut]: (fm: any) => TemplateVariableVariablesLut[K];
+  [K in keyof TemplateVariableVariablesLut]: (app: App, fm: any) => TemplateVariableVariablesLut[K];
 } = {
   [TemplateVariableType.text]: parseTextVariableFrontmatter,
   [TemplateVariableType.number]: parseNumberVariableFrontmatter,
@@ -61,7 +62,7 @@ export const variableProviderVariableParsers: {
 };
 
 export const variableProviderVariableGetters: {
-  [K in keyof TemplateVariableVariablesLut]: (variable: TemplateVariable & TemplateVariableVariablesLut[K], value: string) => Promise<string>;
+  [K in keyof TemplateVariableVariablesLut]: (app: App, variable: TemplateVariable & TemplateVariableVariablesLut[K], value: string) => Promise<string>;
 } = {
   [TemplateVariableType.text]: getTextVariableValue,
   [TemplateVariableType.number]: getNumberVariableValue,

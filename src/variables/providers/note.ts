@@ -1,16 +1,16 @@
-import { TFile, normalizePath } from "obsidian";
+import { App, TFile, normalizePath } from "obsidian";
 import { TemplateVariable } from "..";
 
 export type TemplateVariableVariables_Note = {
   note_filter_set_name: string,
 };
 
-export const parseNoteVariableFrontmatter = (fm:any) : TemplateVariableVariables_Note => ({
+export const parseNoteVariableFrontmatter = (app: App, fm:any) : TemplateVariableVariables_Note => ({
   note_filter_set_name: fm.note_filter_set_name,
 })
 
-export async function getNoteVariableValue(variable: TemplateVariable&TemplateVariableVariables_Note, existingValue:string):Promise<string>{
-  if (!validateNote(variable, existingValue, false)) {
+export async function getNoteVariableValue(app: App, variable: TemplateVariable&TemplateVariableVariables_Note, existingValue:string):Promise<string>{
+  if (!validateNote(app, variable, existingValue, false)) {
     
     try {
       const selectedNote = (await (app as any).plugins.plugins["picker"].api_getNote(variable.note_filter_set_name)) as TFile;
@@ -18,14 +18,14 @@ export async function getNoteVariableValue(variable: TemplateVariable&TemplateVa
     } catch (e){
       console.log(e);
     }
-    validateNote(variable, existingValue, true);
+    validateNote(app, variable, existingValue, true);
   }
 
   return existingValue;
 }
 
 
-function validateNote(variable: TemplateVariable & TemplateVariableVariables_Note, value: string, throwErrors: boolean): boolean {
+function validateNote(app: App, variable: TemplateVariable & TemplateVariableVariables_Note, value: string, throwErrors: boolean): boolean {
   if (!(app.vault.getAbstractFileByPath(normalizePath(value)) instanceof TFile)) {
     if (variable.required && throwErrors)
       throw new Error(`Error: missing required note variable ${variable.name}`);

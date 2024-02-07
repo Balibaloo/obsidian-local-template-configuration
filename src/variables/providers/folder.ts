@@ -1,4 +1,4 @@
-import { TFolder, normalizePath } from "obsidian";
+import { App, TFolder, normalizePath } from "obsidian";
 import { TemplateVariable } from "..";
 
 export type TemplateVariableVariables_Folder = {
@@ -8,7 +8,7 @@ export type TemplateVariableVariables_Folder = {
   folder_filter_set_name: string,
 };
 
-export const parseFolderVariableFrontmatter = (fm:any) => ({
+export const parseFolderVariableFrontmatter = (app: App, fm:any) => ({
   root_folder: fm.in_folder,
   depth: fm.at_depth,
   include_roots: typeof fm?.includes_roots === "undefined" ? undefined :
@@ -17,8 +17,8 @@ export const parseFolderVariableFrontmatter = (fm:any) => ({
   folder_filter_set_name: fm.folder_filter_set_name,
 })
 
-export async function getFolderVariableValue(variable: TemplateVariable&TemplateVariableVariables_Folder, existingValue:string):Promise<string>{
-  if (!validateFolder(variable, existingValue, false)) {
+export async function getFolderVariableValue(app: App,variable: TemplateVariable&TemplateVariableVariables_Folder, existingValue:string):Promise<string>{
+  if (!validateFolder(app, variable, existingValue, false)) {
     
     try {
       const newProjectFolder = (await (app as any).plugins.plugins["picker"].api_getFolder(variable.root_folder, variable.depth, variable.include_roots, variable.folder_filter_set_name)) as TFolder;
@@ -26,14 +26,14 @@ export async function getFolderVariableValue(variable: TemplateVariable&Template
     } catch (e){
       console.log(e);
     }
-    validateFolder(variable, existingValue, true);
+    validateFolder(app, variable, existingValue, true);
   }
 
   return existingValue;
 }
 
 
-function validateFolder(variable: TemplateVariable & TemplateVariableVariables_Folder, value: string, throwErrors: boolean): boolean {
+function validateFolder(app: App, variable: TemplateVariable & TemplateVariableVariables_Folder, value: string, throwErrors: boolean): boolean {
   if (!(app.vault.getAbstractFileByPath(normalizePath(value)) instanceof TFolder)) {
     if (variable.required && throwErrors)
       throw new Error(`Error: missing required folder variable ${variable.name}`);

@@ -8,7 +8,7 @@ export async function getVariableValues(app: App, variables: TemplateVariable[],
   const gatheredValues: any = {};
   for (let variable of variables) {
     let val = existingValues[variable.name] ?? "";
-    gatheredValues[variable.name] = await variableProviderVariableGetters[variable.type](variable as any, val);
+    gatheredValues[variable.name] = await variableProviderVariableGetters[variable.type](app, variable as any, val);
   }
 
   console.log("Gathered variable values:", gatheredValues);

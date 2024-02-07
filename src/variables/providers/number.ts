@@ -1,3 +1,4 @@
+import { App } from "obsidian";
 import { TemplateVariable } from "..";
 import { GenericInputPrompt } from "../suggest";
 
@@ -7,33 +8,33 @@ export type TemplateVariableVariables_Number = {
   max?: number,
 };
 
-export const parseNumberVariableFrontmatter = (fm: any) => ({
+export const parseNumberVariableFrontmatter = (app: App, fm: any) => ({
   min: parseFloat(fm.is_over),
   max: parseFloat(fm.is_under),
 })
 
-export async function getNumberVariableValue(variable: TemplateVariable&TemplateVariableVariables_Number, existingValue:string):Promise<string>{
-  if (!validateNumber(variable, existingValue, false)) {
+export async function getNumberVariableValue(app: App, variable: TemplateVariable&TemplateVariableVariables_Number, existingValue:string):Promise<string>{
+  if (!validateNumber(app, variable, existingValue, false)) {
     const minString = variable.min ? `${variable.min} <= ` : "";
     const maxString = variable.max ? ` <= ${variable.max}` : "";
     const placeholderString = variable.placeholder || minString + variable.name + maxString;
 
     try {
       existingValue = await GenericInputPrompt.Prompt(app, variable,
-        text => validateNumber(variable, text, false)
+        text => validateNumber(app, variable, text, false)
         , `Error: Please enter a number` + ((variable.min || variable.max) ? `in the range ${minString} x ${maxString}` : "")
       );
     } catch (e){
       console.log(e);
     }
-    validateNumber(variable, existingValue, true);
+    validateNumber(app, variable, existingValue, true);
   }
 
   return existingValue;
 }
 
 
-function validateNumber(variable: TemplateVariable & TemplateVariableVariables_Number, value: string, throwErrors: boolean): boolean {
+function validateNumber(app: App, variable: TemplateVariable & TemplateVariableVariables_Number, value: string, throwErrors: boolean): boolean {
   const parsedNum = parseFloat(value);
   const isValidNum: boolean = Boolean(parsedNum);
   if (!isValidNum) {
