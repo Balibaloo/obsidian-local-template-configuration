@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, Setting } from "obsidian";
+import { App, PluginSettingTab, Setting, normalizePath } from "obsidian";
 import PTPlugin from "../main";
 import { PTSettings } from ".";
 
@@ -32,6 +32,7 @@ export class PTSettingTab extends PluginSettingTab {
         text.setPlaceholder('Path')
         .setValue(this.plugin.settings.globalIntentsNotePath)
         .onChange(async (value) => {
+          value = normalizePath(value);
           this.plugin.settings.globalIntentsNotePath = value + (!value.endsWith(".md") ? ".md" : "");
           await this.plugin.saveSettings();
         })

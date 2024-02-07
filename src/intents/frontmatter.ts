@@ -1,4 +1,4 @@
-import { App, FrontMatterCache, TAbstractFile, TFile } from "obsidian";
+import { App, FrontMatterCache, TAbstractFile, TFile, normalizePath } from "obsidian";
 import { join as joinPath } from "path";
 import { Intent, NewNoteProperties, } from ".";
 import { 
@@ -120,19 +120,12 @@ export function resolvePathRelativeToAbstractFile(path: string | void, projectFi
     return;
 
   const parentFolder = projectFile instanceof TFile ? projectFile.parent : projectFile;
-  const newNoteFolderPath: string | void = path[0] === "." ?
-    joinPath(parentFolder?.path as string, path).replaceAll("\\", "/") :
-    path;
+  const newNoteFolderPath: string | void = normalizePath(
+    path[0] === "."
+    ? joinPath(parentFolder?.path as string, path)
+    : path)
   if (!newNoteFolderPath)
     return;
-
-  // Remove directory trailing "/"
-  if (newNoteFolderPath.endsWith("/"))
-    return newNoteFolderPath.slice(0, -1);
-
-  // Remove leading "/"
-  if (newNoteFolderPath.startsWith("/"))
-    return newNoteFolderPath.slice(1);
 
   return newNoteFolderPath.replace(new RegExp("\.md$",), "");
 }

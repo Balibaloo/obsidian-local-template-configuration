@@ -1,4 +1,4 @@
-import { TFolder } from "obsidian";
+import { TFolder, normalizePath } from "obsidian";
 import { TemplateVariable } from "..";
 
 export type TemplateVariableVariables_Folder = {
@@ -34,7 +34,7 @@ export async function getFolderVariableValue(variable: TemplateVariable&Template
 
 
 function validateFolder(variable: TemplateVariable & TemplateVariableVariables_Folder, value: string, throwErrors: boolean): boolean {
-  if (!(app.vault.getAbstractFileByPath(value) instanceof TFolder)) {
+  if (!(app.vault.getAbstractFileByPath(normalizePath(value)) instanceof TFolder)) {
     if (variable.required && throwErrors)
       throw new Error(`Error: missing required folder variable ${variable.name}`);
     return false;

@@ -1,4 +1,4 @@
-import { TFile } from "obsidian";
+import { TFile, normalizePath } from "obsidian";
 import { TemplateVariable } from "..";
 
 export type TemplateVariableVariables_Note = {
@@ -28,7 +28,7 @@ export async function getNoteVariableValue(variable: TemplateVariable&TemplateVa
 
 
 function validateNote(variable: TemplateVariable & TemplateVariableVariables_Note, value: string, throwErrors: boolean): boolean {
-  if (!(app.vault.getAbstractFileByPath(value) instanceof TFile)) {
+  if (!(app.vault.getAbstractFileByPath(normalizePath(value)) instanceof TFile)) {
     if (variable.required && throwErrors)
       throw new Error(`Error: missing required note variable ${variable.name}`);
     return false;
