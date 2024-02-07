@@ -510,3 +510,9 @@ intents_to:
 
 # Note for {{new_project_name}} project!
 ```
+
+# Attributions
+This repository uses code from the following projects:
+- https://github.com/chhoumann/quickadd
+
+Code credits are also placed in comments above code.
