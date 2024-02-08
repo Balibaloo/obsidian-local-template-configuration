@@ -241,7 +241,7 @@ Example:
 with_variables:
   - called: some_note
     of_type: note
-	note_filter_set_name: maps of content
+    note_filter_set_name: maps of content
 ---
 ```
 
