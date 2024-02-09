@@ -35,7 +35,7 @@ The `Run local intent` command is the simplest way to run an intent.
 To run a local intent, you have to select the note that contains that intent.
 
 ### selecting a note
-Another plugin called "Picker" is required to select a note from your vault.
+Another plugin called "Filtered Opener" is required to select a note from your vault.
 To select a note, Picker displays a list of every note in your vault.
 Picker can also be configured to display a subset of your notes using filters.
 Please install the [Picker plugin](https://github.com/Balibaloo/obsidian-picker) as it is required to use this plugin.

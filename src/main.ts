@@ -87,7 +87,7 @@ export default class PTPlugin extends Plugin {
 			name: 'Run local intent',
 			callback: async () => {
 
-				const intentNote = await (this.app as any).plugins.plugins["picker"].api_getNote(this.settings.intentNotesFilterSetName);
+				const intentNote = await (this.app as any).plugins.plugins["filtered-opener"].api_getNote(this.settings.intentNotesFilterSetName);
 				if (!(intentNote instanceof TFile)) {
 					new Notice("Error: Note does not exist");
 					console.error("Error running local intent, note does not exist:", intentNote);
@@ -123,7 +123,7 @@ export default class PTPlugin extends Plugin {
 			id: `create-${normalizedIntentName}`,
 			name: `Create local ${intent.name} note`,
 			callback: async () => {
-				const intentNote = await (this.app as any).plugins.plugins["picker"].api_getNote(this.settings.intentNotesFilterSetName);
+				const intentNote = await (this.app as any).plugins.plugins["filtered-opener"].api_getNote(this.settings.intentNotesFilterSetName);
 				if (!(intentNote instanceof TFile)) {
 					new Notice("Error: Note does not exist");
 					console.error("Error running", intent.name ,"intent, note does not exist:", intentNote);
