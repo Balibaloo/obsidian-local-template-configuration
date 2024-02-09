@@ -13,7 +13,10 @@ export async function getNoteVariableValue(app: App, variable: TemplateVariable&
   if (!validateNote(app, variable, existingValue, false)) {
     
     try {
-      const selectedNote = (await (app as any).plugins.plugins["picker"].api_getNote(variable.note_filter_set_name)) as TFile;
+      const selectedNote = await (app as any).plugins.plugins["picker"].api_getNote(variable.note_filter_set_name);
+      if (!(selectedNote instanceof TFile))
+        throw new Error(`Error: picker plugin did not return a note for variable ${variable.name}`);
+                  
       existingValue = selectedNote.path;
     } catch (e){
       console.log(e);
