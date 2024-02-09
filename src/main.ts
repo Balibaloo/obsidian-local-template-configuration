@@ -118,10 +118,9 @@ export default class PTPlugin extends Plugin {
 	createCommandForIntent(intent: Intent) {
 		const normalizedIntentName = intent.name.toLowerCase()
 			.replaceAll(/[^\w\s]/g,"").replace(/\s+/g,' ').replace(/\s/g,'-');
-		const commandID = `create-${normalizedIntentName}`;
 
 		this.addCommand({
-			id: commandID,
+			id: `create-${normalizedIntentName}`,
 			name: `Create local ${intent.name} note`,
 			callback: async () => {
 				const intentNote = await (this.app as any).plugins.plugins["picker"].api_getNote(this.settings.intentNotesFilterSetName);
