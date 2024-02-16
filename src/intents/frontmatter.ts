@@ -122,7 +122,7 @@ export function resolvePathRelativeToAbstractFile(path: string | void, projectFi
   const parentFolder = projectFile instanceof TFile ? projectFile.parent : projectFile;
   const newNoteFolderPath: string | void = normalizePath(
     path[0] === "."
-    ? joinPath(parentFolder?.path as string, path)
+    ? joinPath(parentFolder?.path || "", path)
     : path)
   if (!newNoteFolderPath)
     return;
