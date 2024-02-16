@@ -8,7 +8,8 @@ export async function getVariableValues(app: App, variables: TemplateVariable[],
   const gatheredValues: any = {};
   for (let variable of variables) {
     const val = existingValues[variable.name] ?? "";
-    gatheredValues[variable.name] = await variableProviderVariableGetters[variable.type](app, variable as any, val);
+    //@ts-ignore variable is a correct type but TS expects it to be the union of all correct types
+    gatheredValues[variable.name] = await variableProviderVariableGetters[variable.type](app, variable, val);
   }
 
   console.log("Gathered variable values:", gatheredValues);
