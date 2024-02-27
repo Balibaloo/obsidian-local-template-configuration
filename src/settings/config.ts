@@ -43,7 +43,7 @@ export class PTSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
         .setName("Intent note filter set name")
-        .setDesc("The name of the Picker File Filter Set used to display a list of notes with intents.")
+        .setDesc("The name of the Filtered Opener File Filter Set used to display a list of notes with intents.")
         .addText(text => {
           text.setValue(this.plugin.settings.intentNotesFilterSetName)
           text.onChange(async v => {

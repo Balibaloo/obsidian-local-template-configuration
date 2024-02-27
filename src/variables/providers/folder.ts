@@ -23,7 +23,7 @@ export async function getFolderVariableValue(app: App,variable: TemplateVariable
     try {
       const newProjectFolder = await (app as any).plugins.plugins["filtered-opener"].api_getFolder(variable.root_folder, variable.depth, variable.include_roots, variable.folder_filter_set_name);
       if (!(newProjectFolder instanceof TFolder))
-        throw new Error(`Error: picker plugin did not return a folder for variable ${variable.name}`);
+        throw new Error(`Error: Filtered Opener plugin did not return a folder for variable ${variable.name}`);
       
       existingValue = newProjectFolder.path;
     } catch (e){

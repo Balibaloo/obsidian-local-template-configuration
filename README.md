@@ -36,9 +36,9 @@ To run a local intent, you have to select the note that contains that intent.
 
 ### selecting a note
 Another plugin called "Filtered Opener" is required to select a note from your vault.
-To select a note, Picker displays a list of every note in your vault.
-Picker can also be configured to display a subset of your notes using filters.
-Please install the [Picker plugin](https://github.com/Balibaloo/obsidian-picker) as it is required to use this plugin.
+To select a note, Filtered Opener displays a list of every note in your vault.
+Filtered Opener can also be configured to display a subset of your notes using filters.
+Please install the [Filtered Opener plugin](https://github.com/Balibaloo/obsidian-filtered-opener) as it is required to use this plugin.
 
 After selecting a note, you will be shown its list of intents to chose from.
 If a note only has one intent, that intent will be selected automatically.
@@ -228,8 +228,8 @@ with_variables:
 ```
 
 ### note
-A path to a note chosen from a list of notes. Uses same Picker plugin as when [selecting a note](#selecting-a-note).
-The Picker plugin takes the name of the filter set (`note_filter_set_name`) to display a list of notes to chose from.
+A path to a note chosen from a list of notes. Uses same Filtered Opener plugin as when [selecting a note](#selecting-a-note).
+The Filtered Opener plugin takes the name of the filter set (`note_filter_set_name`) to display a list of notes to chose from.
 
 | property name | required | Default | description |
 | ---- | ---- | ---- | ---- |
@@ -248,13 +248,13 @@ with_variables:
 
 
 ### folder
-A path to a folder chosen from a list of folders. Uses same Picker plugin as when [selecting a note](#selecting-a-note).
-The Picker plugin takes the name of the filter set (`folder_filter_set_name`) to display a list of folders to chose from.
+A path to a folder chosen from a list of folders. Uses same Filtered Opener plugin as when [selecting a note](#selecting-a-note).
+The Filtered Opener plugin takes the name of the filter set (`folder_filter_set_name`) to display a list of folders to chose from.
 
 | property name | required | Default | description |
 | ---- | ---- | ---- | ---- |
 |`in_folder`| No| Vault root folder |A folder to start searching from, defaults to the vault folder.|
-|`at_depth`| No| Depth configured in Picker  |The depth of folders to include, for a folder structure of `root/inner/leaf`, a depth of 2 will show notes down to the `leaf` level.|
+|`at_depth`| No| Depth configured in Filtered Opener  |The depth of folders to include, for a folder structure of `root/inner/leaf`, a depth of 2 will show notes down to the `leaf` level.|
 |`includes_roots`|No| `false` | When `false` notes only at the specified depth are shown. When `true` notes at all levels down to the specified depth are shown.|
 |`folder_filter_set_name`| No |Allows all folders | The name of the folder filter set.|
 
