@@ -84,8 +84,14 @@ export default class PTPlugin extends Plugin {
 			id: 'run-local-intent',
 			name: 'Run local intent',
 			callback: async () => {
+				const filteredOpener = (this.app as any).plugins.plugins["filtered-opener"];
+				if (!filteredOpener) {
+					new Notice("Error: Filtered Opener plugin not found. Please install it from the community plugins tab.");
+					console.error("Error running local intent, Filtered Opener plugin not found");
+					return;
+				}
 
-				const intentNote = await (this.app as any).plugins.plugins["filtered-opener"].api_getNote(this.settings.intentNotesFilterSetName);
+				const intentNote = await filteredOpener.api_getNote(this.settings.intentNotesFilterSetName);
 				if (!(intentNote instanceof TFile)) {
 					new Notice("Error: Note does not exist");
 					console.error("Error running local intent, note does not exist:", intentNote);
@@ -121,7 +127,14 @@ export default class PTPlugin extends Plugin {
 			id: `create-${normalizedIntentName}`,
 			name: `Create local ${intent.name} note`,
 			callback: async () => {
-				const intentNote = await (this.app as any).plugins.plugins["filtered-opener"].api_getNote(this.settings.intentNotesFilterSetName);
+				const filteredOpener = (this.app as any).plugins.plugins["filtered-opener"];
+				if (!filteredOpener) {
+					new Notice("Error: Filtered Opener plugin not found. Please install it from the community plugins tab.");
+					console.error("Error running local intent, Filtered Opener plugin not found");
+					return;
+				}
+
+				const intentNote = await filteredOpener.api_getNote(this.settings.intentNotesFilterSetName);
 				if (!(intentNote instanceof TFile)) {
 					new Notice("Error: Note does not exist");
 					console.error("Error running", intent.name ,"intent, note does not exist:", intentNote);

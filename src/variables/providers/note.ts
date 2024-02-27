@@ -13,7 +13,12 @@ export async function getNoteVariableValue(app: App, variable: TemplateVariable&
   if (!validateNote(app, variable, existingValue, false)) {
     
     try {
-      const selectedNote = await (app as any).plugins.plugins["filtered-opener"].api_getNote(variable.note_filter_set_name);
+      const filteredOpener = (this.app as any).plugins.plugins["filtered-opener"];
+      if (!filteredOpener) {
+        throw new Error("Error: Filtered Opener plugin not found. Please install it from the community plugins tab.");
+      }
+
+      const selectedNote = await filteredOpener.api_getNote(variable.note_filter_set_name);
       if (!(selectedNote instanceof TFile))
         throw new Error(`Error: Filtered Opener plugin did not return a note for variable ${variable.name}`);
                   
