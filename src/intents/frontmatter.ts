@@ -77,40 +77,41 @@ function getVariablesFromFM(app: App, fm: any) {
 
 
 export async function getFrontmatter(app: App, note: TFile, visited: string[]| null = null): Promise<FrontMatterCache> {
-  return new Promise((resolve, reject) => {
-    app.fileManager.processFrontMatter(note, async fm => {
-      visited = visited || new Array<string>();
+  return new Promise(async (resolve, reject) => {
+    
+    const fm = app.metadataCache.getFileCache(note)?.frontmatter || {};
+    
+    visited = visited || new Array<string>();
 
-      // Resolve note import contents
-      const importPathsFM: string[] | string[][] = [fm.intents_imported_from || []];
-      const importsPaths: string[] = importPathsFM.flat();
+    // Resolve note import contents
+    const importPathsFM: string[] | string[][] = [fm.intents_imported_from || []];
+    const importsPaths: string[] = importPathsFM.flat();
 
-      let fmImports = {}
-      for (let path of importsPaths) {
-        const resolvedPath = resolvePathRelativeToAbstractFile(path, note) + ".md";
-        const importFile = app.vault.getAbstractFileByPath(resolvedPath);
+    let fmImports = {}
+    for (let path of importsPaths) {
+      const resolvedPath = resolvePathRelativeToAbstractFile(path, note) + ".md";
+      const importFile = app.vault.getAbstractFileByPath(resolvedPath);
 
-        // Check for circular imports
-        if (visited.contains(resolvedPath)){
-          console.error("Error: Circular dependency of",resolvedPath,"in", visited);
-          return reject(`Error getting frontmatter: \nCircular import of ${path} in ${note.name}`);
-        }
-
-        if (!(importFile instanceof TFile)) {
-          console.error("Error: importing non-note",resolvedPath);
-          continue;
-        }
-
-        try {
-          const fmI = await getFrontmatter(app, importFile, [...visited, resolvedPath])
-          fmImports = namedObjectDeepMerge(fmImports, fmI);
-        } catch (e){
-          reject(e)
-        }
+      // Check for circular imports
+      if (visited.contains(resolvedPath)){
+        console.error("Error: Circular dependency of",resolvedPath,"in", visited);
+        return reject(`Error getting frontmatter: \nCircular import of ${path} in ${note.name}`);
       }
 
-      resolve(namedObjectDeepMerge(fmImports, fm));
-    })
+      if (!(importFile instanceof TFile)) {
+        console.error("Error: importing non-note",resolvedPath);
+        continue;
+      }
+
+      try {
+        const fmI = await getFrontmatter(app, importFile, [...visited, resolvedPath])
+        fmImports = namedObjectDeepMerge(fmImports, fmI);
+      } catch (e){
+        reject(e)
+      }
+    }
+
+    resolve(namedObjectDeepMerge(fmImports, fm));
   })
 }
 
