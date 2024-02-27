@@ -11,8 +11,6 @@ import {
 } from './intents';
 
 
-const PLUGIN_LONG_NAME = "Contextual note templating";
-
 const DEFAULT_VARIABLES: TemplateVariable[] = [{
 	name: ReservedVariableName.new_note_name,
 	type: TemplateVariableType.text,
@@ -40,7 +38,7 @@ export default class PTPlugin extends Plugin {
 				const globalIntentsNote = this.app.vault.getAbstractFileByPath(this.settings.globalIntentsNotePath);
 				
 				if (!(globalIntentsNote instanceof TFile)) {
-					new Notice(`Error: Please configure the note containing global intents for ${PLUGIN_LONG_NAME}`);
+					new Notice(`Error: Please configure the note containing global intents for the ${this.manifest.name} plugin`);
 					this.settings.pluginConfigured = false;
 					return this.saveSettings();
 				}
