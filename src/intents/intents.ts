@@ -49,7 +49,7 @@ export async function choseIntent(intents:Intent[]):Promise<Intent> {
 
 
 export async function runIntent(plugin:PTPlugin, intent: Intent, abstractFileOfIntent:TAbstractFile) {
-  console.log("Running intent:", intent);
+  // console.log("Running intent:", intent);
 
   let variablesToGather = intent.newNoteProperties.variables;
 
@@ -63,7 +63,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, abstractFileOfI
   let newNoteContents = "";
   if (intent.templates.length !== 0) {
     const chosenTemplate = await getIntentTemplate(intent);
-    console.log("Chosen template:", chosenTemplate);
+    // console.log("Chosen template:", chosenTemplate);
     if (!chosenTemplate) {
       new Notice("Error: No template selected");
       return;
@@ -93,7 +93,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, abstractFileOfI
     acc[variable.name] = selectionSplit[index] ?? "";
     return acc;
   }, {});
-  console.log("Found selection variables:", selectionVariables);
+  // console.log("Found selection variables:", selectionVariables);
 
 
   let gatheredValues;
@@ -133,7 +133,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, abstractFileOfI
   // open new note in tab
   const newLeaf = this.app.workspace.getLeaf("tab");
   await newLeaf.openFile(newNote); // TODO Add toggle setting
-  console.log("New note created:", newNotePathNameResolved);
+  // console.log("New note created:", newNotePathNameResolved);
 
 }
 

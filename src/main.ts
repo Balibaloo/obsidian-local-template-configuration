@@ -44,7 +44,7 @@ export default class PTPlugin extends Plugin {
 				}
 
 				try {
-					console.log("Loading global intents from", globalIntentsNote);
+					// console.log("Loading global intents from", globalIntentsNote);
 					const fm = await getFrontmatter(this.app, globalIntentsNote);
 
 					this.settings.intents = getIntentsFromFM(this.app, fm);
@@ -61,7 +61,7 @@ export default class PTPlugin extends Plugin {
 				}
 
 
-				console.log("Loaded intents:", this.settings.intents);
+				// console.log("Loaded intents:", this.settings.intents);
         new Notice(`Success: Loaded ${this.settings.intents.length} intents`);
 				this.settings.pluginConfigured = true;
 				return this.saveSettings();
