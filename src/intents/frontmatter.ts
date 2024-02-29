@@ -43,6 +43,7 @@ function getNewNoteProperties(app: App, fm: any): NewNoteProperties {
     output_pathname: fm.outputs_to_pathname,
     output_pathname_template: fm.outputs_to_templated_pathname,
     variables: getVariablesFromFM(app,fm),
+    selection_replace_template: fm.replaces_selection_with_templated,
   }
 }
 

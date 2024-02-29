@@ -17,6 +17,7 @@ export type NewNoteProperties = {
 	output_pathname: string,
 	output_pathname_template: string,
 	variables: TemplateVariable[],
+	selection_replace_template?: string,
 }
 
 export {

@@ -161,6 +161,7 @@ There are multiple types of variables but all variables contain a common set of 
 | `described_as` | No |  | Text that will be shown bellow the prompt. |
 | `is_initially` | No |  | The value that will be in the prompt initially. |
 | `uses_selection` | No | false | See [prepopulating prompts using selection](#prepopulating-prompts-using-selection). |
+| `replaces_selection_with_templated` | No | \[\[{{[new_note_name](#new_note_name)}}\]\] | Template text that replaces the selection if `uses_selection` is enabled |
 | `hinted_as` | No |  | The value displayed inside the prompt when it is empty. |
 | `is_disabled` | No | false | See [disabling intents, templates and variables](#disabling-intents-templates-and-variables) |
 
@@ -358,7 +359,7 @@ Overwriting properties of imported intents is useful to:
 ## Additional features:
 - prepopulate the variables prompt using selected text
 	- [ ] (WIP) select multiple lines to create multiple notes
-  - [ ] (WIP) replace selection with templated text
+  - replace selection with templated text
 - supports many variable types eg text, number
 	- and other types of variable providers eg: natural date, note, folder
 - import other config notes

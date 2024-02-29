@@ -12,6 +12,7 @@ intents_to:
         described_as: "text"
         is_initially: "text"
         uses_selection: "true/false"
+        replaces_selection_with_templated: "text"
         hinted_as: "text"
         is_disabled: "true/false"
     with_templates: 
@@ -28,5 +29,6 @@ intents_to:
             described_as: "text"
             is_initially: "text"
             uses_selection: "true/false"
+            replaces_selection_with_templated: "text"
             hinted_as: "text"
             is_disabled: "true/false"

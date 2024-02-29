@@ -125,9 +125,11 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, abstractFileOfI
     newNoteContents
   );
 
-  if (usingSelection){
-    const noteName = newNotePathName.split("/").at(-1)?.replace(".md","");
-    plugin.app.workspace.activeEditor?.editor?.replaceSelection(`[[${noteName}]]`);
+  if ( usingSelection ){
+    const selectionTemplate = intent.newNoteProperties.selection_replace_template || `[[${ReservedVariableName.new_note_name}]]`;
+    const selectionReplacement = getReplacedVariablesText( selectionTemplate, gatheredValues );
+    
+    plugin.app.workspace.activeEditor?.editor?.replaceSelection( selectionReplacement );
   }
 
   // open new note in tab
