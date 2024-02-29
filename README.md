@@ -75,7 +75,7 @@ Example: intents with templates
 ---
 intents_to:
   - make_a: "task ✅"
-    with_variables: 
+    with_templates: 
       - called: "default"
         at_path: "Templates/task template.md"
       - called: "graded"
@@ -83,7 +83,7 @@ intents_to:
       - called: "worksheet"
         at_path: "Templates/worksheet task template.md"
   - make_a: "meeting 🤝"
-    with_variables: 
+    with_templates: 
       - called: "default"
         at_path: "Templates/meeting template.md"
       - called: "project review"
@@ -91,7 +91,7 @@ intents_to:
       - called: "standup"
         at_path: "Templates/standup meeting template.md"
   - make_a: "person 🙋‍♂️"
-    with_variables: 
+    with_templates: 
       - called: "default"
         at_path: "Templates/person template.md"
       - called: "work colleague"
@@ -129,7 +129,7 @@ intents_to:
     with_variables:
       - called: deadline
         of_type: natural_date
-    with_variables:
+    with_templates:
       - called: default ✅
         at_path: Templates/task template.md
       - called: graded 🎓
@@ -429,7 +429,7 @@ Adding a simple template.
 ---
 intents_to:
   - make_a: task
-    with_variables:
+    with_templates:
       - called: simple task
         at_path: "/path /to /templates folder /simple task template.md"
 ---
@@ -440,7 +440,7 @@ Using a template next to a context note.
 ---
 intents_to:
   - make_a: task
-    with_variables:
+    with_templates:
       - called: simple task
         at_path: "./simple task template.md"
 ---
@@ -458,7 +458,7 @@ intents_to:
         is_disabled: true
       - called: new_project_name
     outputs_to_templated_pathname: "./{{new_project_name}}/🏗 {{new_project_name}}"
-    with_variables:
+    with_templates:
       - called: default
         at_path: "/path /to /templates /project template.md"
 ---
@@ -472,7 +472,7 @@ Project note template:
 intents_to:
   - make_a: task
     outputs_to_templated_pathname: "./tasks/{{new_project_name}}-{{new_note_name}}"
-    with_variables:
+    with_templates:
       - called: simple task
         at_path: "./simple task template.md"
 ---
@@ -502,7 +502,7 @@ intents_to:
         at_depth: 1
         includes_roots: false
     outputs_to_templated_pathname: "{{output_folder}}/{{new_project_name}}/🏗 {{new_project_name}}"
-    with_variables:
+    with_templates:
       - called: default
         at_path: "/path /to /templates /project template.md"
 ---
@@ -515,7 +515,7 @@ Project note template:
 intents_to:
   - make_a: task
     outputs_to_templated_pathname: "./tasks/{{new_project_name}}-{{new_note_name}}"
-    with_variables:
+    with_templates:
       - called: simple task
         at_path: "./simple task template.md"
 ---
