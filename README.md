@@ -167,6 +167,7 @@ There are multiple types of variables but all variables contain a common set of 
 There are multiple ways to use variable values. See [using variable values](#using-variable-values).
 
 ## variable types
+Each type of variable has its own parameters and validation.
 
 ### text
 A simple text prompt.
@@ -356,10 +357,21 @@ Overwriting properties of imported intents is useful to:
 
 ## Additional features:
 - prepopulate the variables prompt using selected text
-	- [ ] select multiple lines to create multiple notes
+	- [ ] (WIP) select multiple lines to create multiple notes
+  - [ ] (WIP) replace selection with templated text
 - supports many variable types eg text, number
-	- and other types of variable providers eg: natural date, folder
+	- and other types of variable providers eg: natural date, note, folder
 - import other config notes
+
+## Other plugins with overlapping functionality
+Contextual Note Templating (CNT) functionality compared to:
+- [Note from template](https://github.com/mo-seph/obsidian-note-from-template): Both plugins show prompts and use the selection to pre-populate fields that can be inserted into many note properties eg output folder, name, note title and body.
+  - The major difference is that CNT shows one field at a time and extends the functionality of a single field.
+  - CNT extends fields into [Variables](#variables). 
+    - Each variable has its own configurable prompt and its type adds validation and post processing.
+- [Hotkeys for templates](https://github.com/Vinzent03/obsidian-hotkeys-for-templates):
+  - Instead of creating hotkeys (commands) for each template, this plugin creates commands for each [Intent](#intents).
+<!-- I don't understand what [Metatemplates](https://github.com/avirut/obsidian-metatemplates) does -->
 
 
 # Examples
