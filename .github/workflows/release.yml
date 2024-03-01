@@ -32,3 +32,18 @@ jobs:
             --title="$tag" \
             --draft \
             main.js manifest.json styles.css
+
+
+changelog:
+  categories:
+    - title: Breaking Changes 🛠
+      labels:
+        - Semver-Major
+        - breaking-change
+    - title: New Features
+      labels:
+        - Semver-Minor
+        - enhancement
+    - title: Other Changes
+      labels:
+        - "*"
