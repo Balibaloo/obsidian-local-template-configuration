@@ -126,7 +126,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, abstractFileOfI
   );
 
   if ( usingSelection ){
-    const selectionTemplate = intent.newNoteProperties.selection_replace_template || `[[${ReservedVariableName.new_note_name}]]`;
+    const selectionTemplate = intent.newNoteProperties.selection_replace_template || `[[{{${ReservedVariableName.new_note_name}}}]]`;
     const selectionReplacement = getReplacedVariablesText( selectionTemplate, gatheredValues );
     
     plugin.app.workspace.activeEditor?.editor?.replaceSelection( selectionReplacement );

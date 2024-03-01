@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-contextual-note-templating",
-	"version": "2.0.8",
+	"version": "2.0.9",
 	"description": "Contextual note templating with prompts for values and templates",
 	"main": "main.js",
 	"scripts": {
