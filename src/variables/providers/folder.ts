@@ -42,7 +42,7 @@ export async function getFolderVariableValue(app: App,variable: TemplateVariable
 
 
 function validateFolder(app: App, variable: TemplateVariable & TemplateVariableVariables_Folder, value: string, throwErrors: boolean): boolean {
-  if (!(app.vault.getAbstractFileByPath(normalizePath(value)) instanceof TFolder)) {
+  if (!value || !(app.vault.getAbstractFileByPath(normalizePath(value)) instanceof TFolder)) {
     if (variable.required && throwErrors)
       throw new Error(`Error: missing required folder variable ${variable.name}`);
     return false;
