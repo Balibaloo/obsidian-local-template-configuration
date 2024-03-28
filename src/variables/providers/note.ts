@@ -34,7 +34,7 @@ export async function getNoteVariableValue(app: App, variable: TemplateVariable&
 
 
 function validateNote(app: App, variable: TemplateVariable & TemplateVariableVariables_Note, value: string, throwErrors: boolean): boolean {
-  if (!(app.vault.getAbstractFileByPath(normalizePath(value)) instanceof TFile)) {
+  if (!value || !(app.vault.getAbstractFileByPath(normalizePath(value)) instanceof TFile)) {
     if (variable.required && throwErrors)
       throw new Error(`Error: missing required note variable ${variable.name}`);
     return false;
