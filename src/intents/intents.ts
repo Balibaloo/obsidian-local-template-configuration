@@ -125,8 +125,9 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, abstractFileOfI
     newNoteContents
   );
 
-  if ( usingSelection ){
-    const selectionTemplate = intent.newNoteProperties.selection_replace_template || `[[{{${ReservedVariableName.new_note_name}}}]]`;
+  if ( usingSelection ){    
+    const newNoteNameResolved = newNotePathNameResolved.split("/").at(-1);
+    const selectionTemplate = intent.newNoteProperties.selection_replace_template || `[[${newNoteNameResolved}]]`;
     const selectionReplacement = getReplacedVariablesText( selectionTemplate, gatheredValues );
     
     plugin.app.workspace.activeEditor?.editor?.replaceSelection( selectionReplacement );
