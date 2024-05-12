@@ -21,15 +21,15 @@ function getIntentsFromFM(app: App, fm: FrontMatterCache): Intent[] {
       disable: typeof iFm?.is_disabled === "undefined" ? undefined :
       typeof iFm?.is_disabled === "boolean" ? iFm?.is_disabled :
         Boolean(iFm?.is_disabled?.[0]?.toUpperCase() === "T"),
-      templates: getFMTemplates(app, iFm),
-      newNoteProperties: getNewNoteProperties(app, iFm),
+      templates: getTemplatesFromFM(app, iFm),
+      newNoteProperties: getNewNotePropertiesFromFM(app, iFm),
     }
   });
 
   return newIntents;
 }
 
-function getFMTemplates(app: App, fm: any): Template[] {
+function getTemplatesFromFM(app: App, fm: any): Template[] {
   return (fm?.with_templates || []).map((tFm: any): Template =>
   ({
     name: tFm.called,
@@ -37,12 +37,12 @@ function getFMTemplates(app: App, fm: any): Template[] {
     typeof tFm?.is_disabled === "boolean" ? tFm?.is_disabled :
       Boolean(tFm?.is_disabled?.[0]?.toUpperCase() === "T"),
     path: tFm.at_path,
-    newNoteProperties: getNewNoteProperties(app, tFm),
+    newNoteProperties: getNewNotePropertiesFromFM(app, tFm),
   })
   );
 }
 
-function getNewNoteProperties(app: App, fm: any): NewNoteProperties {
+function getNewNotePropertiesFromFM(app: App, fm: any): NewNoteProperties {
   return {
     output_pathname: fm.outputs_to_pathname,
     output_pathname_template: fm.outputs_to_templated_pathname,
