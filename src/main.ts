@@ -3,8 +3,7 @@ import { DEFAULT_SETTINGS, PTSettings, PTSettingTab } from './settings';
 import { ReservedVariableName, TemplateVariable, TemplateVariableType } from './variables';
 import { 
 	Intent,
-	getFrontmatter, 
-	getIntentsFromFM, 
+	getIntentsFromTFile,
 	namedObjectDeepMerge, 
 	choseIntent, 
 	runIntent 
@@ -45,9 +44,7 @@ export default class PTPlugin extends Plugin {
 
 				try {
 					// console.log("Loading global intents from", globalIntentsNote);
-					const fm = await getFrontmatter(this.app, globalIntentsNote);
-
-					this.settings.intents = getIntentsFromFM(this.app, fm);
+					this.settings.intents = await getIntentsFromTFile(this.app, globalIntentsNote);
 					this.settings.intents.forEach(i =>
 						i.newNoteProperties.variables = namedObjectDeepMerge(
 							DEFAULT_VARIABLES,
@@ -99,7 +96,7 @@ export default class PTPlugin extends Plugin {
 				}
 
 				try {
-					const noteIntents = getIntentsFromFM(this.app, await getFrontmatter(this.app, intentNote));
+					const noteIntents = await getIntentsFromTFile(this.app, intentNote);
 					noteIntents.forEach(i =>
 						i.newNoteProperties.variables = namedObjectDeepMerge(
 							DEFAULT_VARIABLES,
@@ -142,7 +139,7 @@ export default class PTPlugin extends Plugin {
 				}
 
 				try {
-					const noteIntents = getIntentsFromFM(this.app, await getFrontmatter(this.app, intentNote));
+					const noteIntents = await getIntentsFromTFile(this.app, intentNote);
 					const noteIntentsWithGlobalIntents = namedObjectDeepMerge(this.settings.intents, noteIntents) as Intent[];
 					const chosenIntent = noteIntentsWithGlobalIntents.find(i => i.name === intent.name);
 

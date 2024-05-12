@@ -10,7 +10,11 @@ import {
   variableProviderVariableParsers,
 } from "../variables";
 
-export function getIntentsFromFM(app: App, fm: FrontMatterCache): Intent[] {
+export async function getIntentsFromTFile( app: App, file:TFile): Promise<Intent[]> {
+  return getIntentsFromFM( app, await getFrontmatter( app, file ));
+}
+
+function getIntentsFromFM(app: App, fm: FrontMatterCache): Intent[] {
   const newIntents: Intent[] = (fm?.intents_to || []).map((iFm: any): Intent => {
     return {
       name: iFm.make_a,
@@ -77,7 +81,7 @@ function getVariablesFromFM(app: App, fm: any) {
 
 
 
-export async function getFrontmatter(app: App, note: TFile, visited: string[]| null = null): Promise<FrontMatterCache> {
+async function getFrontmatter(app: App, note: TFile, visited: string[]| null = null): Promise<FrontMatterCache> {
   return new Promise(async (resolve, reject) => {
     
     const fm = app.metadataCache.getFileCache(note)?.frontmatter || {};

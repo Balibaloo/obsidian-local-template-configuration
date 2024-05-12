@@ -1,6 +1,7 @@
+import { TAbstractFile } from "obsidian";
 import { Template } from "../templates";
 import { TemplateVariable } from "../variables";
-import { getIntentsFromFM, getFrontmatter, resolvePathRelativeToAbstractFile, namedObjectDeepMerge } from "./frontmatter";
+import { getIntentsFromTFile,  resolvePathRelativeToAbstractFile, namedObjectDeepMerge } from "./frontmatter";
 import { choseIntent, runIntent } from "./intents";
 
 export type Intent = hasNewNoteProperties & {
@@ -21,8 +22,7 @@ export type NewNoteProperties = {
 }
 
 export {
-	getIntentsFromFM,
-	getFrontmatter,
+	getIntentsFromTFile,
 	resolvePathRelativeToAbstractFile,
 	namedObjectDeepMerge,
 	choseIntent,
