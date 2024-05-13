@@ -90,15 +90,15 @@ export async function runIntent(plugin:PTPlugin, intent: Intent) {
   variablesToGather = variablesToGather.filter(v => !v.disable);
 
   const selections:(EditorSelection|null)[] = plugin.app.workspace.activeEditor?.editor?.listSelections() ?? [ null ];
-  const showNewNote = plugin.settings.showNewNotes && ! ( selections.length !== 0 && !plugin.settings.showNewMultiNotes);
+  const creatingMultipleNotes = selections.length > 1;
 
   for (let selection of selections){
-    runIntentWithSelection( plugin, intent, variablesToGather, templateContents, selection, showNewNote )
+    runIntentWithSelection( plugin, intent, variablesToGather, templateContents, selection, creatingMultipleNotes )
   }
 
 }
 
-async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variablesToGather:TemplateVariable[], templateContents:string, selection:EditorSelection|null, showNewNote:boolean){
+async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variablesToGather:TemplateVariable[], templateContents:string, selection:EditorSelection|null, creatingMultipleNotes:boolean){
   const abstractIntentSource = plugin.app.vault.getAbstractFileByPath( intent.sourceNotePath );
   if ( ! abstractIntentSource ){
     new Notice("Error: Intent source doesn't exist anymore. Please reload this intent.");
@@ -166,9 +166,9 @@ async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variables
     plugin.app.workspace.activeEditor?.editor?.replaceRange( selectionReplacement, selectionStart, selectionEnd );
   }
 
-  if ( showNewNote ){
+  if ( plugin.settings.showNewNotes && ( ! creatingMultipleNotes || plugin.settings.showNewMultiNotes) ){
     const newLeaf = plugin.app.workspace.getLeaf( plugin.settings.showNewNotesStyle );
-    await newLeaf.openFile(newNote);
+    await newLeaf.openFile(newNote, { active: !creatingMultipleNotes });
   }
   // console.log("New note created:", newNotePathNameResolved);
 
