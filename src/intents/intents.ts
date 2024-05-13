@@ -145,10 +145,16 @@ async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variables
     await this.app.vault.createFolder(newNoteResolvedDir);
   }
 
-  const newNote = await this.app.vault.create(
-    newNotePathNameResolved+".md",
-    newNoteContents
-  );
+  let newNote;
+  try {
+    newNote = await plugin.app.vault.create(
+      newNotePathNameResolved+".md",
+      newNoteContents
+    );
+  } catch (e){
+    new Notice(`Error: Could not create ${newNotePathNameResolved}, ${e.message}`, 6_000)
+    return;
+  }
 
   if ( selection ){    
     const newNoteNameResolved = newNotePathNameResolved.split("/").at(-1);
