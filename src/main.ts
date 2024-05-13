@@ -45,11 +45,13 @@ export default class PTPlugin extends Plugin {
 				try {
 					// console.log("Loading global intents from", globalIntentsNote);
 					this.settings.intents = await getIntentsFromTFile(this.app, globalIntentsNote);
-					this.settings.intents.forEach(i =>
+					this.settings.intents.forEach(i => {
 						i.newNoteProperties.variables = namedObjectDeepMerge(
 							DEFAULT_VARIABLES,
 							i.newNoteProperties.variables
-						))
+						)
+						i.sourceNotePath = this.app.vault.getRoot().path
+					})
 					this.settings.intents.forEach((intent) => {
 						this.createCommandForIntent(intent);
 					});
@@ -73,7 +75,7 @@ export default class PTPlugin extends Plugin {
 				if (!choseIntent) 
 					return;
 				
-				runIntent(this, chosenIntent, this.app.vault.getRoot());
+				runIntent(this, chosenIntent);
 			}
 		});
 
@@ -107,7 +109,7 @@ export default class PTPlugin extends Plugin {
 					if (!choseIntent) 
 						return;
 					
-					runIntent(this, chosenIntent, this.app.vault.getRoot());
+					runIntent(this, chosenIntent);
 				} catch (e) {
 					return new Notice(e, NOTICE_TIMEOUT);
 				}
@@ -148,7 +150,7 @@ export default class PTPlugin extends Plugin {
 						return;
 					}
 
-					runIntent(this, chosenIntent, intentNote);
+					runIntent(this, chosenIntent);
 				} catch (e) {
 					return new Notice(e, NOTICE_TIMEOUT);
 				}

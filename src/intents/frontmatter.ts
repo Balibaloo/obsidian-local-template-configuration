@@ -11,10 +11,10 @@ import {
 } from "../variables";
 
 export async function getIntentsFromTFile( app: App, file:TFile): Promise<Intent[]> {
-  return getIntentsFromFM( app, await getFrontmatter( app, file ));
+  return getIntentsFromFM( app, await getFrontmatter( app, file ), file);
 }
 
-function getIntentsFromFM(app: App, fm: FrontMatterCache): Intent[] {
+function getIntentsFromFM(app: App, fm: FrontMatterCache, sourceFile: TFile): Intent[] {
   const newIntents: Intent[] = (fm?.intents_to || []).map((iFm: any): Intent => {
     return {
       name: iFm.make_a,
@@ -23,6 +23,7 @@ function getIntentsFromFM(app: App, fm: FrontMatterCache): Intent[] {
         Boolean(iFm?.is_disabled?.[0]?.toUpperCase() === "T"),
       templates: getTemplatesFromFM(app, iFm),
       newNoteProperties: getNewNotePropertiesFromFM(app, iFm),
+      sourceNotePath: sourceFile.path,
     }
   });
 

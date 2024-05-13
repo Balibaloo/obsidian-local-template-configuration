@@ -8,6 +8,7 @@ export type Intent = hasNewNoteProperties & {
 	name: string;
 	disable: boolean;
 	templates: Template[];
+	sourceNotePath: string;
 }
 
 export type hasNewNoteProperties = {

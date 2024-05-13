@@ -1,4 +1,4 @@
-import { App, FuzzySuggestModal, Notice, TAbstractFile, TFile, TFolder } from "obsidian";
+import { App, FuzzySuggestModal, Notice, TFile, TFolder } from "obsidian";
 import PTPlugin from "../main";
 import { Intent, namedObjectDeepMerge, resolvePathRelativeToAbstractFile } from ".";
 import { ReservedVariableName, TemplateVariable, getVariableValues } from "../variables";
@@ -48,16 +48,16 @@ export async function choseIntent(intents:Intent[]):Promise<Intent> {
 }
 
 
-export async function runIntent(plugin:PTPlugin, intent: Intent, abstractFileOfIntent:TAbstractFile) {
+export async function runIntent(plugin:PTPlugin, intent: Intent) {
   // console.log("Running intent:", intent);
 
   let variablesToGather = intent.newNoteProperties.variables;
 
-  const selection:string = plugin.app.workspace.activeEditor?.editor?.getSelection() ?? "";
-  const selectionSplit = selection.split(new RegExp(`[${plugin.settings.selectionDelimiters}]`,"g"))
-    .map(v=>v.trim());
-  const usingSelection:boolean = selection !== "";
-
+  const abstractIntentSource = plugin.app.vault.getAbstractFileByPath( intent.sourceNotePath );
+  if ( ! abstractIntentSource ){
+    new Notice("Error: Intent source doesn't exist anymore. Please reload this intent.");
+    return;
+  }
 
   // If templates configured
   let newNoteContents = "";
@@ -70,7 +70,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, abstractFileOfI
     }
 
     // get template
-    const templatePath: string | void = resolvePathRelativeToAbstractFile(chosenTemplate.path, abstractFileOfIntent);
+    const templatePath: string | void = resolvePathRelativeToAbstractFile(chosenTemplate.path, abstractIntentSource);
     if (!templatePath) {
       new Notice(`Error: Invalid path for the ${chosenTemplate.name} template of the ${intent.name} intent`);
       return;
@@ -108,7 +108,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent, abstractFileOfI
   newNoteContents = getReplacedVariablesText(newNoteContents, gatheredValues);
 
   const newNotePathName = getNewNotePathName(intent, gatheredValues);
-  const newNotePathNameResolved = resolvePathRelativeToAbstractFile(newNotePathName, abstractFileOfIntent);
+  const newNotePathNameResolved = resolvePathRelativeToAbstractFile(newNotePathName, abstractIntentSource);
   if (!newNotePathNameResolved){
     new Notice(`Error: Failed to determine ${intent.name} output path`);
     return;
