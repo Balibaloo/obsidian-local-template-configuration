@@ -90,14 +90,15 @@ export async function runIntent(plugin:PTPlugin, intent: Intent) {
   variablesToGather = variablesToGather.filter(v => !v.disable);
 
   const selections:(EditorSelection|null)[] = plugin.app.workspace.activeEditor?.editor?.listSelections() ?? [ null ];
+  const showNewNote = plugin.settings.showNewNotes && ! ( selections.length !== 0 && !plugin.settings.showNewMultiNotes);
 
   for (let selection of selections){
-    runIntentWithSelection( plugin, intent, variablesToGather, templateContents, selection )
+    runIntentWithSelection( plugin, intent, variablesToGather, templateContents, selection, showNewNote )
   }
 
 }
 
-async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variablesToGather:TemplateVariable[], templateContents:string, selection:EditorSelection|null){
+async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variablesToGather:TemplateVariable[], templateContents:string, selection:EditorSelection|null, showNewNote:boolean){
   const abstractIntentSource = plugin.app.vault.getAbstractFileByPath( intent.sourceNotePath );
   if ( ! abstractIntentSource ){
     new Notice("Error: Intent source doesn't exist anymore. Please reload this intent.");
@@ -154,13 +155,15 @@ async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variables
     const selectionTemplate = intent.newNoteProperties.selection_replace_template || `[[${newNoteNameResolved}]]`;
     const selectionReplacement = getReplacedVariablesText( selectionTemplate, gatheredValues );
     
+    // TODO fix selection replacement when focus changes, when creating multiple files
     const [selectionStart, selectionEnd] = getOrderedSelectionBounds(selection);
     plugin.app.workspace.activeEditor?.editor?.replaceRange( selectionReplacement, selectionStart, selectionEnd );
   }
 
-  // open new note in tab
-  const newLeaf = this.app.workspace.getLeaf("tab");
-  await newLeaf.openFile(newNote); // TODO Add toggle setting
+  if ( showNewNote ){
+    const newLeaf = plugin.app.workspace.getLeaf( plugin.settings.showNewNotesStyle );
+    await newLeaf.openFile(newNote);
+  }
   // console.log("New note created:", newNotePathNameResolved);
 
 }

@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, Setting, normalizePath } from "obsidian";
+import { App, PaneType, PluginSettingTab, Setting, normalizePath } from "obsidian";
 import PTPlugin from "../main";
 import { PTSettings } from ".";
 
@@ -9,6 +9,9 @@ export const DEFAULT_SETTINGS: PTSettings = {
   intents: [],
   intentNotesFilterSetName: "default",
   selectionDelimiters: ",|",
+  showNewNotes: true,
+	showNewNotesStyle: "split",
+	showNewMultiNotes: true,
 }
 
 
@@ -63,5 +66,53 @@ export class PTSettingTab extends PluginSettingTab {
           await this.plugin.saveSettings();
         })
       })
+    
+    new Setting(containerEl)
+      .setName("Open newly created notes")
+      .addToggle( tg => {
+        tg.setTooltip("Yes/No")
+          .setValue(this.plugin.settings.showNewNotes)
+          .onChange( async v => {
+            this.plugin.settings.showNewNotes = v;
+            await this.plugin.saveSettings();
+            this.hide();
+            this.display();
+          })
+      }).addDropdown( dd => {
+        dd.setDisabled( ! this.plugin.settings.showNewNotes)
+          .addOptions({
+            "false": "in active window",
+            "tab": "in new tab",
+            "split": "in new split",
+            "window": "in new window",
+          })
+          .setValue( String(this.plugin.settings.showNewNotesStyle) )
+          .onChange(async v => {
+            let nv: PaneType|false;
+            if (v === "false") {
+              nv = false;
+            } else if (v === "tab" || v === "split" || v === "window") {
+              nv = v;
+            } else {
+              throw Error("Error: Unknown open new note style");
+            }
+
+            this.plugin.settings.showNewNotesStyle = nv;
+            await this.plugin.saveSettings();
+          })
+          
+      })
+    
+    new Setting(containerEl)
+      .setName("Open new notes when creating multiple notes")
+      .addToggle( tg => {
+        tg.setValue( this.plugin.settings.showNewMultiNotes && this.plugin.settings.showNewNotes)
+          .setDisabled( ! this.plugin.settings.showNewNotes )
+          .onChange( async v => {
+            this.plugin.settings.showNewMultiNotes = v;
+            await this.plugin.saveSettings();
+          })
+      })
+
   }
 }
