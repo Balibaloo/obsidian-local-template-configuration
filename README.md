@@ -359,6 +359,8 @@ Overwriting properties of imported intents is useful to:
 ## Additional features:
 - auto-populate variable prompts with selected text
 	- use multiple cursors to create multiple notes
+  - replace the selected text with a link to the new note
+    - use a template to change the replacement text
 - supports many variable types eg text, number
 	- and other types of variable providers eg: natural date, note, folder
 - import other config notes
