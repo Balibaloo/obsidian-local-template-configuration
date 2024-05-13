@@ -156,7 +156,7 @@ async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variables
     return;
   }
 
-  if ( selection ){    
+  if ( selection && ! selectionIsEmpty( selection )){
     const newNoteNameResolved = newNotePathNameResolved.split("/").at(-1);
     const selectionTemplate = intent.newNoteProperties.selection_replace_template || `[[${newNoteNameResolved}]]`;
     const selectionReplacement = getReplacedVariablesText( selectionTemplate, gatheredValues );
@@ -215,4 +215,14 @@ function getOrderedSelectionBounds( selection:EditorSelection ):[ head:EditorPos
     return [head, anchor];
   
   return [anchor, head];
+}
+
+function selectionIsEmpty( selection:EditorSelection ): boolean {
+  if (selection.anchor.line !== selection.head.line)
+    return false;
+
+  if (selection.anchor.ch !== selection.head.ch)
+    return false;
+
+  return true;
 }
