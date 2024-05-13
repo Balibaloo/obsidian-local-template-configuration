@@ -1,4 +1,4 @@
-import { App, FuzzySuggestModal, Notice, TFile, TFolder } from "obsidian";
+import { App, EditorPosition, EditorSelection, FuzzySuggestModal, Notice, TFile, TFolder } from "obsidian";
 import PTPlugin from "../main";
 import { Intent, namedObjectDeepMerge, resolvePathRelativeToAbstractFile } from ".";
 import { ReservedVariableName, TemplateVariable, getVariableValues } from "../variables";
@@ -60,7 +60,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent) {
   }
 
   // If templates configured
-  let newNoteContents = "";
+  let templateContents = "";
   if (intent.templates.length !== 0) {
     const chosenTemplate = await getIntentTemplate(intent);
     // console.log("Chosen template:", chosenTemplate);
@@ -82,19 +82,43 @@ export async function runIntent(plugin:PTPlugin, intent: Intent) {
       return;
     }
 
-    newNoteContents = await this.app.vault.cachedRead(templateNote);
+    templateContents = await this.app.vault.cachedRead(templateNote);
     variablesToGather = namedObjectDeepMerge(variablesToGather, chosenTemplate.newNoteProperties.variables);
     intent.newNoteProperties = namedObjectDeepMerge(intent.newNoteProperties, chosenTemplate.newNoteProperties);
   }
 
   variablesToGather = variablesToGather.filter(v => !v.disable);
-  const variablesToSelect = variablesToGather.filter(v => v.use_selection);
-  const selectionVariables = variablesToSelect.reduce((acc:any, variable:TemplateVariable, index) => {
-    acc[variable.name] = selectionSplit[index] ?? "";
-    return acc;
-  }, {});
-  // console.log("Found selection variables:", selectionVariables);
 
+  const selections:(EditorSelection|null)[] = plugin.app.workspace.activeEditor?.editor?.listSelections() ?? [ null ];
+
+  for (let selection of selections){
+    runIntentWithSelection( plugin, intent, variablesToGather, templateContents, selection )
+  }
+
+}
+
+async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variablesToGather:TemplateVariable[], templateContents:string, selection:EditorSelection|null){
+  const abstractIntentSource = plugin.app.vault.getAbstractFileByPath( intent.sourceNotePath );
+  if ( ! abstractIntentSource ){
+    new Notice("Error: Intent source doesn't exist anymore. Please reload this intent.");
+    return;
+  }
+
+  const variablesToSelect = variablesToGather.filter(v => v.use_selection);
+  
+  let selectionVariables = {};
+  if ( selection ){
+    const [selectionStart, selectionEnd] = getOrderedSelectionBounds(selection);
+    const selectionText = plugin.app.workspace.activeEditor?.editor?.getRange( selectionStart, selectionEnd ) || "";
+    const selectionSplit = selectionText.split(new RegExp(`[${plugin.settings.selectionDelimiters}]`,"g"))
+      .map(v=>v.trim());
+
+    selectionVariables = variablesToSelect.reduce((acc:any, variable:TemplateVariable, index) => {
+      acc[variable.name] = selectionSplit[index] ?? "";
+      return acc;
+    }, {});
+    // console.log("Found selection variables:", selectionVariables);
+  }
 
   let gatheredValues;
   try {
@@ -105,7 +129,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent) {
   }
   
 
-  newNoteContents = getReplacedVariablesText(newNoteContents, gatheredValues);
+  const newNoteContents = getReplacedVariablesText(templateContents, gatheredValues);
 
   const newNotePathName = getNewNotePathName(intent, gatheredValues);
   const newNotePathNameResolved = resolvePathRelativeToAbstractFile(newNotePathName, abstractIntentSource);
@@ -125,12 +149,13 @@ export async function runIntent(plugin:PTPlugin, intent: Intent) {
     newNoteContents
   );
 
-  if ( usingSelection ){    
+  if ( selection ){    
     const newNoteNameResolved = newNotePathNameResolved.split("/").at(-1);
     const selectionTemplate = intent.newNoteProperties.selection_replace_template || `[[${newNoteNameResolved}]]`;
     const selectionReplacement = getReplacedVariablesText( selectionTemplate, gatheredValues );
     
-    plugin.app.workspace.activeEditor?.editor?.replaceSelection( selectionReplacement );
+    const [selectionStart, selectionEnd] = getOrderedSelectionBounds(selection);
+    plugin.app.workspace.activeEditor?.editor?.replaceRange( selectionReplacement, selectionStart, selectionEnd );
   }
 
   // open new note in tab
@@ -166,4 +191,19 @@ function getNewNotePathName(intent:Intent, values:{[key: string]: string}):strin
     return "./"+values[ReservedVariableName.new_note_name];
   
   return intent.name;
+}
+
+function getOrderedSelectionBounds( selection:EditorSelection ):[ head:EditorPosition, tail:EditorPosition ]{ 
+  const {anchor, head} = selection;
+
+  if ( anchor.line > head.line )
+    return [head, anchor];
+  
+  if ( anchor.line < head.line )
+    return [anchor, head];
+  
+  if ( anchor.ch > head.ch )
+    return [head, anchor];
+  
+  return [anchor, head];
 }
