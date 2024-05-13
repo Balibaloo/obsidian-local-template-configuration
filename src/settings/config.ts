@@ -10,7 +10,7 @@ export const DEFAULT_SETTINGS: PTSettings = {
   intentNotesFilterSetName: "default",
   selectionDelimiters: ",|",
   showNewNotes: true,
-	showNewNotesStyle: "split",
+	showNewNotesStyle: "tab",
 	showNewMultiNotes: true,
 }
 
