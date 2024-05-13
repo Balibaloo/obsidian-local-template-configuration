@@ -105,6 +105,7 @@ export class PTSettingTab extends PluginSettingTab {
     
     new Setting(containerEl)
       .setName("Open new notes when creating multiple notes")
+      .setDesc(fragWithHTML("You can create multiple notes by selecting text with <a href='https://help.obsidian.md/Editing+and+formatting/Multiple+cursors'>multiple cursors</a>"))
       .addToggle( tg => {
         tg.setValue( this.plugin.settings.showNewMultiNotes && this.plugin.settings.showNewNotes)
           .setDisabled( ! this.plugin.settings.showNewNotes )
@@ -115,4 +116,8 @@ export class PTSettingTab extends PluginSettingTab {
       })
 
   }
+}
+
+function fragWithHTML(html: string){
+  return createFragment((frag) => (frag.createDiv().innerHTML = html));
 }
