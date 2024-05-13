@@ -93,7 +93,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent) {
   const creatingMultipleNotes = selections.length > 1;
 
   for (let selection of selections){
-    runIntentWithSelection( plugin, intent, variablesToGather, templateContents, selection, creatingMultipleNotes )
+    await runIntentWithSelection( plugin, intent, variablesToGather, templateContents, selection, creatingMultipleNotes )
   }
 
 }
