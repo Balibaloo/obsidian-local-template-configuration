@@ -30,7 +30,7 @@ function getIntentsFromFM(app: App, fm: FrontMatterCache, sourceFile: TFile): In
   return newIntents;
 }
 
-function getTemplatesFromFM(app: App, fm: any): Template[] {
+function getTemplatesFromFM(app: App, fm: FrontMatterCache): Template[] {
   return (fm?.with_templates || []).map((tFm: any): Template =>
   ({
     name: tFm.called,
@@ -43,7 +43,7 @@ function getTemplatesFromFM(app: App, fm: any): Template[] {
   );
 }
 
-function getNewNotePropertiesFromFM(app: App, fm: any): NewNoteProperties {
+function getNewNotePropertiesFromFM(app: App, fm: FrontMatterCache): NewNoteProperties {
   return {
     output_pathname: fm.outputs_to_pathname,
     output_pathname_template: fm.outputs_to_templated_pathname,
@@ -53,7 +53,7 @@ function getNewNotePropertiesFromFM(app: App, fm: any): NewNoteProperties {
 }
 
 
-function getVariablesFromFM(app: App, fm: any) {
+function getVariablesFromFM(app: App, fm: FrontMatterCache) {
   return (fm?.with_variables || []).map((v: any): TemplateVariable => {
     const type: TemplateVariableType = TemplateVariableType[v.of_type as keyof typeof TemplateVariableType]
       || TemplateVariableType.text;
