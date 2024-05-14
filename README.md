@@ -69,6 +69,15 @@ The new note will contain the contents of this template note.
 
 <img src="assets/templates.gif" width=800px>
 
+The properties of templates are:
+| property name | required | Default | description |
+| ---- | ---- | ---- | ---- |
+| `called` | Yes |  | The display name of the template |
+| `at_path` | Yes |  | An alternative for `outputs_to_pathname` that allows [using variable values](#using-variable-values). The example below uses the [new_note_name](#new_note_name) variable to format the name of the new note |
+| `is_disabled` | No | false | see [disabling intents, templates and variables](#disabling-intents-templates-and-variables) |
+|  | |  | Additional properties covered in [New Note Properties](#new-note-properties) |
+
+
 
 Example: intents with templates
 ```yaml
