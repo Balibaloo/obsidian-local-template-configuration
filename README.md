@@ -244,7 +244,7 @@ The Filtered Opener plugin takes the name of the filter set (`note_filter_set_na
 
 | property name | required | Default | description |
 | ---- | ---- | ---- | ---- |
-|`folder_filter_set_name`| No| Allows all notes| The name of the note filter set.|
+|`note_filter_set_name`| No| Allows all notes| The name of the note filter set.|
 
 Example:
 ```yaml
