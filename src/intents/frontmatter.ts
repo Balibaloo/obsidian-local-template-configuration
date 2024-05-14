@@ -10,12 +10,16 @@ import {
   variableProviderVariableParsers,
 } from "../variables";
 
+// @ts-ignore yaml bundled by esbuild-yaml
+import intentSchema from "../../intentsSchema.yaml";
+
 export async function getIntentsFromTFile( app: App, file:TFile): Promise<Intent[]> {
   return getIntentsFromFM( app, await getFrontmatter( app, file ), file);
 }
 
 function getIntentsFromFM(app: App, fm: FrontMatterCache, sourceFile: TFile): Intent[] {
   const newIntents: Intent[] = (fm?.intents_to || []).map((iFm: any): Intent => {
+    fmValidateIntent( iFm );
     return {
       name: iFm.make_a,
       disable: typeof iFm?.is_disabled === "undefined" ? undefined :
@@ -32,7 +36,7 @@ function getIntentsFromFM(app: App, fm: FrontMatterCache, sourceFile: TFile): In
 
 function getTemplatesFromFM(app: App, fm: FrontMatterCache): Template[] {
   return (fm?.with_templates || []).map((tFm: any): Template =>
-  ({
+  (fmValidateTemplate( tFm ), {
     name: tFm.called,
     disable: typeof tFm?.is_disabled === "undefined" ? undefined :
     typeof tFm?.is_disabled === "boolean" ? tFm?.is_disabled :
@@ -55,6 +59,7 @@ function getNewNotePropertiesFromFM(app: App, fm: FrontMatterCache): NewNoteProp
 
 function getVariablesFromFM(app: App, fm: FrontMatterCache) {
   return (fm?.with_variables || []).map((v: any): TemplateVariable => {
+    fmValidateVariable( v );
     const type: TemplateVariableType = TemplateVariableType[v.of_type as keyof typeof TemplateVariableType]
       || TemplateVariableType.text;
 
@@ -163,3 +168,43 @@ export function namedObjectDeepMerge(obj1: any, obj2: any) {
 
   return clone1;
 };
+
+function fmValidateIntent( fm:FrontMatterCache ){
+  const exampleIntent = intentSchema["intents_to"]?.[0];
+  if (!exampleIntent){
+    throw new Error("Failed to get schema for intent")
+  }
+
+  validateFmSchema( fm, exampleIntent, "intent");
+}
+
+function fmValidateTemplate( fm:FrontMatterCache ){
+  const exampleTemplate = intentSchema["intents_to"]?.[0]?.["with_templates"]?.[0];
+  if (!exampleTemplate){
+    throw new Error("Failed to get schema for template")
+  }
+  
+  validateFmSchema( fm, exampleTemplate, "template");
+}
+
+function fmValidateVariable( fm:FrontMatterCache ){
+  const exampleVariable = intentSchema["intents_to"]?.[0]?.["with_variables"]?.[0];
+  if (!exampleVariable){
+    throw new Error("Failed to get schema for variable");
+  }
+
+  validateFmSchema( fm, exampleVariable, "variable");
+}
+
+function validateFmSchema( fm:FrontMatterCache, schema:FrontMatterCache, name:string){
+  const exampleKeys = Object.keys(schema);
+  const unknownKeys = Object.keys( fm ).filter( k => ! exampleKeys.contains(k))
+  
+  if ( unknownKeys.length === 0 ) return;
+
+  const examplePropertyStrings = exampleKeys.map( k => `${k}: "${schema[k]}"`)
+  
+  console.warn(`Unrecognized ${name} properties: [ ${unknownKeys.join(", ")} ]
+Valid ${name} properties:
+- ${examplePropertyStrings.join("\n- ")}`)
+}

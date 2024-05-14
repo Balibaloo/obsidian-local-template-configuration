@@ -1,7 +1,7 @@
 {
 	"id": "contextual-note-templating",
 	"name": "Contextual note templating",
-	"version": "2.1.3",
+	"version": "2.2.0",
 	"minAppVersion": "0.15.0",
 	"description": "Prompts for values and templates to create notes.",
 	"author": "Roman Kubiv",

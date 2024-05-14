@@ -1,6 +1,7 @@
 import esbuild from "esbuild";
 import process from "process";
 import builtins from "builtin-modules";
+import { YAMLPlugin } from "esbuild-yaml";
 
 const banner =
 `/*
@@ -38,6 +39,7 @@ const context = await esbuild.context({
 	sourcemap: prod ? false : "inline",
 	treeShaking: true,
 	outfile: "main.js",
+	plugins: [YAMLPlugin()]
 });
 
 if (prod) {
