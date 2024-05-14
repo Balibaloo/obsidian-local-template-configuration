@@ -8,6 +8,14 @@ intents_to:
     is_disabled: "?true/false (false)"
     outputs_to_pathname: "?text (./new_note_name)"
     outputs_to_templated_pathname: "?text (./{{new_note_name}})"
+    with_templates: 
+      - called: "text"
+        is_disabled: "?true/false (false)"
+        at_path: "text"
+        outputs_to_pathname: "?text (./new_note_name)"
+        outputs_to_templated_pathname: "?text (./{{new_note_name}})"
+        with_variables:
+          # See below
     with_variables:
       - called: "text"
         of_type: "?text (text)"
@@ -19,20 +27,24 @@ intents_to:
         replaces_selection_with_templated: "?text ([[{{new_note_name}}]])"
         hinted_as: "?text"
         is_disabled: "?true/false (false)"
-    with_templates: 
-      - called: "text"
-        is_disabled: "?true/false (false)"
-        at_path: "text"
-        outputs_to_pathname: "?text (./new_note_name)"
-        outputs_to_templated_pathname: "?text (./{{new_note_name}})"
-        with_variables:
-          - called: "text"
-            of_type: "?text (text)"
-            is_required: "?true/false (false)"
-            that_prompts: "?text"
-            described_as: "?text"
-            is_initially: "?text"
-            uses_selection: "?true/false (false)"
-            replaces_selection_with_templated: "?text ([[{{new_note_name}}]])"
-            hinted_as: "?text"
-            is_disabled: "?true/false (false)"
+        
+        ## Variable types
+        # Text
+        matches_regex: "?text"
+
+        # Number
+        is_over: "?number,"
+        is_under: "?number,"
+
+        # Natural date
+        is_after: "?text"
+        is_before: "?text"
+
+        # Note
+        note_filter_set_name: "?text"
+
+        # Folder
+        in_folder: "?text (/)"
+        at_depth: "?number (Depth configured in Filtered Opener)"
+        includes_roots: "?true/false (false)"
+        folder_filter_set_name: "?text"
