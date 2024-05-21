@@ -26,15 +26,15 @@ intents_to:
 ---
 ```
 
-## running intents
-### local intents
+## Running intents
+### Local intents
 The `Run local intent` command is the simplest way to run an intent.
 
 <img src="assets/simple.gif" width=800px>
 
 To run a local intent, you have to select the note that contains that intent.
 
-### selecting a note
+### Selecting a note
 Another plugin called "Filtered Opener" is required to select a note from your vault.
 To select a note, Filtered Opener displays a list of every note in your vault.
 Filtered Opener can also be configured to display a subset of your notes using filters.
@@ -43,7 +43,7 @@ Please install the [Filtered Opener plugin](https://github.com/Balibaloo/obsidia
 After selecting a note, you will be shown its list of intents to chose from.
 If a note only has one intent, that intent will be selected automatically.
 
-### global intents
+### Global intents
 Global intents are intents that are in the global intents note.
 
 Global intents can be ran using any other note as context.
@@ -56,11 +56,11 @@ Paths relative to the global context are resolved relative to the root folder of
 When global intents are configured, a command is created for each global intent called `Create local {{intent_name}} note`.
 This command lets you run a global intent in a local context.
 
-#### configuring global intents
+#### Configuring global intents
 The global intents note is configured by setting the Global Intents Note Path in the plugin settings.
 This note must be reloaded by using the `Reload global intents` command for changes to apply.
 
-# templates
+# Templates
 Intents can have many note templates.
 
 A note template contains a path to a note.
@@ -108,7 +108,7 @@ intents_to:
 ---
 ```
 
-# new note properties
+# New note properties
 Both intents and templates can have a new note pathname and a list of variables.
 
 Template new note properties overwrite intent new note properties.
@@ -158,7 +158,7 @@ intents_to:
 ---
 ```
 
-# variables
+# Variables
 There are multiple types of variables but all variables contain a common set of properties:
 
 | property name | required | Default | description |
@@ -176,10 +176,10 @@ There are multiple types of variables but all variables contain a common set of 
 
 There are multiple ways to use variable values. See [using variable values](#using-variable-values).
 
-## variable types
+## Variable types
 Each type of variable has its own parameters and validation.
 
-### text
+### Text
 A simple text prompt.
 Text is the default variable type.
 
@@ -197,7 +197,7 @@ with_variables:
 ---
 ```
 
-### number
+### Number
 A simple number prompt.
 Any number including integers and floats.
 
@@ -217,7 +217,7 @@ with_variables:
 ---
 ```
 
-### natural date
+### Natural date
 A natural date provided the [natural language dates](https://github.com/argenos/nldates-obsidian) plugin.
 
 
@@ -238,7 +238,7 @@ with_variables:
 ---
 ```
 
-### note
+### Note
 A path to a note chosen from a list of notes. Uses same Filtered Opener plugin as when [selecting a note](#selecting-a-note).
 The Filtered Opener plugin takes the name of the filter set (`note_filter_set_name`) to display a list of notes to chose from.
 
@@ -258,7 +258,7 @@ with_variables:
 
 
 
-### folder
+### Folder
 A path to a folder chosen from a list of folders. Uses same Filtered Opener plugin as when [selecting a note](#selecting-a-note).
 The Filtered Opener plugin takes the name of the filter set (`folder_filter_set_name`) to display a list of folders to chose from.
 
@@ -284,7 +284,7 @@ with_variables:
 
 
 
-## using variable values
+## Using variable values
 When using variables, text in the format of `{{variable_name}}` is replaced with the value of the variable.
 If the variable called `variable_name` is not in the current intent, the `{{variable_name}}` text will not be changed.
 
@@ -292,7 +292,7 @@ When creating a new note, variables in the [template](#templates) are also repla
 
 If you are already familiar with the [Templater](https://github.com/SilentVoid13/Templater) plugin, it will run its templating after the variables of this plugin are replaced.
 
-## advanced variable use
+## Advanced variable use
 ### new_note_name
 This is a [text](#text) variable that is added to every intent automatically.
 
@@ -304,14 +304,14 @@ It can also be used with a [folder](#folder) variable to chose the output folder
 
 If an intent [disables](#disabling-intents-templates-and-variables) `new_note_name` and doesn't set `outputs_to_pathname`, by default the name of the new note will be the name of the intent and it will be created in the same folder as the context note.
 
-### disabling intents, templates and variables
+### Disabling intents, templates and variables
 Intents, templates and variables can be disabled by setting `is_disabled` to `true`.
 - Disabled intents and templates are ignored and not shown when one must be selected.
 - Disabled variables are ignored, their prompts are not shown and they wont be replaced when [using variable values](#using-variable-values).
 
 Disabled items are still [imported](#importing-intents) and can be un-hidden by setting their `is_disabled` property to `false`.
 
-### prepopulating prompts using selection
+### Prepopulating prompts using selection
 When running an intent, selected text can be used to pre-populate the prompts for variables.
 
 The selection will be split using the delimiters configured in the plugin settings and then assigned to variables by the order that they appear in the variable list.
@@ -321,7 +321,7 @@ To enable this for a variable, set `uses_selection` to `true`.
 If a variable is assigned a valid value from the selection, the value will be accepted and the variable prompt will be skipped.
 If the value is not valid, the prompt will be shown prepopulated with the selected value.
 
-# importing intents
+# Importing intents
 Notes can import intents from other notes using the `intents_imported_from` property.
 
 The `intents_imported_from` property accepts any number of paths to configuration notes.
@@ -386,7 +386,7 @@ Contextual Note Templating (CNT) functionality compared to:
 
 
 # Examples
-## simplest runnable intent
+## Simplest runnable intent
 ```yaml
 ---
 intents_to:
@@ -396,7 +396,7 @@ intents_to:
 
 This intent will create an empty note named the value of [new_note_name](#new_note_name) in the same folder as the context note.
 
-## creating in a folder
+## Creating in a folder
 Create an empty note in a folder called `tasks` next to the context note.
 ```yaml
 ---
@@ -434,7 +434,7 @@ intents_to:
 ```
 
 
-## adding templates
+## Adding templates
 Adding a simple template.
 ```yaml
 ---
@@ -457,7 +457,7 @@ intents_to:
 ---
 ```
 
-## create a note with its own intents
+## Create a note with its own intents
 This intent creates a project note with an emoji in the project note name.
 This intent disables `new_note_name` and replaces it with a `new_project_name` variable so that it doesn't replace `new_note_name` in the project note.
 ```yaml
@@ -493,7 +493,7 @@ Contents of the project note template!
 ```
 
 
-## project
+## Project
 This intent creates a project note with an intent that has the project name in the task name, created in its own folder in a category folder.
 
 In this case the `🏗 projects` folder contains subfolders that categorize projects.
