@@ -150,6 +150,8 @@ export default class PTPlugin extends Plugin {
 						return;
 					}
 
+					chosenIntent.sourceNotePath = intentNote.path;
+
 					runIntent(this, chosenIntent);
 				} catch (e) {
 					return new Notice(e, NOTICE_TIMEOUT);
