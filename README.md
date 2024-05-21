@@ -321,6 +321,12 @@ To enable this for a variable, set `uses_selection` to `true`.
 If a variable is assigned a valid value from the selection, the value will be accepted and the variable prompt will be skipped.
 If the value is not valid, the prompt will be shown prepopulated with the selected value.
 
+# Configuration Schema
+The full schema used by this plugin is shown in the [Intents Schema File](./intentsSchema.yaml).
+
+When debugging intents, check the [developer console](https://forum.obsidian.md/t/how-to-access-the-console/16703).
+If an intent has properties that aren't in this schema, an error will be shown.
+
 # Importing intents
 Notes can import intents from other notes using the `intents_imported_from` property.
 
