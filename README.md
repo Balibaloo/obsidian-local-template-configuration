@@ -27,12 +27,12 @@ intents_to:
 ```
 
 ## Running intents
-### Local intents
-The `Run local intent` command is the simplest way to run an intent.
+### Note intents
+The `Run note intent` command is the simplest way to run an intent.
 
 <img src="assets/simple.gif" width=800px>
 
-To run a local intent, you have to select the note that contains that intent.
+To run a note intent, you have to select the note that contains that intent.
 
 ### Selecting a note
 Another plugin called "Filtered Opener" is required to select a note from your vault.
@@ -46,15 +46,15 @@ If a note only has one intent, that intent will be selected automatically.
 ### Global intents
 Global intents are intents that are in the global intents note.
 
-Global intents can be ran using any other note as context.
+Global intents can be ran in the context of any other note.
 A context note is used to resolve relative paths and before running the global intent, it [imports and merges](#importing-intents) the global intents before the resulting merged intent is ran.
 
 The `Run global intent` command runs a global intent in the global context.
 The global context is the note containing global intents.
 Paths relative to the global context are resolved relative to the root folder of your vault.
 
-When global intents are configured, a command is created for each global intent called `Create local {{intent_name}} note`.
-This command lets you run a global intent in a local context.
+When global intents are configured, a command is created for each global intent called `Create ${intent.name} for note`.
+This command lets you run a global intent in the context of a note.
 
 #### Configuring global intents
 The global intents note is configured by setting the Global Intents Note Path in the plugin settings.
@@ -345,16 +345,15 @@ intents_imported_from: ["some/configuration note.md", "other/configuration note.
 ---
 ```
 
-The intents of the imported notes are loaded first and are then merged with local intents.
+The intents of the imported notes are loaded first and are then merged with note intents.
 
-**If an imported intent has the same name as a local intent, the imported intent properties will be overwritten by the local intent properties.**
+**If a note with an intent imports an intent with the same name, the current note intent properties will overwrite the properties of the imported intent.**
 
 Overwriting properties of imported intents is useful to:
-- add local intents
-- add local templates
-  - overwrite the path with a relative local path
-- enabling and [disabling intents, templates and variables](#disabling-intents-templates-and-variables)
-- adding variables to intents and templates
+- add and change templates
+  - eg: use a template in the same folder by overwriting the template path with a relative one
+- add variables
+- [enabling and disabling intents, templates and variables](#disabling-intents-templates-and-variables)
 
 
 # You should use this plugin if
@@ -363,11 +362,11 @@ Overwriting properties of imported intents is useful to:
 - you want to group your templates by intent
 	- eg: a task, a meeting, …
 - some of your intents have multiple templates
-	- a normal task, a graded task, a research task
-	- daily stand-up meeting, project catch-up meeting, catch-up with a colleague
-- you want to extend/override your intents and templates locally to
-	- use a local version of a template
-	- add variables to an intent/template
+	- tasks: a normal task, a graded task, a research task
+	- meetings: daily stand-up meeting, project catch-up meeting, catch-up with a colleague
+- you want to extend/override your prompts and templates on a note by note basis
+	- use a template note next to your note (relative path)
+	- add prompts to an existing intent/template
 	- add more intents/templates
 	- …
 
