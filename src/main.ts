@@ -31,6 +31,36 @@ export default class PTPlugin extends Plugin {
 		this.addSettingTab(new PTSettingTab(this.app, this));
 
 		this.addCommand({
+			id: 'run-active-note-intent',
+			name: 'Run intent from active note',
+			callback: async () => {
+				
+				const intentNote = this.app.workspace.getActiveFile()
+				if ( ! intentNote) {
+					new Notice("Error: No active note");
+					return;
+				}
+
+				try {
+					const noteIntents = await getIntentsFromTFile(this.app, intentNote);
+					noteIntents.forEach(i =>
+						i.newNoteProperties.variables = namedObjectDeepMerge(
+							DEFAULT_VARIABLES,
+							i.newNoteProperties.variables
+						))
+	
+					const chosenIntent = await choseIntent(noteIntents);
+					if (!choseIntent) 
+						return;
+					
+					runIntent(this, chosenIntent);
+				} catch (e) {
+					return new Notice(e, NOTICE_TIMEOUT);
+				}
+			}
+		});
+
+		this.addCommand({
 			id: 'reload-global-intents',
 			name: 'Reload global intents',
 			callback: async () => {
