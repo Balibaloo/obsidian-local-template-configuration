@@ -2,7 +2,7 @@ import { TAbstractFile } from "obsidian";
 import { Template } from "../templates";
 import { TemplateVariable } from "../variables";
 import { getIntentsFromTFile,  resolvePathRelativeToAbstractFile, namedObjectDeepMerge } from "./frontmatter";
-import { choseIntent, runIntent } from "./intents";
+import { choseIntent, getReplacedVariablesText, runIntent } from "./intents";
 
 export type Intent = hasNewNoteProperties & {
 	name: string;
@@ -28,4 +28,5 @@ export {
 	namedObjectDeepMerge,
 	choseIntent,
 	runIntent,
+	getReplacedVariablesText,
 };

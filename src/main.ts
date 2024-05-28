@@ -16,7 +16,7 @@ const DEFAULT_VARIABLES: TemplateVariable[] = [{
 	required: true,
 	use_selection: true,
 	disable: false,
-	prompt: "New note name",
+	prompt: `New {{${ReservedVariableName.intent_name}}} name`,
 }]
 
 const NOTICE_TIMEOUT = 10_000;	

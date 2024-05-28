@@ -119,7 +119,8 @@ async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variables
 
     existingVariables = { ...existingVariables,
       ...variablesToSelect.reduce((acc:any, variable:TemplateVariable, index) => {
-      acc[variable.name] = selectionSplit[index] ?? "";
+      if (selectionSplit[index])
+        acc[variable.name] = selectionSplit[index];
       return acc;
     }, {})};
     // console.log("Found selection variables:", selectionVariables);
@@ -179,7 +180,7 @@ async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variables
 }
 
 
-function getReplacedVariablesText(text: string, values:{[key: string]: string}): string{
+export function getReplacedVariablesText(text: string, values:{[key: string]: string}): string{
   function escapeRegExp(str:string) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }

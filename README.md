@@ -292,6 +292,9 @@ When creating a new note, variables in the [template](#templates) are also repla
 
 If you are already familiar with the [Templater](https://github.com/SilentVoid13/Templater) plugin, it will run its templating after the variables of this plugin are replaced.
 
+All text properties of variables are passed through the templating functionality meaning that you can use variables in prompts. See [existing variable names](#existing-variable-names) for a list of variables you can use.
+
+
 ## Advanced variable use
 ### new_note_name
 This is a [text](#text) variable that is added to every intent automatically.
@@ -303,6 +306,15 @@ See [new note properties](#new-note-properties)
 It can also be used with a [folder](#folder) variable to chose the output folder of the new note eg [to create a project](#project)
 
 If an intent [disables](#disabling-intents-templates-and-variables) `new_note_name` and doesn't set `outputs_to_pathname`, by default the name of the new note will be the name of the intent and it will be created in the same folder as the context note.
+
+### Existing variable names
+There are other additional variables that are available for templating.
+
+|Variable Name| Value|
+|---|---|
+| [new_note_name](#new_note_name)  | The text entered for the new note name prompt |
+| intent_name  | The name of the intent |
+
 
 ### Disabling intents, templates and variables
 Intents, templates and variables can be disabled by setting `is_disabled` to `true`.
