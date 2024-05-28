@@ -105,25 +105,29 @@ async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variables
     return;
   }
 
-  const variablesToSelect = variablesToGather.filter(v => v.use_selection);
+  let existingVariables = {
+    [ReservedVariableName.intent_name]:intent.name,
+  };
   
-  let selectionVariables = {};
   if ( selection ){
     const [selectionStart, selectionEnd] = getOrderedSelectionBounds(selection);
     const selectionText = plugin.app.workspace.activeEditor?.editor?.getRange( selectionStart, selectionEnd ) || "";
     const selectionSplit = selectionText.split(new RegExp(`[${plugin.settings.selectionDelimiters}]`,"g"))
       .map(v=>v.trim());
 
-    selectionVariables = variablesToSelect.reduce((acc:any, variable:TemplateVariable, index) => {
+    const variablesToSelect = variablesToGather.filter(v => v.use_selection);
+
+    existingVariables = { ...existingVariables,
+      ...variablesToSelect.reduce((acc:any, variable:TemplateVariable, index) => {
       acc[variable.name] = selectionSplit[index] ?? "";
       return acc;
-    }, {});
+    }, {})};
     // console.log("Found selection variables:", selectionVariables);
   }
 
   let gatheredValues;
   try {
-    gatheredValues = await getVariableValues(plugin.app, variablesToGather, selectionVariables);
+    gatheredValues = await getVariableValues(plugin.app, variablesToGather, existingVariables);
   } catch (e) {
     new Notice(e);
     return console.error("Error: failed to gather all variables");
