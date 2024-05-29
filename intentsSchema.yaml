@@ -8,14 +8,14 @@ intents_to:
     is_disabled: "?true/false (false)"
     with_name: "?text ({{new_note_name}})"
     in_folder: "?text (./)"
-    replaces_selection_with_templated: "?text ([[{{new_note_name}}]])"
+    replaces_selection_with: "?text ([[{{new_note_name}}]])"
     with_templates: 
       - called: "text"
         is_disabled: "?true/false (false)"
         at_path: "text"
         with_name: "?text ({{new_note_name}})"
         in_folder: "?text (./)"
-        replaces_selection_with_templated: "?text ([[{{new_note_name}}]])"
+        replaces_selection_with: "?text ([[{{new_note_name}}]])"
         with_variables:
           # See below
     with_variables:

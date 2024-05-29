@@ -52,7 +52,7 @@ function getNewNotePropertiesFromFM(app: App, fm: FrontMatterCache): NewNoteProp
     output_filename: fm.with_name,
     output_folder_path: fm.in_folder,
     variables: getVariablesFromFM(app,fm),
-    selection_replace_template: fm.replaces_selection_with_templated,
+    selection_replace_template: fm.replaces_selection_with,
   }
 }
 
