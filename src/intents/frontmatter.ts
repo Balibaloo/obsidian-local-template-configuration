@@ -49,8 +49,8 @@ function getTemplatesFromFM(app: App, fm: FrontMatterCache): Template[] {
 
 function getNewNotePropertiesFromFM(app: App, fm: FrontMatterCache): NewNoteProperties {
   return {
-    output_pathname: fm.outputs_to_pathname,
-    output_pathname_template: fm.outputs_to_templated_pathname,
+    output_filename: fm.with_name,
+    output_folder_path: fm.in_folder,
     variables: getVariablesFromFM(app,fm),
     selection_replace_template: fm.replaces_selection_with_templated,
   }

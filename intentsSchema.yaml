@@ -6,14 +6,14 @@ intents_imported_from: "'text'|['text']"
 intents_to:
   - make_a: "text"
     is_disabled: "?true/false (false)"
-    outputs_to_pathname: "?text (./new_note_name)"
-    outputs_to_templated_pathname: "?text (./{{new_note_name}})"
+    with_name: "?text ({{new_note_name}})"
+    in_folder: "?text (./)"
     with_templates: 
       - called: "text"
         is_disabled: "?true/false (false)"
         at_path: "text"
-        outputs_to_pathname: "?text (./new_note_name)"
-        outputs_to_templated_pathname: "?text (./{{new_note_name}})"
+        with_name: "?text ({{new_note_name}})"
+        in_folder: "?text (./)"
         with_variables:
           # See below
     with_variables:

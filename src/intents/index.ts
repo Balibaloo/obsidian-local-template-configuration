@@ -16,8 +16,8 @@ export type hasNewNoteProperties = {
 }
 
 export type NewNoteProperties = {
-	output_pathname: string,
-	output_pathname_template: string,
+	output_filename: string,
+	output_folder_path: string,
 	variables: TemplateVariable[],
 	selection_replace_template?: string,
 }

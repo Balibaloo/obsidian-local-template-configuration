@@ -4,6 +4,10 @@ import { Intent, namedObjectDeepMerge, resolvePathRelativeToAbstractFile } from 
 import { ReservedVariableName, TemplateVariable, getVariableValues } from "../variables";
 import { getIntentTemplate } from "../templates";
 
+type NoteDestination = {
+  destinationFolder:string,
+  destinationFilename:string,
+}
 
 class IntentSuggestModal extends FuzzySuggestModal<Intent> {
 	constructor(app: App, items: Intent[], callback: (item: Intent) => void) {
@@ -137,33 +141,31 @@ async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variables
 
   const newNoteContents = getReplacedVariablesText(templateContents, gatheredValues);
 
-  const newNotePathName = getNewNotePathName(intent, gatheredValues);
-  const newNotePathNameResolved = resolvePathRelativeToAbstractFile(newNotePathName, abstractIntentSource);
-  if (!newNotePathNameResolved){
+  const { destinationFolder, destinationFilename} = getNewNoteRelativeDestination(intent, gatheredValues);
+  const newNoteFolderResolved = resolvePathRelativeToAbstractFile( destinationFolder, abstractIntentSource);
+  if (!newNoteFolderResolved){
     new Notice(`Error: Failed to determine ${intent.name} output path`);
     return;
   }
 
   // create folder if not exists
-  const newNoteResolvedDir = newNotePathNameResolved.split("/").slice(0,-1).join("/") || "/";
-  if (!(this.app.vault.getAbstractFileByPath(newNoteResolvedDir) instanceof TFolder)) {
-    await this.app.vault.createFolder(newNoteResolvedDir);
+  if ( ! (this.app.vault.getAbstractFileByPath( newNoteFolderResolved ) instanceof TFolder)) {
+    await this.app.vault.createFolder( newNoteFolderResolved );
   }
 
   let newNote;
   try {
     newNote = await plugin.app.vault.create(
-      newNotePathNameResolved+".md",
+      `${newNoteFolderResolved}/${destinationFilename}.md`,
       newNoteContents
     );
   } catch (e){
-    new Notice(`Error: Could not create ${newNotePathNameResolved}, ${e.message}`, 6_000)
+    new Notice(`Error: Could not create ${newNoteFolderResolved}, ${e.message}`, 6_000)
     return;
   }
 
   if ( selection && ! selectionIsEmpty( selection )){
-    const newNoteNameResolved = newNotePathNameResolved.split("/").at(-1);
-    const selectionTemplate = intent.newNoteProperties.selection_replace_template || `[[${newNoteNameResolved}]]`;
+    const selectionTemplate = intent.newNoteProperties.selection_replace_template || `[[${destinationFilename}]]`;
     const selectionReplacement = getReplacedVariablesText( selectionTemplate, gatheredValues );
     
     // TODO fix selection replacement when focus changes, when creating multiple files
@@ -189,22 +191,23 @@ export function getReplacedVariablesText(text: string, values:{[key: string]: st
     , text);
 }
 
-function getNewNotePathName(intent:Intent, values:{[key: string]: string}):string{
+function getNewNoteRelativeDestination(intent:Intent, values:{[key: string]: string}): NoteDestination {
   const newNoteProps = intent.newNoteProperties;
 
-  if (newNoteProps.output_pathname_template &&
-    newNoteProps.output_pathname_template?.trim())
-    return getReplacedVariablesText(newNoteProps.output_pathname_template, values);
-
-  if (newNoteProps.output_pathname &&
-    newNoteProps.output_pathname?.trim())
-    return newNoteProps.output_pathname; 
-
-  if (values[ReservedVariableName.new_note_name] &&
+  let folder = "./";
+  if (newNoteProps.output_folder_path &&
+    newNoteProps.output_folder_path?.trim())
+    folder = getReplacedVariablesText(newNoteProps.output_folder_path, values);
+    
+  let filename = intent.name;
+  if (newNoteProps.output_filename &&
+    newNoteProps.output_filename?.trim())
+    filename = getReplacedVariablesText(newNoteProps.output_filename, values);
+  else if (values[ReservedVariableName.new_note_name] &&
     values[ReservedVariableName.new_note_name]?.trim())
-    return "./"+values[ReservedVariableName.new_note_name];
+    filename = values[ReservedVariableName.new_note_name];
   
-  return intent.name;
+  return { destinationFolder: folder, destinationFilename: filename };
 }
 
 function getOrderedSelectionBounds( selection:EditorSelection ):[ head:EditorPosition, tail:EditorPosition ]{ 

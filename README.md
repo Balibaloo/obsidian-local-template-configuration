@@ -73,7 +73,7 @@ The properties of templates are:
 | property name | required | Default | description |
 | ---- | ---- | ---- | ---- |
 | `called` | Yes |  | The display name of the template |
-| `at_path` | Yes |  | An alternative for `outputs_to_pathname` that allows [using variable values](#using-variable-values). The example below uses the [new_note_name](#new_note_name) variable to format the name of the new note |
+| `at_path` | Yes |  | The path to the template note |
 | `is_disabled` | No | false | see [disabling intents, templates and variables](#disabling-intents-templates-and-variables) |
 |  | |  | Additional properties covered in [New Note Properties](#new-note-properties) |
 
@@ -119,8 +119,8 @@ Example: Task intent has 3 different templates with different output folders and
 The properties of new notes are:
 | property name | required | Default | description |
 | ---- | ---- | ---- | ---- |
-| `outputs_to_pathname` | No | A note called `new_note_name` in the same folder as the context note | The output location and name of the new note |
-| `outputs_to_templated_pathname` | No | `./{{new_note_name}}` is the template representation of the above | An alternative for `outputs_to_pathname` that allows [using variable values](#using-variable-values). The example below uses the [new_note_name](#new_note_name) variable to format the name of the new note |
+| `with_name` | No | `{{new_note_name}}` | The name of the new note, see [new_note_name](#new_note_name) |
+| `in_folder` | No | `./` |  The folder in which the new note will be created in  |
 | `with_variables` | No |  | A list of [variables](#variables) |
 | `is_disabled` | No | false | see [disabling intents, templates and variables](#disabling-intents-templates-and-variables) |
 
@@ -305,7 +305,7 @@ See [new note properties](#new-note-properties)
 
 It can also be used with a [folder](#folder) variable to chose the output folder of the new note eg [to create a project](#project)
 
-If an intent [disables](#disabling-intents-templates-and-variables) `new_note_name` and doesn't set `outputs_to_pathname`, by default the name of the new note will be the name of the intent and it will be created in the same folder as the context note.
+If an intent [disables](#disabling-intents-templates-and-variables) the `new_note_name` variable and doesn't set `with_name`, by default the name of the new note will be the name of the intent.
 
 ### Existing variable names
 There are other additional variables that are available for templating.
