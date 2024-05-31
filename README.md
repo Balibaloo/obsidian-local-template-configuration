@@ -307,13 +307,10 @@ It can also be used with a [folder](#folder) variable to chose the output folder
 
 If an intent [disables](#disabling-intents-templates-and-variables) the `new_note_name` variable and doesn't set `with_name`, by default the name of the new note will be the name of the intent.
 
-### Existing variable names
-There are other additional variables that are available for templating.
+### Properties that can be used in templating
+During and after prompting, all [New Note Properties](#new-note-properties) can be used in templating.
 
-|Variable Name| Value|
-|---|---|
-| [new_note_name](#new_note_name)  | The text entered for the new note name prompt |
-| intent_name  | The name of the intent |
+Note that properties that use variables wont be replaced until all of their variables are replaced.
 
 
 ### Disabling intents, templates and variables

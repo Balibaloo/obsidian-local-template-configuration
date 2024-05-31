@@ -5,6 +5,9 @@ import { TemplateVariableType, TemplateVariableVariables, variableProviderVariab
 export enum ReservedVariableName {
   new_note_name = "new_note_name",
   intent_name = "intent_name",
+  with_name = "with_name",
+  in_folder = "in_folder",
+  replaces_selection_with = "replaces_selection_with",
 }
 
 export type TemplateVariable = {

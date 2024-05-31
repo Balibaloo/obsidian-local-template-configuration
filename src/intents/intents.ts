@@ -109,10 +109,23 @@ async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variables
     return;
   }
 
-  let existingVariables = {
+  let existingVariables: { [key:string] : string } = {
     [ReservedVariableName.intent_name]:intent.name,
+    [ReservedVariableName.in_folder]: intent.newNoteProperties.output_folder_path?.trim() ?? "./",
+    [ReservedVariableName.with_name]: intent.newNoteProperties.output_filename?.trim() ?? "",
+    [ReservedVariableName.replaces_selection_with]: intent.newNoteProperties.selection_replace_template?.trim() ?? `[[{{${ReservedVariableName.with_name}}}]]`,
   };
-  
+
+  // Note name fallbacks
+  if ( ! existingVariables[ReservedVariableName.with_name] ){
+    if ( variablesToGather.some( v => v.name === ReservedVariableName.new_note_name) ){
+      existingVariables[ReservedVariableName.with_name] = `{{${ReservedVariableName.new_note_name}}}`;
+    } else {
+      existingVariables[ReservedVariableName.with_name] = intent.name;
+    }
+  }
+
+
   if ( selection ){
     const [selectionStart, selectionEnd] = getOrderedSelectionBounds(selection);
     const selectionText = plugin.app.workspace.activeEditor?.editor?.getRange( selectionStart, selectionEnd ) || "";
@@ -137,40 +150,40 @@ async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variables
     new Notice(e);
     return console.error("Error: failed to gather all variables");
   }
-  
 
-  const newNoteContents = getReplacedVariablesText(templateContents, gatheredValues);
+  console.log("Gathered", gatheredValues);
 
-  const { destinationFolder, destinationFilename} = getNewNoteRelativeDestination(intent, gatheredValues);
-  const newNoteFolderResolved = resolvePathRelativeToAbstractFile( destinationFolder, abstractIntentSource);
-  if (!newNoteFolderResolved){
+  const newNoteFolderRelativePath = gatheredValues[ReservedVariableName.in_folder];
+  const newNoteFolder = resolvePathRelativeToAbstractFile( newNoteFolderRelativePath, abstractIntentSource);
+  if (!newNoteFolder){
     new Notice(`Error: Failed to determine ${intent.name} output path`);
     return;
   }
 
   // create folder if not exists
-  if ( ! (this.app.vault.getAbstractFileByPath( newNoteFolderResolved ) instanceof TFolder)) {
-    await this.app.vault.createFolder( newNoteFolderResolved );
+  if ( ! (this.app.vault.getAbstractFileByPath( newNoteFolder ) instanceof TFolder)) {
+    await this.app.vault.createFolder( newNoteFolder );
   }
 
   let newNote;
   try {
+    const newNoteContents = getReplacedVariablesText(templateContents, gatheredValues);
+    const newNoteFileName = gatheredValues[ReservedVariableName.with_name];
     newNote = await plugin.app.vault.create(
-      `${newNoteFolderResolved}/${destinationFilename}.md`,
+      `${newNoteFolder}/${newNoteFileName}.md`,
       newNoteContents
     );
   } catch (e){
-    new Notice(`Error: Could not create ${newNoteFolderResolved}, ${e.message}`, 6_000)
+    new Notice(`Error: Could not create ${newNoteFolder}, ${e.message}`, 6_000)
     return;
   }
 
   if ( selection && ! selectionIsEmpty( selection )){
-    const selectionTemplate = intent.newNoteProperties.selection_replace_template || `[[${destinationFilename}]]`;
-    const selectionReplacement = getReplacedVariablesText( selectionTemplate, gatheredValues );
+    const replacementText = gatheredValues[ReservedVariableName.replaces_selection_with];
     
     // TODO fix selection replacement when focus changes, when creating multiple files
     const [selectionStart, selectionEnd] = getOrderedSelectionBounds(selection);
-    plugin.app.workspace.activeEditor?.editor?.replaceRange( selectionReplacement, selectionStart, selectionEnd );
+    plugin.app.workspace.activeEditor?.editor?.replaceRange( replacementText, selectionStart, selectionEnd );
   }
 
   if ( plugin.settings.showNewNotes && ( ! creatingMultipleNotes || plugin.settings.showNewMultiNotes) ){
@@ -186,28 +199,14 @@ export function getReplacedVariablesText(text: string, values:{[key: string]: st
   function escapeRegExp(str:string) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
+
+  // Prevent insertion of values that contain templates
+  const primalKeys = Object.keys( values ).filter( k => ! values[k].match(`\\{\\{\\s*.*\\s*\\}\\}`))
+  values = Object.fromEntries( Object.entries(values).filter( ([ k ]) => primalKeys.includes( k ) ))
+
   return Object.keys(values).reduce((text, varName)=>
     text.replaceAll(new RegExp(`\\{\\{\\s*${escapeRegExp(varName)}\\s*\\}\\}`, "g"), values[varName])
     , text);
-}
-
-function getNewNoteRelativeDestination(intent:Intent, values:{[key: string]: string}): NoteDestination {
-  const newNoteProps = intent.newNoteProperties;
-
-  let folder = "./";
-  if (newNoteProps.output_folder_path &&
-    newNoteProps.output_folder_path?.trim())
-    folder = getReplacedVariablesText(newNoteProps.output_folder_path, values);
-    
-  let filename = intent.name;
-  if (newNoteProps.output_filename &&
-    newNoteProps.output_filename?.trim())
-    filename = getReplacedVariablesText(newNoteProps.output_filename, values);
-  else if (values[ReservedVariableName.new_note_name] &&
-    values[ReservedVariableName.new_note_name]?.trim())
-    filename = values[ReservedVariableName.new_note_name];
-  
-  return { destinationFolder: folder, destinationFilename: filename };
 }
 
 function getOrderedSelectionBounds( selection:EditorSelection ):[ head:EditorPosition, tail:EditorPosition ]{ 
