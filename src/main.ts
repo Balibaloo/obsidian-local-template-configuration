@@ -30,8 +30,7 @@ export default class PTPlugin extends Plugin {
 
 		this.addSettingTab(new PTSettingTab(this.app, this));
 
-		this.addCommand({
-			id: 'run-active-note-intent',
+		this.addCommand({ id: 'run-active-note-intent',
 			name: 'Run intent from active note',
 			callback: async () => {
 				
@@ -60,8 +59,7 @@ export default class PTPlugin extends Plugin {
 			}
 		});
 
-		this.addCommand({
-			id: 'reload-global-intents',
+		this.addCommand({ id: 'reload-global-intents',
 			name: 'Reload global intents',
 			callback: async () => {
 				const globalIntentsNote = this.app.vault.getAbstractFileByPath(this.settings.globalIntentsNotePath);
@@ -97,8 +95,7 @@ export default class PTPlugin extends Plugin {
 			}
 		});		
 
-		this.addCommand({
-			id: 'run-global-intent',
+		this.addCommand({ id: 'run-global-intent',
 			name: 'Run global intent',
 			callback: async () => {
 				const chosenIntent = await choseIntent(this.settings.intents);
@@ -109,8 +106,7 @@ export default class PTPlugin extends Plugin {
 			}
 		});
 
-		this.addCommand({
-			id: 'run-local-intent',
+		this.addCommand({ id: 'run-local-intent',
 			name: 'Run note intent',
 			callback: async () => {
 				const filteredOpener = (this.app as any).plugins.plugins["filtered-opener"];
@@ -152,8 +148,7 @@ export default class PTPlugin extends Plugin {
 		const normalizedIntentName = intent.name.toLowerCase()
 			.replaceAll(/[^\w\s]/g,"").replace(/\s+/g,' ').replace(/\s/g,'-');
 
-		this.addCommand({
-			id: `create-${normalizedIntentName}`,
+		this.addCommand({ id: `create-${normalizedIntentName}`,
 			name: `Create ${intent.name} for note`,
 			callback: async () => {
 				const filteredOpener = (this.app as any).plugins.plugins["filtered-opener"];
