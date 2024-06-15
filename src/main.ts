@@ -42,7 +42,8 @@ export default class PTPlugin extends Plugin {
 
 				try {
 					const noteIntents = await getIntentsFromTFile(this.app, intentNote);
-					const chosenIntent = await choseIntent(noteIntents);
+					const noteIntentsWithGlobalIntents = namedObjectDeepMerge( this.settings.intents, noteIntents ) as Intent[];
+					const chosenIntent = await choseIntent( noteIntentsWithGlobalIntents );
 					if (!choseIntent) 
 						return;
 
@@ -124,7 +125,8 @@ export default class PTPlugin extends Plugin {
 
 				try {
 					const noteIntents = await getIntentsFromTFile(this.app, intentNote);
-					const chosenIntent = await choseIntent(noteIntents);
+					const noteIntentsWithGlobalIntents = namedObjectDeepMerge( this.settings.intents, noteIntents ) as Intent[];
+					const chosenIntent = await choseIntent( noteIntentsWithGlobalIntents );
 					if (!choseIntent) 
 						return;
 
