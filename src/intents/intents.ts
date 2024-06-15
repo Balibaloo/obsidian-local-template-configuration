@@ -35,13 +35,13 @@ export async function choseIntent(intents:Intent[]):Promise<Intent> {
   return new Promise((resolve,rejects) => {
     if (intents.length === 0) {
       new Notice(`Error: No intents found`);
-      return rejects("No intents found");
+      return rejects();
     }
 
     const shownIntents = intents.filter(i => !i.disable);
     if (shownIntents.length === 0) {
       new Notice(`Error: All intents are hidden`);
-      return rejects("All intents are hidden");
+      return rejects();
     }
 
     if (shownIntents.length === 1) {
