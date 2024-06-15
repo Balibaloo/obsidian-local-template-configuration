@@ -42,15 +42,14 @@ export default class PTPlugin extends Plugin {
 
 				try {
 					const noteIntents = await getIntentsFromTFile(this.app, intentNote);
-					noteIntents.forEach(i =>
-						i.newNoteProperties.variables = namedObjectDeepMerge(
-							DEFAULT_VARIABLES,
-							i.newNoteProperties.variables
-						))
-	
 					const chosenIntent = await choseIntent(noteIntents);
 					if (!choseIntent) 
 						return;
+
+					chosenIntent.newNoteProperties.variables = namedObjectDeepMerge(
+						DEFAULT_VARIABLES,
+						chosenIntent.newNoteProperties.variables
+					)
 					
 					runIntent(this, chosenIntent);
 				} catch (e) {
@@ -125,15 +124,14 @@ export default class PTPlugin extends Plugin {
 
 				try {
 					const noteIntents = await getIntentsFromTFile(this.app, intentNote);
-					noteIntents.forEach(i =>
-						i.newNoteProperties.variables = namedObjectDeepMerge(
-							DEFAULT_VARIABLES,
-							i.newNoteProperties.variables
-						))
-	
 					const chosenIntent = await choseIntent(noteIntents);
 					if (!choseIntent) 
 						return;
+
+					chosenIntent.newNoteProperties.variables = namedObjectDeepMerge(
+						DEFAULT_VARIABLES,
+						chosenIntent.newNoteProperties.variables
+					)
 					
 					runIntent(this, chosenIntent);
 				} catch (e) {
