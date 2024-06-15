@@ -44,7 +44,7 @@ export default class PTPlugin extends Plugin {
 					const noteIntents = await getIntentsFromTFile(this.app, intentNote);
 					const noteIntentsWithGlobalIntents = namedObjectDeepMerge( this.settings.intents, noteIntents ) as Intent[];
 					const chosenIntent = await choseIntent( noteIntentsWithGlobalIntents );
-					if (!choseIntent) 
+					if ( ! chosenIntent )
 						return;
 
 					chosenIntent.newNoteProperties.variables = namedObjectDeepMerge(
@@ -99,7 +99,7 @@ export default class PTPlugin extends Plugin {
 			name: 'Run global intent',
 			callback: async () => {
 				const chosenIntent = await choseIntent(this.settings.intents);
-				if (!choseIntent) 
+				if ( ! chosenIntent )
 					return;
 				
 				runIntent(this, chosenIntent);
@@ -127,7 +127,7 @@ export default class PTPlugin extends Plugin {
 					const noteIntents = await getIntentsFromTFile(this.app, intentNote);
 					const noteIntentsWithGlobalIntents = namedObjectDeepMerge( this.settings.intents, noteIntents ) as Intent[];
 					const chosenIntent = await choseIntent( noteIntentsWithGlobalIntents );
-					if (!choseIntent) 
+					if ( ! chosenIntent )
 						return;
 
 					chosenIntent.newNoteProperties.variables = namedObjectDeepMerge(
