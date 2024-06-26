@@ -148,6 +148,18 @@ export default class PTPlugin extends Plugin {
 		const normalizedIntentName = intent.name.toLowerCase()
 			.replaceAll(/[^\w\s]/g,"").replace(/\s+/g,' ').replace(/\s/g,'-');
 
+		this.addCommand({ id: `create-global-${normalizedIntentName}`,
+			name: `Create global ${intent.name}`,
+			callback: async () => {
+				try {
+					runIntent(this, intent);
+
+				} catch (e) {
+					return new Notice(e, NOTICE_TIMEOUT);
+				}
+			}
+		})
+
 		this.addCommand({ id: `create-${normalizedIntentName}`,
 			name: `Create ${intent.name} for note`,
 			callback: async () => {
