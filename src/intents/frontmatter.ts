@@ -1,4 +1,4 @@
-import { App, FrontMatterCache, TAbstractFile, TFile, normalizePath } from "obsidian";
+import { App, FrontMatterCache, Notice, TAbstractFile, TFile, normalizePath } from "obsidian";
 import { join as joinPath } from "path";
 import { Intent, NewNoteProperties, } from ".";
 import { 
@@ -201,6 +201,10 @@ function validateFmSchema( fm:FrontMatterCache, schema:FrontMatterCache, name:st
   const unknownKeys = Object.keys( fm ).filter( k => ! exampleKeys.contains(k))
   
   if ( unknownKeys.length === 0 ) return;
+
+  if (Object.keys( fm ).find( k => ["output_pathname", "output_pathname_template", "replaces_selection_with_templated"].includes( k ))){
+    new Notice("Warning: found outdated properties, please check the console for more information")
+  }
 
   const examplePropertyStrings = exampleKeys.map( k => `${k}: "${schema[k]}"`)
   
