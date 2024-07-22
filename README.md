@@ -223,7 +223,8 @@ A natural date provided the [natural language dates](https://github.com/argenos/
 
 | property name | required | Default | description |
 | ---- | ---- | ---- | ---- |
-|`is_after` | No|| The date must be after this date. A natural language date  |
+| `format` | No | Defaults to natural date setting | The output format of the natural date |
+|`is_after` | No|| The date must be after this date. A natural language date |
 |`is_before` | No|| The date must be before this date. A natural language date |
 
 
@@ -233,6 +234,7 @@ Example:
 with_variables:
   - called: some_date
     of_type: natural_date
+    format: "YYYY-MM-dd"
     is_after: yesterday # today or later
     is_before: next year
 ---

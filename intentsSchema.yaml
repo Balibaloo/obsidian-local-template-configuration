@@ -39,6 +39,7 @@ intents_to:
         # Natural date
         is_after: "?text"
         is_before: "?text"
+        format: "?text"
 
         # Note
         note_filter_set_name: "?text"
