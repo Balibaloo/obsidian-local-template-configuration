@@ -5,6 +5,7 @@ import { GenericInputPrompt } from "../suggest";
 export type TemplateVariableVariables_NaturalDate = {
   after?: string,
   before?: string,
+  format?: string,
 };
 
 export const parseNaturalDateVariableFrontmatter = (app: App, fm: any) => {
@@ -13,6 +14,7 @@ export const parseNaturalDateVariableFrontmatter = (app: App, fm: any) => {
   const dateVariable:TemplateVariableVariables_NaturalDate = {
     after: fm.is_after,
     before: fm.is_before,
+    format: fm.format,
   }
   
   if (dateVariable.after && !NLDates.parseDate(dateVariable.after).moment.isValid()){
@@ -43,7 +45,12 @@ export async function getNaturalDateVariableValue(app: App, variable: TemplateVa
   }
 
   const NLDates = (app as any).plugins.getPlugin("nldates-obsidian");
-  existingValue = NLDates.parseDate(existingValue).formattedString;
+  if ( variable.format ){
+    existingValue = NLDates.parseDate(existingValue).moment.format( variable.format )
+  } else {
+    existingValue = NLDates.parseDate(existingValue).formattedString;
+  }
+  
   return existingValue;
 }
 
