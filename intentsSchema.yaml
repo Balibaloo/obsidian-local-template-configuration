@@ -16,9 +16,9 @@ intents_to:
         with_name: "?text ({{new_note_name}})"
         in_folder: "?text (./)"
         replaces_selection_with: "?text ([[{{new_note_name}}]])"
-        with_variables:
+        with_prompts:
           # See below
-    with_variables:
+    with_prompts:
       - called: "text"
         of_type: "?text (text)"
         is_required: "?true/false (false)"

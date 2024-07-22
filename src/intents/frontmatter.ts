@@ -58,7 +58,7 @@ function getNewNotePropertiesFromFM(app: App, fm: FrontMatterCache): NewNoteProp
 
 
 function getVariablesFromFM(app: App, fm: FrontMatterCache) {
-  return (fm?.with_variables || []).map((v: any): TemplateVariable => {
+  return (fm?.with_prompts || []).map((v: any): TemplateVariable => {
     fmValidateVariable( v );
     const type: TemplateVariableType = TemplateVariableType[v.of_type as keyof typeof TemplateVariableType]
       || TemplateVariableType.text;
@@ -188,7 +188,7 @@ function fmValidateTemplate( fm:FrontMatterCache ){
 }
 
 function fmValidateVariable( fm:FrontMatterCache ){
-  const exampleVariable = intentSchema["intents_to"]?.[0]?.["with_variables"]?.[0];
+  const exampleVariable = intentSchema["intents_to"]?.[0]?.["with_prompts"]?.[0];
   if (!exampleVariable){
     throw new Error("Failed to get schema for variable");
   }
@@ -202,7 +202,7 @@ function validateFmSchema( fm:FrontMatterCache, schema:FrontMatterCache, name:st
   
   if ( unknownKeys.length === 0 ) return;
 
-  if (Object.keys( fm ).find( k => ["output_pathname", "output_pathname_template", "replaces_selection_with_templated"].includes( k ))){
+  if (Object.keys( fm ).find( k => ["output_pathname", "output_pathname_template", "replaces_selection_with_templated", "with_prompts"].includes( k ))){
     new Notice("Warning: found outdated properties, please check the console for more information")
   }
 

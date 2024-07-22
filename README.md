@@ -121,7 +121,7 @@ The properties of new notes are:
 | ---- | ---- | ---- | ---- |
 | `with_name` | No | `{{new_note_name}}` | The name of the new note, see [new_note_name](#new_note_name) |
 | `in_folder` | No | `./` |  The folder in which the new note will be created in  |
-| `with_variables` | No |  | A list of [variables](#variables) |
+| `with_prompts` | No |  | A list of [variables](#variables) |
 | `is_disabled` | No | false | see [disabling intents, templates and variables](#disabling-intents-templates-and-variables) |
 
 
@@ -135,7 +135,7 @@ Example:
 intents_to:
   - make_a: task ✅
     outputs_to_templated_pathname: ./✔ tasks/✅ {{new_note_name}}
-    with_variables:
+    with_prompts:
       - called: deadline
         of_type: natural_date
     with_templates:
@@ -144,14 +144,14 @@ intents_to:
       - called: graded 🎓
         at_path: Templates/graded task template.md
         outputs_to_templated_pathname: ./✔ tasks/🎓 {{new_note_name}}
-        with_variables:
+        with_prompts:
           - called: date_released
             of_type: natural_date
           - called: percent
       - called: worksheet 📃
         at_path: Templates/worksheet task template.md
         outputs_to_templated_pathname: "./📃 worksheets/📃 Worksheet #{{worksheet_number}} - {{new_note_name}}"
-        with_variables:
+        with_prompts:
           - called: worksheet_number
             of_type: number
             is_over: 1
@@ -190,7 +190,7 @@ Text is the default variable type.
 Example:
 ```yaml
 ---
-with_variables:
+with_prompts:
   - called: word_starting_with_auto
     of_type: text
     matches_regex: ^auto
@@ -209,7 +209,7 @@ Any number including integers and floats.
 Example:
 ```yaml
 ---
-with_variables:
+with_prompts:
   - called: a_number
     of_type: number
     is_over: -10.8
@@ -230,7 +230,7 @@ A natural date provided the [natural language dates](https://github.com/argenos/
 Example:
 ```yaml
 ---
-with_variables:
+with_prompts:
   - called: some_date
     of_type: natural_date
     is_after: yesterday # today or later
@@ -249,7 +249,7 @@ The Filtered Opener plugin takes the name of the filter set (`note_filter_set_na
 Example:
 ```yaml
 ---
-with_variables:
+with_prompts:
   - called: some_note
     of_type: note
     note_filter_set_name: maps of content
@@ -272,7 +272,7 @@ The Filtered Opener plugin takes the name of the filter set (`folder_filter_set_
 Example:
 ```yaml
 ---
-with_variables:
+with_prompts:
   - called: a_project_folder
     of_type: folder
     in_folder: "/🏗 projects"
@@ -435,7 +435,7 @@ Chose a folder and place a task in its own folder in that folder.
 ---
 intents_to:
   - make_a: task
-    with_variables:
+    with_prompts:
       - called: output_folder
         is_required: true
         of_type: folder
@@ -478,7 +478,7 @@ This intent disables `new_note_name` and replaces it with a `new_project_name` v
 ---
 intents_to:
   - make_a: project
-    with_variables:
+    with_prompts:
       - called: new_note_name
         is_disabled: true
       - called: new_project_name
@@ -516,7 +516,7 @@ This intent disables `new_note_name` and replaces it with a `new_project_name` v
 ---
 intents_to:
   - make_a: project
-    with_variables:
+    with_prompts:
       - called: new_note_name
         is_disabled: true
       - called: new_project_name
