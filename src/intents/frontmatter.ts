@@ -72,7 +72,7 @@ function getVariablesFromFM(app: App, fm: FrontMatterCache) {
       required: typeof v?.is_required === "undefined" ? undefined :
         typeof v?.is_required === "boolean" ? v?.is_required :
           Boolean(v?.is_required?.[0]?.toUpperCase() === "T"),
-      use_selection: typeof v?.uses_selection === "undefined" ? undefined :
+      use_selection: typeof v?.uses_selection === "undefined" ? true :
         typeof v?.uses_selection === "boolean" ? v?.uses_selection :
           Boolean(v?.uses_selection?.[0]?.toUpperCase() === "T"),
       initial: v.is_initially,

@@ -25,7 +25,7 @@ intents_to:
         that_prompts: "?text"
         described_as: "?text"
         is_initially: "?text"
-        uses_selection: "?true/false (false)"
+        uses_selection: "?true/false (true)"
         hinted_as: "?text"
         is_disabled: "?true/false (false)"
         

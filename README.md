@@ -169,7 +169,7 @@ There are multiple types of variables but all variables contain a common set of 
 | `that_prompts` | No |  | The text that is displayed when prompting. |
 | `described_as` | No |  | Text that will be shown bellow the prompt. |
 | `is_initially` | No |  | The value that will be in the prompt initially. |
-| `uses_selection` | No | false | See [prepopulating prompts using selection](#prepopulating-prompts-using-selection). |
+| `uses_selection` | No | true | See [prepopulating prompts using selection](#prepopulating-prompts-using-selection). |
 | `replaces_selection_with_templated` | No | \[\[{{[new_note_name](#new_note_name)}}\]\] | Template text that replaces the selection if `uses_selection` is enabled |
 | `hinted_as` | No |  | The value displayed inside the prompt when it is empty. |
 | `is_disabled` | No | false | See [disabling intents, templates and variables](#disabling-intents-templates-and-variables) |
