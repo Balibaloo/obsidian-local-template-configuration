@@ -13,10 +13,10 @@ export async function getVariableValues(app: App, variables: TemplateVariable[],
     gatheredValues[key] = getReplacedVariablesText( gatheredValues[key], gatheredValues);
   }
 
+  // Template string variable properties
   for (let variable of variables) {
     const val = gatheredValues[variable.name] ?? "";
 
-    // Template string variable properties
     for (let key in variable){
       if ( typeof key === "string" && typeof variable[key as keyof TemplateVariable ] === "string"){
         // @ts-ignore complains that key isn't a keyof TemplateVariable
