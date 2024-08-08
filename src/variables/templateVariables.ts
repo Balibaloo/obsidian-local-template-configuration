@@ -4,9 +4,9 @@ import { variableProviderVariableGetters } from "./providers";
 import { getReplacedVariablesText } from "src/intents";
 
 
-export async function getVariableValues(app: App, variables: TemplateVariable[], existingValues: { [key: string]: string }) {
-  // gather variable values
-  const gatheredValues = { ...existingValues };
+export async function getVariableValues(app: App, variables: TemplateVariable[], selectionValues: { [key: string]: string }, propertyValues: { [key: string]: string }) {
+  // build gathered variable values object
+  const gatheredValues = { ...propertyValues };
 
   // Template gathered values with itself
   for ( let key in gatheredValues ){
@@ -15,7 +15,7 @@ export async function getVariableValues(app: App, variables: TemplateVariable[],
 
   // Template string variable properties
   for (let variable of variables) {
-    const val = gatheredValues[variable.name] ?? "";
+    const val = selectionValues[variable.name] ?? "";
 
     for (let key in variable){
       if ( typeof key === "string" && typeof variable[key as keyof TemplateVariable ] === "string"){

@@ -109,7 +109,7 @@ async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variables
     return;
   }
 
-  let existingVariables: { [key:string] : string } = {
+  let propertyValues: { [key:string] : string } = {
     [ReservedVariableName.intent_name]:intent.name,
     [ReservedVariableName.in_folder]: intent.newNoteProperties.output_folder_path?.trim() ?? "./",
     [ReservedVariableName.with_name]: intent.newNoteProperties.output_filename?.trim() ?? "",
@@ -117,15 +117,16 @@ async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variables
   };
 
   // Note name fallbacks
-  if ( ! existingVariables[ReservedVariableName.with_name] ){
+  if ( ! propertyValues[ReservedVariableName.with_name] ){
     if ( variablesToGather.some( v => v.name === ReservedVariableName.new_note_name) ){
-      existingVariables[ReservedVariableName.with_name] = `{{${ReservedVariableName.new_note_name}}}`;
+      propertyValues[ReservedVariableName.with_name] = `{{${ReservedVariableName.new_note_name}}}`;
     } else {
-      existingVariables[ReservedVariableName.with_name] = intent.name;
+      propertyValues[ReservedVariableName.with_name] = intent.name;
     }
   }
 
 
+  let selectionValues = {};
   if ( selection ){
     const [selectionStart, selectionEnd] = getOrderedSelectionBounds(selection);
     const selectionText = plugin.app.workspace.activeEditor?.editor?.getRange( selectionStart, selectionEnd ) || "";
@@ -134,18 +135,17 @@ async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variables
 
     const variablesToSelect = variablesToGather.filter(v => v.use_selection);
 
-    existingVariables = { ...existingVariables,
-      ...variablesToSelect.reduce((acc:any, variable:TemplateVariable, index) => {
+    selectionValues = variablesToSelect.reduce((acc:any, variable:TemplateVariable, index) => {
       if (selectionSplit[index])
         acc[variable.name] = selectionSplit[index];
       return acc;
-    }, {})};
+    }, {});
     // console.log("Found selection variables:", selectionVariables);
   }
 
   let gatheredValues;
   try {
-    gatheredValues = await getVariableValues(plugin.app, variablesToGather, existingVariables);
+    gatheredValues = await getVariableValues(plugin.app, variablesToGather, selectionValues, propertyValues);
   } catch (e) {
     new Notice(e);
     return console.error("Error: failed to gather all variables");
