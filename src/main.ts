@@ -10,15 +10,6 @@ import {
 } from './intents';
 
 
-const DEFAULT_VARIABLES: TemplateVariable[] = [{
-	name: ReservedVariableName.new_note_name,
-	type: TemplateVariableType.text,
-	required: true,
-	use_selection: true,
-	disable: false,
-	prompt: `New {{${ReservedVariableName.intent_name}}} name`,
-}]
-
 const NOTICE_TIMEOUT = 10_000;	
 
 export default class PTPlugin extends Plugin {
@@ -46,11 +37,6 @@ export default class PTPlugin extends Plugin {
 					const chosenIntent = await choseIntent( noteIntentsWithGlobalIntents );
 					if ( ! chosenIntent )
 						return;
-
-					chosenIntent.newNoteProperties.variables = namedObjectDeepMerge(
-						DEFAULT_VARIABLES,
-						chosenIntent.newNoteProperties.variables
-					)
 					
 					runIntent(this, chosenIntent);
 				} catch (e) {
@@ -74,10 +60,6 @@ export default class PTPlugin extends Plugin {
 					// console.log("Loading global intents from", globalIntentsNote);
 					this.settings.intents = await getIntentsFromTFile(this.app, globalIntentsNote);
 					this.settings.intents.forEach(i => {
-						i.newNoteProperties.variables = namedObjectDeepMerge(
-							DEFAULT_VARIABLES,
-							i.newNoteProperties.variables
-						)
 						i.sourceNotePath = this.app.vault.getRoot().path
 					})
 					this.settings.intents.forEach((intent) => {
@@ -129,11 +111,6 @@ export default class PTPlugin extends Plugin {
 					const chosenIntent = await choseIntent( noteIntentsWithGlobalIntents );
 					if ( ! chosenIntent )
 						return;
-
-					chosenIntent.newNoteProperties.variables = namedObjectDeepMerge(
-						DEFAULT_VARIABLES,
-						chosenIntent.newNoteProperties.variables
-					)
 					
 					runIntent(this, chosenIntent);
 				} catch (e) {

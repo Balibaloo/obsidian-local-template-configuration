@@ -118,11 +118,7 @@ async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variables
 
   // Note name fallbacks
   if ( ! propertyValues[ReservedVariableName.with_name] ){
-    if ( variablesToGather.some( v => v.name === ReservedVariableName.new_note_name) ){
-      propertyValues[ReservedVariableName.with_name] = `{{${ReservedVariableName.new_note_name}}}`;
-    } else {
-      propertyValues[ReservedVariableName.with_name] = intent.name;
-    }
+    propertyValues[ReservedVariableName.with_name] = intent.name;
   }
 
 

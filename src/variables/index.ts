@@ -3,7 +3,6 @@ import { getVariableValues } from "./templateVariables";
 import { TemplateVariableType, TemplateVariableVariables, variableProviderVariableParsers } from "./providers";
 
 export enum ReservedVariableName {
-  new_note_name = "new_note_name",
   intent_name = "intent_name",
   with_name = "with_name",
   in_folder = "in_folder",
