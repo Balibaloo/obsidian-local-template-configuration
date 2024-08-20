@@ -5,7 +5,11 @@ export type TemplateVariableVariables_Folder = {
   root_folder: string,
   depth: number,
   include_roots: boolean,
-  folder_filter_set_name: string,
+  filter_set_name: string,
+  include_path_name: string,
+  exclude_path_name: string,
+  include_folder_name: string,
+  exclude_folder_name: string,
 };
 
 export const parseFolderVariableFrontmatter = (app: App, fm:any) => ({
@@ -14,7 +18,11 @@ export const parseFolderVariableFrontmatter = (app: App, fm:any) => ({
   include_roots: typeof fm?.includes_roots === "undefined" ? undefined :
     typeof fm?.includes_roots === "boolean" ? fm?.includes_roots :
       Boolean(fm?.includes_roots?.[0]?.toUpperCase() === "T"),
-  folder_filter_set_name: fm.folder_filter_set_name,
+  filter_set_name: fm.filter_set_name,
+  include_path_name: fm.include_path_name,
+  exclude_path_name: fm.exclude_path_name,
+  include_folder_name: fm.include_folder_name,
+  exclude_folder_name: fm.exclude_folder_name,
 })
 
 export async function getFolderVariableValue(app: App,variable: TemplateVariable&TemplateVariableVariables_Folder, existingValue:string):Promise<string>{
@@ -26,7 +34,16 @@ export async function getFolderVariableValue(app: App,variable: TemplateVariable
         throw new Error("Error: Filtered Opener plugin not found. Please install it from the community plugins tab.");
       }
 
-      const newProjectFolder = await filteredOpener.api_getFolder(variable.root_folder, variable.depth, variable.include_roots, variable.folder_filter_set_name);
+      const newProjectFolder = await filteredOpener.api_getFolder(
+        variable.root_folder, 
+        variable.depth, 
+        variable.include_roots, 
+        variable.filter_set_name ?? {
+          includePathName: variable.include_path_name,
+          excludePathName: variable.exclude_path_name,
+          includeFolderName: variable.include_folder_name,
+          excludeFolderName: variable.exclude_folder_name,
+        });
       if (!(newProjectFolder instanceof TFolder))
         throw new Error(`Error: Filtered Opener plugin did not return a folder for variable ${variable.name}`);
       

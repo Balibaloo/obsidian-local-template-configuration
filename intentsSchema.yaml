@@ -42,17 +42,18 @@ intents_to:
         is_before: "?text"
         format: "?text"
 
-        # Note
-        note_filter_set_name: "?text"
+        # Note and Folder
+        filter_set_name: "?text"
         include_path_name: "?text"
         exclude_path_name: "?text"
+
+        ## Note only
         include_note_name: "?text"
         exclude_note_name: "?text"
         include_tags: "?text"
         exclude_tags: "?text"
 
-        # Folder
+        ## Folder only
         in_folder: "?text (/)"
         at_depth: "?number (Depth configured in Filtered Opener)"
         includes_roots: "?true/false (false)"
-        folder_filter_set_name: "?text"

@@ -2,7 +2,7 @@ import { App, TFile, normalizePath } from "obsidian";
 import { TemplateVariable } from "..";
 
 export type TemplateVariableVariables_Note = {
-  note_filter_set_name: string,
+  filter_set_name: string,
   include_path_name: string,
   exclude_path_name: string,
   include_note_name: string,
@@ -12,7 +12,7 @@ export type TemplateVariableVariables_Note = {
 };
 
 export const parseNoteVariableFrontmatter = (app: App, fm:any) : TemplateVariableVariables_Note => ({
-  note_filter_set_name: fm.note_filter_set_name,
+  filter_set_name: fm.filter_set_name,
   include_path_name: fm.include_path_name,
   exclude_path_name: fm.exclude_path_name,
   include_note_name: fm.include_note_name,
@@ -30,7 +30,7 @@ export async function getNoteVariableValue(app: App, variable: TemplateVariable&
         throw new Error("Error: Filtered Opener plugin not found. Please install it from the community plugins tab.");
       }
 
-      const selectedNote = await filteredOpener.api_getNote( variable.note_filter_set_name ?? {
+      const selectedNote = await filteredOpener.api_getNote( variable.filter_set_name ?? {
         includePathName: variable.include_path_name,
         excludePathName: variable.exclude_path_name,
         includeNoteName: variable.include_note_name,
