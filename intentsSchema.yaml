@@ -44,6 +44,12 @@ intents_to:
 
         # Note
         note_filter_set_name: "?text"
+        include_path_name: "?text"
+        exclude_path_name: "?text"
+        include_note_name: "?text"
+        exclude_note_name: "?text"
+        include_tags: "?text"
+        exclude_tags: "?text"
 
         # Folder
         in_folder: "?text (/)"
