@@ -10,6 +10,7 @@ export type TemplateVariableVariables_Folder = {
   exclude_path_name: string,
   include_folder_name: string,
   exclude_folder_name: string,
+  folder_output_format: string,
 };
 
 export const parseFolderVariableFrontmatter = (app: App, fm:any) => ({
@@ -23,6 +24,7 @@ export const parseFolderVariableFrontmatter = (app: App, fm:any) => ({
   exclude_path_name: fm.exclude_path_name,
   include_folder_name: fm.include_folder_name,
   exclude_folder_name: fm.exclude_folder_name,
+  folder_output_format: fm.folder_output_format,
 })
 
 export async function getFolderVariableValue( app:App, variable:TemplateVariable&TemplateVariableVariables_Folder, existingValue:string, sourceNotePath:string ): Promise<string> {
@@ -56,8 +58,22 @@ export async function getFolderVariableValue( app:App, variable:TemplateVariable
     validateFolder(app, variable, existingValue, parentFolderPath, true);
   }
 
-  // @ts-expect-error earlier validateFolder ensured that return value is a valid folder
-  return getRelativePath( existingValue, parentFolderPath );
+  
+  if ( !["path","name"].contains( variable.folder_output_format ) ){
+    variable.folder_output_format = "path";
+
+    if ( variable.folder_output_format )
+      console.warn("Unrecognized folder_output_format value:", variable.folder_output_format);
+  }
+  
+  // @ts-ignore earlier validateFolder ensured that return value is a valid folder
+  const absolutePath = getRelativePath( existingValue, parentFolderPath ) as string;
+  if ( variable.folder_output_format === "name" ){
+    // If absolute path has no slash then it is in root
+    return absolutePath.split("/").at(-1) || absolutePath;
+  }
+  
+  return absolutePath;
 }
 
 

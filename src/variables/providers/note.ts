@@ -9,6 +9,7 @@ export type TemplateVariableVariables_Note = {
   exclude_note_name: string,
   include_tags: string,
   exclude_tags: string,
+  note_output_format: string,
 };
 
 export const parseNoteVariableFrontmatter = (app: App, fm:any) : TemplateVariableVariables_Note => ({
@@ -19,6 +20,7 @@ export const parseNoteVariableFrontmatter = (app: App, fm:any) : TemplateVariabl
   exclude_note_name: fm.exclude_note_name,
   include_tags: fm.include_tags,
   exclude_tags: fm.exclude_tags,
+  note_output_format: fm.note_output_format,
 })
 
 export async function getNoteVariableValue( app:App, variable:TemplateVariable&TemplateVariableVariables_Note, existingValue:string, sourceNotePath:string ): Promise<string> {
@@ -52,8 +54,22 @@ export async function getNoteVariableValue( app:App, variable:TemplateVariable&T
     validateNote(app, variable, existingValue, parentFolderPath, true);
   }
 
-  // @ts-expect-error earlier validateFolder ensured that return value is a valid folder
-  return getRelativePath( existingValue, parentFolderPath );
+    
+  if ( !["path","name"].contains( variable.note_output_format ) ){
+    variable.note_output_format = "path";
+
+    if ( variable.note_output_format )
+      console.warn("Unrecognized note_output_format value:", variable.note_output_format);
+  }
+  
+  // @ts-ignore earlier validateNote ensured that return value is a valid note
+  const absolutePath = getRelativePath( existingValue, parentFolderPath ) as string;
+  if ( variable.note_output_format === "name" ){
+    // If absolute path has no slash then it is in root
+    return absolutePath.split("/").at(-1) || absolutePath;
+  }
+  
+  return absolutePath;
 }
 
 
