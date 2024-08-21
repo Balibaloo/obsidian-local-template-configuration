@@ -1,4 +1,4 @@
-import { App, TFile, normalizePath } from "obsidian";
+import { App, TFile } from "obsidian";
 import { getRelativePath, TemplateVariable } from "..";
 
 export type TemplateVariableVariables_Note = {
@@ -22,7 +22,9 @@ export const parseNoteVariableFrontmatter = (app: App, fm:any) : TemplateVariabl
 })
 
 export async function getNoteVariableValue( app:App, variable:TemplateVariable&TemplateVariableVariables_Note, existingValue:string, sourceNotePath:string ): Promise<string> {
-  if (!validateNote(app, variable, existingValue, false)) {
+  const parentFolderPath = sourceNotePath?.split("/").slice(0, -1).join("/") ?? "/";
+
+  if (!validateNote(app, variable, existingValue, parentFolderPath, false)) {
     
     try {
       const filteredOpener = (app as any).plugins.plugins["filtered-opener"];
@@ -30,7 +32,6 @@ export async function getNoteVariableValue( app:App, variable:TemplateVariable&T
         throw new Error("Error: Filtered Opener plugin not found. Please install it from the community plugins tab.");
       }
        
-      const parentFolderPath = sourceNotePath?.split("/").slice(0, -1).join("/") ?? "/";
 
       const selectedNote = await filteredOpener.api_getNote( variable.filter_set_name ?? {
         includePathName: getRelativePath( variable.include_path_name, parentFolderPath ),
@@ -48,15 +49,18 @@ export async function getNoteVariableValue( app:App, variable:TemplateVariable&T
     } catch (e){
       console.log(e);
     }
-    validateNote(app, variable, existingValue, true);
+    validateNote(app, variable, existingValue, parentFolderPath, true);
   }
 
-  return existingValue;
+  // @ts-expect-error earlier validateFolder ensured that return value is a valid folder
+  return getRelativePath( existingValue, parentFolderPath );
 }
 
 
-function validateNote(app: App, variable: TemplateVariable & TemplateVariableVariables_Note, value: string, throwErrors: boolean): boolean {
-  if (!value || !(app.vault.getAbstractFileByPath(normalizePath(value)) instanceof TFile)) {
+function validateNote(app: App, variable: TemplateVariable & TemplateVariableVariables_Note, value: string, relativeRootPath:string, throwErrors: boolean): boolean {
+  const resolvedPath = getRelativePath( value , relativeRootPath );
+
+  if ( ! resolvedPath || ! (app.vault.getAbstractFileByPath( resolvedPath + ".md" ) instanceof TFile)) {
     if (variable.required && throwErrors)
       throw new Error(`Error: missing required note variable ${variable.name}`);
     return false;
