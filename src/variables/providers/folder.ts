@@ -1,4 +1,4 @@
-import { App, TFolder } from "obsidian";
+import { App, Notice, TFolder } from "obsidian";
 import { getRelativePath, TemplateVariable } from "..";
 
 export type TemplateVariableVariables_Folder = {
@@ -31,6 +31,8 @@ export async function getFolderVariableValue( app:App, variable:TemplateVariable
   const parentFolderPath = sourceNotePath?.split("/").slice(0, -1).join("/") ?? "/";
 
   if (!validateFolder(app, variable, existingValue, parentFolderPath, false)) {
+    if ( existingValue )
+      new Notice(`Invalid selection: ${existingValue}`);
     
     try {
       const filteredOpener = (app as any).plugins.plugins["filtered-opener"];

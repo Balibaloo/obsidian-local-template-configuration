@@ -1,4 +1,4 @@
-import { App } from "obsidian";
+import { App, Notice } from "obsidian";
 import { TemplateVariable } from "..";
 import { GenericInputPrompt } from "../suggest";
 
@@ -12,6 +12,9 @@ export const parseTextVariableFrontmatter = (app: App, fm:any) => ({
 
 export async function getTextVariableValue(app: App, variable: TemplateVariable&TemplateVariableVariables_Text, existingValue:string, sourceNotePath: string):Promise<string>{
   if (!validateText(app, variable, existingValue, false)) {
+    if ( existingValue )
+      new Notice(`Invalid selection: ${existingValue}`);
+
     try {
       existingValue = await GenericInputPrompt.Prompt(app, variable,
         text => validateText(app, variable, text, false),

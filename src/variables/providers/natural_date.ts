@@ -1,4 +1,4 @@
-import { App } from "obsidian";
+import { App, Notice } from "obsidian";
 import { TemplateVariable } from "..";
 import { GenericInputPrompt } from "../suggest";
 
@@ -30,6 +30,9 @@ export const parseNaturalDateVariableFrontmatter = (app: App, fm: any) => {
 
 export async function getNaturalDateVariableValue(app: App, variable: TemplateVariable&TemplateVariableVariables_NaturalDate, existingValue:string, sourceNotePath: string): Promise<string>{
   if (!validateNaturalDate(app, variable, existingValue, false)) {
+    if ( existingValue )
+      new Notice(`Invalid selection: ${existingValue}`);
+
     try {
       existingValue = await GenericInputPrompt.Prompt(app, variable,
         text => validateNaturalDate(app, variable, text, false),

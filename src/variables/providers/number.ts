@@ -1,4 +1,4 @@
-import { App } from "obsidian";
+import { App, Notice } from "obsidian";
 import { TemplateVariable } from "..";
 import { GenericInputPrompt } from "../suggest";
 
@@ -15,6 +15,9 @@ export const parseNumberVariableFrontmatter = (app: App, fm: any) => ({
 
 export async function getNumberVariableValue(app: App, variable: TemplateVariable&TemplateVariableVariables_Number, existingValue:string, sourceNotePath: string):Promise<string>{
   if (!validateNumber(app, variable, existingValue, false)) {
+    if ( existingValue )
+      new Notice(`Invalid selection: ${existingValue}`);
+
     const minString = variable.min ? `${variable.min} <= ` : "";
     const maxString = variable.max ? ` <= ${variable.max}` : "";
     const placeholderString = variable.placeholder || minString + variable.name + maxString;
