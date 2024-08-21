@@ -1,6 +1,5 @@
 import { App, TFile, normalizePath } from "obsidian";
-import { join as joinPath } from "path";
-import { TemplateVariable } from "..";
+import { getRelativePath, TemplateVariable } from "..";
 
 export type TemplateVariableVariables_Note = {
   filter_set_name: string,
@@ -33,21 +32,9 @@ export async function getNoteVariableValue( app:App, variable:TemplateVariable&T
        
       const parentFolderPath = sourceNotePath?.split("/").slice(0, -1).join("/") ?? "/";
 
-      const include_path_name = variable.include_path_name && normalizePath(
-        variable.include_path_name[0] === "." 
-        ? joinPath( parentFolderPath, variable.include_path_name )
-        : variable.include_path_name
-      );
-      
-      const exclude_path_name = variable.exclude_path_name && normalizePath(
-        variable.exclude_path_name[0] === "." 
-        ? joinPath( parentFolderPath, variable.exclude_path_name )
-        : variable.exclude_path_name
-      );
-
       const selectedNote = await filteredOpener.api_getNote( variable.filter_set_name ?? {
-        includePathName: include_path_name,
-        excludePathName: exclude_path_name,
+        includePathName: getRelativePath( variable.include_path_name, parentFolderPath ),
+        excludePathName: getRelativePath( variable.exclude_path_name, parentFolderPath ),
         includeNoteName: variable.include_note_name,
         excludeNoteName: variable.exclude_note_name,
         includeTags: variable.include_tags,

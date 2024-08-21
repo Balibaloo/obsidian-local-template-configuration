@@ -1,10 +1,10 @@
-import { App, FrontMatterCache, Notice, TAbstractFile, TFile, normalizePath } from "obsidian";
-import { join as joinPath } from "path";
+import { App, FrontMatterCache, Notice, TAbstractFile, TFile } from "obsidian";
 import { Intent, NewNoteProperties, } from ".";
 import { 
   Template, 
 } from "../templates";
 import { 
+  getRelativePath,
   TemplateVariable, 
   TemplateVariableType, 
   variableProviderVariableParsers,
@@ -132,14 +132,11 @@ export function resolvePathRelativeToAbstractFile(path: string | void, projectFi
     return;
 
   const parentFolder = projectFile instanceof TFile ? projectFile.parent : projectFile;
-  const newNoteFolderPath: string | void = normalizePath(
-    path[0] === "."
-    ? joinPath(parentFolder?.path || "", path)
-    : path)
+  const newNoteFolderPath = getRelativePath( path, parentFolder?.path)
   if (!newNoteFolderPath)
     return;
 
-  return newNoteFolderPath.replace(new RegExp("\.md$",), "");
+  return newNoteFolderPath;
 }
 
 // https://stackoverflow.com/questions/27936772/how-to-deep-merge-instead-of-shallow-merge

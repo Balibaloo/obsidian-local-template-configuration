@@ -1,6 +1,5 @@
 import { App, TFolder, normalizePath } from "obsidian";
-import { join as joinPath } from "path";
-import { TemplateVariable } from "..";
+import { getRelativePath, TemplateVariable } from "..";
 
 export type TemplateVariableVariables_Folder = {
   root_folder: string,
@@ -37,25 +36,13 @@ export async function getFolderVariableValue( app:App, variable:TemplateVariable
 
       const parentFolderPath = sourceNotePath?.split("/").slice(0, -1).join("/") ?? "/";
 
-      const include_path_name = variable.include_path_name && normalizePath(
-          variable.include_path_name[0] === "." 
-          ? joinPath( parentFolderPath, variable.include_path_name )
-          : variable.include_path_name
-      );
-      
-      const exclude_path_name = variable.exclude_path_name && normalizePath(
-          variable.exclude_path_name[0] === "." 
-          ? joinPath( parentFolderPath, variable.exclude_path_name )
-          : variable.exclude_path_name
-        );
-
       const newProjectFolder = await filteredOpener.api_getFolder(
         variable.root_folder, 
         variable.depth, 
         variable.include_roots, 
         variable.filter_set_name ?? {
-          includePathName: include_path_name,
-          excludePathName: exclude_path_name,
+          includePathName: getRelativePath( variable.include_path_name, parentFolderPath ),
+          excludePathName: getRelativePath( variable.exclude_path_name, parentFolderPath ),
           includeFolderName: variable.include_folder_name,
           excludeFolderName: variable.exclude_folder_name,
         });

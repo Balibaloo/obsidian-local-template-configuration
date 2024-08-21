@@ -1,6 +1,8 @@
 
 import { getVariableValues } from "./templateVariables";
 import { TemplateVariableType, TemplateVariableVariables, variableProviderVariableParsers } from "./providers";
+import { normalizePath } from "obsidian";
+import { join } from "path";
 
 export enum ReservedVariableName {
   intent_name = "intent_name",
@@ -21,8 +23,25 @@ export type TemplateVariable = {
   description?: string,
 } & TemplateVariableVariables
 
+function getRelativePath( path:string|null|undefined, relativeRootPath:string|null|undefined ): string|undefined {
+  if ( path === "" || path === null || path === undefined )
+    return undefined;
+
+  path = path.replace(new RegExp("\.md$"), "");
+
+  if (path[0] === "."){
+    if (relativeRootPath === null || relativeRootPath === undefined)
+      return undefined;
+
+    return normalizePath( join( relativeRootPath, path ) )
+  }
+
+  return normalizePath( path );
+}
+
 export {
   getVariableValues,
   TemplateVariableType,
   variableProviderVariableParsers, 
+  getRelativePath,
 };
