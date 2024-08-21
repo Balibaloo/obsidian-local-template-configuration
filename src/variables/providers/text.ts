@@ -10,7 +10,7 @@ export const parseTextVariableFrontmatter = (app: App, fm:any) => ({
   regex: fm.matches_regex,
 })
 
-export async function getTextVariableValue(app: App, variable: TemplateVariable&TemplateVariableVariables_Text, existingValue:string):Promise<string>{
+export async function getTextVariableValue(app: App, variable: TemplateVariable&TemplateVariableVariables_Text, existingValue:string, sourceNotePath: string):Promise<string>{
   if (!validateText(app, variable, existingValue, false)) {
     try {
       existingValue = await GenericInputPrompt.Prompt(app, variable,

@@ -141,7 +141,7 @@ async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variables
 
   let gatheredValues;
   try {
-    gatheredValues = await getVariableValues(plugin.app, variablesToGather, selectionValues, propertyValues);
+    gatheredValues = await getVariableValues(plugin.app, variablesToGather, selectionValues, propertyValues, abstractIntentSource.path);
   } catch (e) {
     new Notice(e);
     return console.error("Error: failed to gather all variables");

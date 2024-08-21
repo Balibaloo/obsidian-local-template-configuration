@@ -28,7 +28,7 @@ export const parseNaturalDateVariableFrontmatter = (app: App, fm: any) => {
   return dateVariable;
 };
 
-export async function getNaturalDateVariableValue(app: App, variable: TemplateVariable&TemplateVariableVariables_NaturalDate, existingValue:string): Promise<string>{
+export async function getNaturalDateVariableValue(app: App, variable: TemplateVariable&TemplateVariableVariables_NaturalDate, existingValue:string, sourceNotePath: string): Promise<string>{
   if (!validateNaturalDate(app, variable, existingValue, false)) {
     try {
       existingValue = await GenericInputPrompt.Prompt(app, variable,

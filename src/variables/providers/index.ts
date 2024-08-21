@@ -62,7 +62,7 @@ export const variableProviderVariableParsers: {
 };
 
 export const variableProviderVariableGetters: {
-  [K in keyof TemplateVariableVariablesLut]: (app: App, variable: TemplateVariable & TemplateVariableVariablesLut[K], value: string) => Promise<string>;
+  [K in keyof TemplateVariableVariablesLut]: (app: App, variable: TemplateVariable & TemplateVariableVariablesLut[K], value: string, sourceNotePath: string) => Promise<string>;
 } = {
   [TemplateVariableType.text]: getTextVariableValue,
   [TemplateVariableType.number]: getNumberVariableValue,

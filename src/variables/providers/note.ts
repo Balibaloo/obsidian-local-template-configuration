@@ -1,4 +1,5 @@
 import { App, TFile, normalizePath } from "obsidian";
+import { join as joinPath } from "path";
 import { TemplateVariable } from "..";
 
 export type TemplateVariableVariables_Note = {
@@ -21,7 +22,7 @@ export const parseNoteVariableFrontmatter = (app: App, fm:any) : TemplateVariabl
   exclude_tags: fm.exclude_tags,
 })
 
-export async function getNoteVariableValue(app: App, variable: TemplateVariable&TemplateVariableVariables_Note, existingValue:string):Promise<string>{
+export async function getNoteVariableValue( app:App, variable:TemplateVariable&TemplateVariableVariables_Note, existingValue:string, sourceNotePath:string ): Promise<string> {
   if (!validateNote(app, variable, existingValue, false)) {
     
     try {
@@ -29,10 +30,24 @@ export async function getNoteVariableValue(app: App, variable: TemplateVariable&
       if (!filteredOpener) {
         throw new Error("Error: Filtered Opener plugin not found. Please install it from the community plugins tab.");
       }
+       
+      const parentFolderPath = sourceNotePath?.split("/").slice(0, -1).join("/") ?? "/";
+
+      const include_path_name = variable.include_path_name && normalizePath(
+        variable.include_path_name[0] === "." 
+        ? joinPath( parentFolderPath, variable.include_path_name )
+        : variable.include_path_name
+      );
+      
+      const exclude_path_name = variable.exclude_path_name && normalizePath(
+        variable.exclude_path_name[0] === "." 
+        ? joinPath( parentFolderPath, variable.exclude_path_name )
+        : variable.exclude_path_name
+      );
 
       const selectedNote = await filteredOpener.api_getNote( variable.filter_set_name ?? {
-        includePathName: variable.include_path_name,
-        excludePathName: variable.exclude_path_name,
+        includePathName: include_path_name,
+        excludePathName: exclude_path_name,
         includeNoteName: variable.include_note_name,
         excludeNoteName: variable.exclude_note_name,
         includeTags: variable.include_tags,

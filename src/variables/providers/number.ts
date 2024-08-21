@@ -13,7 +13,7 @@ export const parseNumberVariableFrontmatter = (app: App, fm: any) => ({
   max: parseFloat(fm.is_under),
 })
 
-export async function getNumberVariableValue(app: App, variable: TemplateVariable&TemplateVariableVariables_Number, existingValue:string):Promise<string>{
+export async function getNumberVariableValue(app: App, variable: TemplateVariable&TemplateVariableVariables_Number, existingValue:string, sourceNotePath: string):Promise<string>{
   if (!validateNumber(app, variable, existingValue, false)) {
     const minString = variable.min ? `${variable.min} <= ` : "";
     const maxString = variable.max ? ` <= ${variable.max}` : "";

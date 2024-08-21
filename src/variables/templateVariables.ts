@@ -4,7 +4,7 @@ import { variableProviderVariableGetters } from "./providers";
 import { getReplacedVariablesText } from "src/intents";
 
 
-export async function getVariableValues(app: App, variables: TemplateVariable[], selectionValues: { [key: string]: string }, propertyValues: { [key: string]: string }) {
+export async function getVariableValues(app: App, variables: TemplateVariable[], selectionValues: { [key: string]: string }, propertyValues: { [key: string]: string }, sourceNotePath: string) {
   // build gathered variable values object
   const gatheredValues = { ...propertyValues };
 
@@ -25,7 +25,7 @@ export async function getVariableValues(app: App, variables: TemplateVariable[],
     }
     
     //@ts-ignore variable is a correct type but TS expects it to be the union of all correct types
-    gatheredValues[variable.name] = await variableProviderVariableGetters[variable.type](app, variable, val);
+    gatheredValues[variable.name] = await variableProviderVariableGetters[variable.type](app, variable, val, sourceNotePath);
     
     // Template gathered values with itself
     for ( let key in gatheredValues ){
