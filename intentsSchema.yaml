@@ -20,7 +20,7 @@ intents_to:
           # See below
     with_prompts:
       - called: "text"
-        of_type: "?text (text)"
+        of_type: "?text|number|natural_date|note|folder (text)"
         is_required: "?true/false (false)"
         that_prompts: "?text"
         described_as: "?text"
