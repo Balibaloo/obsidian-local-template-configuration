@@ -41,14 +41,14 @@ export async function getFolderVariableValue( app:App, variable:TemplateVariable
       }
 
       const newProjectFolder = await filteredOpener.api_getFolder(
-        variable.root_folder, 
-        variable.depth, 
-        variable.include_roots, 
         variable.filter_set_name ?? {
+          rootFolder: variable.root_folder,
           includePathName: getRelativePath( variable.include_path_name, parentFolderPath ),
           excludePathName: getRelativePath( variable.exclude_path_name, parentFolderPath ),
           includeFolderName: variable.include_folder_name,
           excludeFolderName: variable.exclude_folder_name,
+          includeParents: variable.include_roots,
+          depth: variable.depth,
         });
       if (!(newProjectFolder instanceof TFolder))
         throw new Error(`Error: Filtered Opener plugin did not return a folder for variable ${variable.name}`);
