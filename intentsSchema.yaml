@@ -21,7 +21,7 @@ intents_to:
     with_prompts:
       - called: "text"
         of_type: "?text|number|natural_date|note|folder (text)"
-        is_required: "?true|false (false)"
+        is_required: "?true|false (true)"
         that_prompts: "?text"
         described_as: "?text"
         is_initially: "?text"
