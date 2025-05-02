@@ -1,4 +1,4 @@
-import { App, PaneType, PluginSettingTab, Setting, normalizePath } from "obsidian";
+import { App, Notice, PaneType, PluginSettingTab, Setting, normalizePath } from "obsidian";
 import PTPlugin from "../main";
 import { PTSettings } from ".";
 
@@ -47,12 +47,41 @@ export class PTSettingTab extends PluginSettingTab {
     new Setting(containerEl)
         .setName("Intent note filter set name")
         .setDesc("The name of the Filtered Opener File Filter Set used to display a list of notes with intents.")
-        .addText(text => {
-          text.setValue(this.plugin.settings.intentNotesFilterSetName)
-          text.onChange(async v => {
+        .addDropdown(async dropdown => {
+          dropdown.setValue(this.plugin.settings.intentNotesFilterSetName);
+
+          // Get filtered opener plugin
+          const filteredOpener = (this.app as any).plugins.plugins["filtered-opener"];
+          if (!filteredOpener) {
+            new Notice("Error: Filtered Opener plugin not found. Please install it from the community plugins tab.", 0);
+            return;
+          }
+          
+          const options : [string, string][] = ( filteredOpener.api_getListOfNoteFilterSets() || [] )
+            .map( (option: { name: any; }) => [option.name, option.name])
+          
+          // Reset filter set if no options
+          if (options.length === 0){
+            this.plugin.settings.intentNotesFilterSetName = "";
+            await this.plugin.saveSettings();
+          }
+
+          // Default filter set
+          options.unshift(["", "All notes"])
+
+          // Reset filter set if not in options
+          if ( ! options.map( opt => opt[0]).includes( this.plugin.settings.intentNotesFilterSetName )){
+            new Notice("Warning: Your note filter set is no longer in the list of options and has been reset", 0);
+            this.plugin.settings.intentNotesFilterSetName = "";
+            await this.plugin.saveSettings();
+          }
+
+          dropdown.addOptions(Object.fromEntries(options));
+
+          dropdown.onChange(async v => {
             this.plugin.settings.intentNotesFilterSetName = v;
             await this.plugin.saveSettings();
-          })
+          });
         })
 
     new Setting(containerEl)
