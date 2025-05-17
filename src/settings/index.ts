@@ -1,6 +1,6 @@
 import { PaneType } from "obsidian";
 import { Intent } from "../intents";
-import { DEFAULT_SETTINGS, PTSettingTab } from "./config";
+import { DEFAULT_SETTINGS, PTSettingTab } from "./settings";
 
 export interface PTSettings {
 	globalIntentsNotePath: string;
