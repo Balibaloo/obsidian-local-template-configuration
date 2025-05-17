@@ -8,7 +8,7 @@ export async function getIntentTemplate(intent: Intent): Promise<Template | null
     return null;
   }
   
-	const shownTemplates = intent.templates.filter(t => !t.disable);
+	const shownTemplates = intent.templates.filter(t => !t.hidden);
 	if (shownTemplates.length == 0) {
 		new Notice(`Error: All ${intent.name} templates are hidden`);
 		return null;

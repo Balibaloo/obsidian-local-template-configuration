@@ -5,13 +5,15 @@
 intents_imported_from: "'text'|['text']"
 intents_to:
   - make_a: "!text"
-    is_disabled: "true|false (false)"
+    hidden: "true|false (false)"
+    disabled: "true|false (false)"
     with_name: "text ({{intent_name}})"
     in_folder: "text (./)"
     replaces_selection_with: "text ([[{{intent_name}}]])"
     with_templates: 
       - called: "!text"
-        is_disabled: "true|false (false)"
+        hidden: "true|false (false)"
+        disabled: "true|false (false)"
         at_path: "!text"
         with_name: "text ({{intent_name}})"
         in_folder: "text (./)"
@@ -27,7 +29,8 @@ intents_to:
         is_initially: "text"
         uses_selection: "true|false (true)"
         hinted_as: "text"
-        is_disabled: "true/false (false)"
+        hidden: "true|false (false)"
+        disabled: "true|false (false)"
         
         ## Variable types
         # Text

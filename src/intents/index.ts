@@ -6,7 +6,8 @@ import { choseIntent, getReplacedVariablesText, runIntent } from "./intents";
 
 export type Intent = hasNewNoteProperties & {
 	name: string;
-	disable: boolean;
+	hidden: boolean;
+	disabled: boolean;
 	templates: Template[];
 	sourceNotePath: string;
 }

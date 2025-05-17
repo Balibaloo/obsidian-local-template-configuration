@@ -4,7 +4,8 @@ import { getIntentTemplate } from "./templates";
 export type Template = hasNewNoteProperties & {
   name: string;
   path: string;
-  disable: boolean;
+  disabled: boolean;
+  hidden: boolean;
 }
 
 export { 

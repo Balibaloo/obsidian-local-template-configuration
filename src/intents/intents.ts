@@ -38,7 +38,7 @@ export async function choseIntent(intents:Intent[]):Promise<Intent> {
       return rejects();
     }
 
-    const shownIntents = intents.filter(i => !i.disable);
+    const shownIntents = intents.filter(i => !i.hidden);
     if (shownIntents.length === 0) {
       new Notice(`Error: All intents are hidden`);
       return rejects();
@@ -91,7 +91,7 @@ export async function runIntent(plugin:PTPlugin, intent: Intent) {
     intent.newNoteProperties = namedObjectDeepMerge(intent.newNoteProperties, chosenTemplate.newNoteProperties);
   }
 
-  variablesToGather = variablesToGather.filter(v => !v.disable);
+  variablesToGather = variablesToGather.filter(v => !v.hidden);
 
   const selections:(EditorSelection|null)[] = plugin.app.workspace.activeEditor?.editor?.listSelections() ?? [ null ];
   const creatingMultipleNotes = selections.length > 1;

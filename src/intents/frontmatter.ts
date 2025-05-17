@@ -22,14 +22,17 @@ function getIntentsFromFM(app: App, fm: FrontMatterCache, sourceFile: TFile): In
     fmValidateIntent( iFm );
     return {
       name: iFm.make_a,
-      disable: typeof iFm?.is_disabled === "undefined" ? undefined :
-      typeof iFm?.is_disabled === "boolean" ? iFm?.is_disabled :
-        Boolean(iFm?.is_disabled?.[0]?.toUpperCase() === "T"),
+      hidden: typeof iFm?.hidden === "undefined" ? undefined :
+        typeof iFm?.hidden === "boolean" ? iFm?.hidden :
+        Boolean(iFm?.hidden?.[0]?.toUpperCase() === "T"),
+      disabled: typeof iFm?.disabled === "undefined" ? undefined :
+        typeof iFm?.disabled === "boolean" ? iFm?.disabled :
+        Boolean(iFm?.disabled?.[0]?.toUpperCase() === "T"),
       templates: getTemplatesFromFM(app, iFm),
       newNoteProperties: getNewNotePropertiesFromFM(app, iFm),
       sourceNotePath: sourceFile.path,
     }
-  });
+  }).filter(( i: Intent ) => ! i.disabled );
 
   return newIntents;
 }
@@ -38,13 +41,16 @@ function getTemplatesFromFM(app: App, fm: FrontMatterCache): Template[] {
   return (fm?.with_templates || []).map((tFm: any): Template =>
   (fmValidateTemplate( tFm ), {
     name: tFm.called,
-    disable: typeof tFm?.is_disabled === "undefined" ? undefined :
-    typeof tFm?.is_disabled === "boolean" ? tFm?.is_disabled :
-      Boolean(tFm?.is_disabled?.[0]?.toUpperCase() === "T"),
+    hidden: typeof tFm?.hidden === "undefined" ? undefined :
+      typeof tFm?.hidden === "boolean" ? tFm?.hidden :
+      Boolean(tFm?.hidden?.[0]?.toUpperCase() === "T"),
+    disabled: typeof tFm?.disabled === "undefined" ? undefined :
+      typeof tFm?.disabled === "boolean" ? tFm?.disabled :
+      Boolean(tFm?.disabled?.[0]?.toUpperCase() === "T"),
     path: tFm.at_path,
     newNoteProperties: getNewNotePropertiesFromFM(app, tFm),
   })
-  );
+  ).filter(( t: Template ) => ! t.disabled );
 }
 
 function getNewNotePropertiesFromFM(app: App, fm: FrontMatterCache): NewNoteProperties {
@@ -66,9 +72,12 @@ function getVariablesFromFM(app: App, fm: FrontMatterCache) {
     const baseVariables: TemplateVariable = {
       name: v.called,
       type: type,
-      disable: typeof v?.is_disabled === "undefined" ? undefined :
-        typeof v?.is_disabled === "boolean" ? v?.is_disabled :
-          Boolean(v?.is_disabled?.[0]?.toUpperCase() === "T"),
+      disabled: typeof v?.disabled === "undefined" ? undefined :
+        typeof v?.disabled === "boolean" ? v?.disabled :
+        Boolean(v?.disabled?.[0]?.toUpperCase() === "T"),
+      hidden: typeof v?.hidden === "undefined" ? undefined :
+        typeof v?.hidden === "boolean" ? v?.hidden :
+        Boolean(v?.hidden?.[0]?.toUpperCase() === "T"),
       required: typeof v?.is_required === "undefined" || v?.is_required === "" ? true :
         typeof v?.is_required === "boolean" ? v?.is_required :
           Boolean(v?.is_required?.[0]?.toUpperCase() === "T"),
@@ -82,7 +91,7 @@ function getVariablesFromFM(app: App, fm: FrontMatterCache) {
     }
 
     return Object.assign(baseVariables, variableProviderVariableParsers[type](app,v))
-  })
+  }).filter(( tv: TemplateVariable ) => ! tv.disabled )
 }
 
 
