@@ -1,61 +1,61 @@
 # Schema of intents frontmatter
-## ? means the property is optional
+## ! means the property is required
 ## (someValue) shows the default value if no value is specified
 
 intents_imported_from: "'text'|['text']"
 intents_to:
-  - make_a: "text"
-    is_disabled: "?true|false (false)"
-    with_name: "?text ({{intent_name}})"
-    in_folder: "?text (./)"
-    replaces_selection_with: "?text ([[{{intent_name}}]])"
+  - make_a: "!text"
+    is_disabled: "true|false (false)"
+    with_name: "text ({{intent_name}})"
+    in_folder: "text (./)"
+    replaces_selection_with: "text ([[{{intent_name}}]])"
     with_templates: 
-      - called: "text"
-        is_disabled: "?true|false (false)"
-        at_path: "text"
-        with_name: "?text ({{intent_name}})"
-        in_folder: "?text (./)"
-        replaces_selection_with: "?text ([[{{intent_name}}]])"
+      - called: "!text"
+        is_disabled: "true|false (false)"
+        at_path: "!text"
+        with_name: "text ({{intent_name}})"
+        in_folder: "text (./)"
+        replaces_selection_with: "text ([[{{intent_name}}]])"
         with_prompts:
           # See below
     with_prompts:
-      - called: "text"
-        of_type: "?text|number|natural_date|note|folder (text)"
-        is_required: "?true|false (true)"
-        that_prompts: "?text"
-        described_as: "?text"
-        is_initially: "?text"
-        uses_selection: "?true|false (true)"
-        hinted_as: "?text"
-        is_disabled: "?true/false (false)"
+      - called: "!text"
+        of_type: "text|number|natural_date|note|folder (text)"
+        is_required: "true|false (true)"
+        that_prompts: "text"
+        described_as: "text"
+        is_initially: "text"
+        uses_selection: "true|false (true)"
+        hinted_as: "text"
+        is_disabled: "true/false (false)"
         
         ## Variable types
         # Text
-        matches_regex: "?text"
+        matches_regex: "text"
 
         # Number
-        is_over: "?number,"
-        is_under: "?number,"
+        is_over: "number,"
+        is_under: "number,"
 
         # Natural date
-        is_after: "?text"
-        is_before: "?text"
-        format: "?text"
+        is_after: "text"
+        is_before: "text"
+        format: "text"
 
         # Note and Folder
-        filter_set_name: "?text"
-        include_path_name: "?text"
-        exclude_path_name: "?text"
+        filter_set_name: "text"
+        include_path_name: "text"
+        exclude_path_name: "text"
 
         ## Note only
-        include_note_name: "?text"
-        exclude_note_name: "?text"
-        include_tags: "?text"
-        exclude_tags: "?text"
-        note_output_format: "?path|name (path)"
+        include_note_name: "text"
+        exclude_note_name: "text"
+        include_tags: "text"
+        exclude_tags: "text"
+        note_output_format: "path|name (path)"
 
         ## Folder only
-        in_folder: "?text (/)"
-        at_depth: "?number (Depth configured in Filtered Opener)"
-        includes_roots: "?true/false (false)"
-        folder_output_format: "?path|name (path)"
+        in_folder: "text (/)"
+        at_depth: "number (Depth configured in Filtered Opener)"
+        includes_roots: "true/false (false)"
+        folder_output_format: "path|name (path)"
