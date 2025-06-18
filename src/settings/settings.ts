@@ -1,6 +1,7 @@
 import { App, Notice, PaneType, PluginSettingTab, Setting, normalizePath } from "obsidian";
 import PTPlugin from "../main";
 import { PTSettings } from ".";
+import { FilteredOpenerMissingNotice } from "src/notice";
 
 
 export const DEFAULT_SETTINGS: PTSettings = {
@@ -52,12 +53,7 @@ export class PTSettingTab extends PluginSettingTab {
 
           // Get filtered opener plugin
           const filteredOpener = (this.app as any).plugins.plugins["filtered-opener"];
-          if (!filteredOpener) {
-            new Notice("Error: Filtered Opener plugin not found. Please install it from the community plugins tab.", 0);
-            return;
-          }
-          
-          const options : [string, string][] = ( filteredOpener.api_getListOfNoteFilterSets() || [] )
+          const options : [string, string][] = ( filteredOpener?.api_getListOfNoteFilterSets() || [] )
             .map( (option: { name: any; }) => [option.name, option.name])
           
           // Reset filter set if no options
@@ -82,6 +78,12 @@ export class PTSettingTab extends PluginSettingTab {
             this.plugin.settings.intentNotesFilterSetName = v;
             await this.plugin.saveSettings();
           });
+
+          dropdown.selectEl.onClickEvent((ev) => {
+            if (!filteredOpener) {
+              new FilteredOpenerMissingNotice();
+            }
+          })
         })
 
     new Setting(containerEl)

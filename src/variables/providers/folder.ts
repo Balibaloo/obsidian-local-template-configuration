@@ -1,5 +1,6 @@
 import { App, Notice, TFolder } from "obsidian";
 import { getRelativePath, TemplateVariable } from "..";
+import { FilteredOpenerMissingNotice } from "src/notice";
 
 export type TemplateVariableVariables_Folder = {
   root_folder: string,
@@ -37,7 +38,7 @@ export async function getFolderVariableValue( app:App, variable:TemplateVariable
     try {
       const filteredOpener = (app as any).plugins.plugins["filtered-opener"];
       if (!filteredOpener) {
-        throw new Error("Error: Filtered Opener plugin not found. Please install it from the community plugins tab.");
+        new FilteredOpenerMissingNotice();
       }
 
       const newProjectFolder = await filteredOpener.api_getFolder(

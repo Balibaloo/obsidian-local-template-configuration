@@ -1,6 +1,7 @@
 import { Notice, Plugin, TFile } from 'obsidian';
 import { DEFAULT_SETTINGS, PTSettings, PTSettingTab } from './settings';
 import { ReservedVariableName, TemplateVariable, TemplateVariableType } from './variables';
+import { FilteredOpenerMissingNotice } from './notice';
 import { 
 	Intent,
 	getIntentsFromTFile,
@@ -93,7 +94,7 @@ export default class PTPlugin extends Plugin {
 			callback: async () => {
 				const filteredOpener = (this.app as any).plugins.plugins["filtered-opener"];
 				if (!filteredOpener) {
-					new Notice("Error: Filtered Opener plugin not found. Please install it from the community plugins tab.");
+					new FilteredOpenerMissingNotice();
 					console.error("Error running note intent, Filtered Opener plugin not found");
 					return;
 				}
@@ -142,7 +143,7 @@ export default class PTPlugin extends Plugin {
 			callback: async () => {
 				const filteredOpener = (this.app as any).plugins.plugins["filtered-opener"];
 				if (!filteredOpener) {
-					new Notice("Error: Filtered Opener plugin not found. Please install it from the community plugins tab.");
+					new FilteredOpenerMissingNotice();
 					console.error("Error running note intent, Filtered Opener plugin not found");
 					return;
 				}
