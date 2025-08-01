@@ -38,7 +38,8 @@ export async function getNoteVariableValue( app:App, variable:TemplateVariable&T
       }
        
 
-      const selectedNote = await filteredOpener.api_getNote( variable.filter_set_name ?? {
+      const selectedNote = await filteredOpener.api_getNote({
+        name: variable.filter_set_name,
         includePathName: getRelativePath( variable.include_path_name, parentFolderPath ),
         excludePathName: getRelativePath( variable.exclude_path_name, parentFolderPath ),
         includeNoteName: variable.include_note_name,

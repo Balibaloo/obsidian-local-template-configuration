@@ -41,8 +41,8 @@ export async function getFolderVariableValue( app:App, variable:TemplateVariable
         new FilteredOpenerMissingNotice();
       }
 
-      const newProjectFolder = await filteredOpener.api_getFolder(
-        variable.filter_set_name ?? {
+      const newProjectFolder = await filteredOpener.api_getFolder({
+          name: variable.filter_set_name,
           rootFolder: variable.root_folder,
           includePathName: getRelativePath( variable.include_path_name, parentFolderPath ),
           excludePathName: getRelativePath( variable.exclude_path_name, parentFolderPath ),
