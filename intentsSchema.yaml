@@ -18,7 +18,7 @@ intents_to:
         with_name: "text ({{intent_name}})"
         in_folder: "text (./)"
         replaces_selection_with: "text ([[{{intent_name}}]])"
-        with_prompts:
+        with_prompts: ""
           # See below
     with_prompts:
       - called: "!text"

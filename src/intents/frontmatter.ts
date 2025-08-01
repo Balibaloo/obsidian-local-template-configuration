@@ -205,6 +205,13 @@ function fmValidateVariable( fm:FrontMatterCache ){
 function validateFmSchema( fm:FrontMatterCache, schema:FrontMatterCache, name:string){
   const exampleKeys = Object.keys(schema);
   const unknownKeys = Object.keys( fm ).filter( k => ! exampleKeys.contains(k))
+
+  // Catch missing required keys
+  const unusedKeys = exampleKeys.filter( k => ( ! Object.keys(fm).contains(k)) || (fm[k] === null || fm[k] === undefined))
+  const missingRequiredKeys = unusedKeys.filter(k => schema[k].includes("!"))
+  if (missingRequiredKeys.length > 0){
+    throw new Error(`${name} is missing required properties: ${missingRequiredKeys.join(", ")}`)
+  }
   
   if ( unknownKeys.length === 0 ) return;
 
