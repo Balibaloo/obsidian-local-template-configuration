@@ -63,10 +63,10 @@ export async function getFolderVariableValue( app:App, variable:TemplateVariable
 
   
   if ( !["path","name"].contains( variable.folder_output_format ) ){
-    variable.folder_output_format = "path";
-
     if ( variable.folder_output_format )
       console.warn("Unrecognized folder_output_format value:", variable.folder_output_format);
+    
+    variable.folder_output_format = "path";
   }
   
   // @ts-ignore earlier validateFolder ensured that return value is a valid folder

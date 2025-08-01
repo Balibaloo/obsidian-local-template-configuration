@@ -59,10 +59,10 @@ export async function getNoteVariableValue( app:App, variable:TemplateVariable&T
 
     
   if ( !["path","name"].contains( variable.note_output_format ) ){
-    variable.note_output_format = "path";
-
     if ( variable.note_output_format )
       console.warn("Unrecognized note_output_format value:", variable.note_output_format);
+    
+    variable.note_output_format = "path";
   }
   
   // @ts-ignore earlier validateNote ensured that return value is a valid note
