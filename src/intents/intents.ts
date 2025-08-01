@@ -136,7 +136,7 @@ async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variables
         acc[variable.name] = selectionSplit[index];
       return acc;
     }, {});
-    // console.log("Found selection variables:", selectionVariables);
+    // console.log("Found selection values:", selectionVariables);
   }
 
   let gatheredValues;
@@ -144,7 +144,7 @@ async function runIntentWithSelection(plugin:PTPlugin, intent: Intent, variables
     gatheredValues = await getVariableValues(plugin.app, variablesToGather, selectionValues, propertyValues, abstractIntentSource.path);
   } catch (e) {
     new Notice(e);
-    return console.error("Error: failed to gather all variables");
+    return console.error("Error: Failed to get all prompt values");
   }
 
   console.log("Gathered", gatheredValues);

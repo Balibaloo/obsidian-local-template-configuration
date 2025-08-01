@@ -196,10 +196,10 @@ function fmValidateTemplate( fm:FrontMatterCache ){
 function fmValidateVariable( fm:FrontMatterCache ){
   const exampleVariable = intentSchema["intents_to"]?.[0]?.["with_prompts"]?.[0];
   if (!exampleVariable){
-    throw new Error("Failed to get schema for variable");
+    throw new Error("Failed to get schema for prompt");
   }
 
-  validateFmSchema( fm, exampleVariable, "variable");
+  validateFmSchema( fm, exampleVariable, "prompt");
 }
 
 function validateFmSchema( fm:FrontMatterCache, schema:FrontMatterCache, name:string){

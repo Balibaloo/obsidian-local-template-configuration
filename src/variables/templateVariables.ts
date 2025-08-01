@@ -33,6 +33,6 @@ export async function getVariableValues(app: App, variables: TemplateVariable[],
     }
   }
 
-  // console.log("Gathered variable values:", gatheredValues);
+  // console.log("Gathered prompt values:", gatheredValues);
   return gatheredValues;
 }
