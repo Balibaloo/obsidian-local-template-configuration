@@ -9,7 +9,7 @@ intents_to:
     disabled: "true|false (false)"
     with_name: "text ({{intent_name}})"
     in_folder: "text (./)"
-    replaces_selection_with: "text ([[{{intent_name}}]])"
+    replaces_selection_with: "text ([[{{with_name}}]])"
     with_templates: 
       - called: "!text"
         hidden: "true|false (false)"
@@ -17,7 +17,7 @@ intents_to:
         at_path: "!text"
         with_name: "text ({{intent_name}})"
         in_folder: "text (./)"
-        replaces_selection_with: "text ([[{{intent_name}}]])"
+        replaces_selection_with: "text ([[{{with_name}}]])"
         with_prompts: ""
           # See below
     with_prompts:
