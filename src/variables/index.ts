@@ -34,7 +34,7 @@ function getRelativePath( path:string|null|undefined, relativeRootPath:string|nu
     if (relativeRootPath === null || relativeRootPath === undefined)
       return undefined;
 
-    return normalizePath( join( relativeRootPath, path ) )
+    path = join( relativeRootPath, path )
   }
 
   return normalizePath( path );
