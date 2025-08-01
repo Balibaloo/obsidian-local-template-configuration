@@ -23,7 +23,7 @@ export default class PTPlugin extends Plugin {
 		this.addSettingTab(new PTSettingTab(this.app, this));
 
 		this.addCommand({ id: 'run-active-note-intent',
-			name: 'Run active note intent',
+			name: 'Create note with intent from active note',
 			callback: async () => {
 				
 				const intentNote = this.app.workspace.getActiveFile()
@@ -79,7 +79,7 @@ export default class PTPlugin extends Plugin {
 		});		
 
 		this.addCommand({ id: 'run-global-intent',
-			name: 'Run global intent',
+			name: 'Create note with global intent',
 			callback: async () => {
 				const chosenIntent = await choseIntent(this.settings.intents);
 				if ( ! chosenIntent )
@@ -90,7 +90,7 @@ export default class PTPlugin extends Plugin {
 		});
 
 		this.addCommand({ id: 'run-local-intent',
-			name: 'Run intent in note',
+			name: 'Create note with intent from a note',
 			callback: async () => {
 				const filteredOpener = (this.app as any).plugins.plugins["filtered-opener"];
 				if (!filteredOpener) {

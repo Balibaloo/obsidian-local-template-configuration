@@ -1,191 +1,535 @@
-Configure note templating locally in frontmatter and insert values using prompts.
+# Contextual Note Templating
+An [Obsidian](https://obsidian.md) plugin for creating notes next to notes.
+<br>
 
-Is this [Obsidian](https://obsidian.md) plugin for you? [You should use this plugin if](#you-should-use-this-plugin-if)
+##### Table of contents
+- [Introduction](#introduction)
+- [Installing](#installing)
+- <details><summary>Basics</summary>
 
-<img src="assets/main.gif" width=800px>
+    - [Change output note name](#change-output-note-name)
+    - [Change output folder](#change-output-folder)
+    - [Use a template note](#use-a-template)
+    - [Add a prompt](#add-a-prompt)
+  </details>
 
-Note: configuration in GIFs uses old YAML property names. All other YAML in this readme is up to date.
+- <details> <summary>Workflow Optimizations</summary>
+
+  - [Filter the list of notes shown](#filter-the-list-of-notes-shown)
+  - [Use selected text to populate prompts](#use-selected-text-to-populate-prompts)
+  - [Create a note with a hotkey](#create-note-with-a-hotkey)
+  - [Create multiple notes at a time](#create-multiple-notes-at-a-time)
+  - [Hide elements](#hide-elements)
+  </details>
+
+- <details> <summary>Managing many intents</summary>
+
+  - [Import intents from other notes](#import-intents-from-other-notes)
+  - [Make an intent available globally](#make-an-intent-available-globally)
+  - [Disable elements](#disabling-elements)
+  </details>
+
+- <details> <summary>Appendix</summary>
+
+  - [Reference](#Reference)
+  - [Troubleshooting](#Troubleshooting)
+  - [Other similar plugins](#similar-plugins)
+
+  </details>
 
 
-Notes are created by running intents.
-# Intents
-Intents group together templates and are the core unit of configuration in this plugin.
-They represent the different intents for creating a note.
-Eg: "I intend to create a meeting note".
+<!-- chapter intro summaries -->
 
-The frontmatter of any note can hold a list of intents.
-The easiest way to edit frontmatter is to enable the [source property display mode](https://help.obsidian.md/Editing+and+formatting/Properties#Display+modes) in the Obsidian settings.
+# Introduction
+Every time you make a note you need to make 3 basic decisions:<br>
+(click to expand them for more context)
+<details> <summary>1) <b>Where</b> should the note go?</summary>
 
-Example: simple intents
+- Should it be next to some note?
+- Should it be inside a folder?
+</details>
+
+<details> <summary>2) What should be the <b>name of the new note</b>?</summary>
+
+- Should it always have a fixed name?
+- Should you be able to input its new name?
+- Should it have a prefix or suffix?
+</details>
+
+<details> <summary>3) What should the <b>note have inside it</b>?</summary>
+
+- Should it have the contents of a template?
+- Are there any values that should be inputted when creating the note?
+</details><br>
+
+
+This is a plugin for [Obsidian](https://obsidian.md) that helps you **automate** making these decisions with the help of your existing notes.<br><br>
+
+
+# Installing
+This plugin is available on the [community plugins market](https://obsidian.md/plugins) in the Obsidian settings menu.<br>
+If Obsidian is already installed on your device, you can [install by clicking this link](https://obsidian.md/plugins?id=contextual-note-templating).
+
+This plugin also requires the [Filtered opener plugin](https://github.com/Balibaloo/obsidian-filtered-opener) to be installed but you can install it as required later.<br>
+
+# Base concepts
+
+The basic concept of the plugin is that **your notes can hold recipes to create new notes**.<br>
+For example: Your project note can make a task note for itself.<br><br>
+
+
+Continuing with the cooking analogy, you can have multiple versions of a recipe as well as make last minute ingredient substitutions.
+You can chose the version of the recipe appropriate for the occasion and make ingredient substitutions during cooking.
+<br>
+
+In the plugin, **the general recipe is called an "Intent"**, it holds all the different versions of a recipe as well as possibilities for ingredient substitutions.
+For example, you could have an Intent to create a 'task note' and another to create a 'meeting note'.
+<br>
+
+Within an Intent, **each version of a recipe is called a "Template"**.
+Before creating a "meeting note" for example, you can chose between creating a "Quick catch-up" note or a big "Quarterly review" note.  
+<br>
+
+Finally when actually using a recipe, you may want to substitute different ingredients in the moment.
+Your recipe can include **a "Prompt" which asks you to enter a value** like a due date or the time of the meeting.
+
+## First recipe
+
+A recipe is **just text** that is kept **at the start of a note** in a special place called the [Frontmatter](https://help.obsidian.md/Getting+started/Glossary#Frontmatter).<br>
+When you put text at the start of your note and surround it with `---` (above and below) Obsidian is able to detect and read this special text.
+
+The simplest recipe possible looks like this:
 ```yaml
 ---
 intents_to:
-- make_a: task ✅
-- make_a: meeting 🤝
-- make_a: person 🙋‍♂️
+  - make_a: "task"
 ---
 ```
 
-## Running intents
-### Note intents
-The `Run note intent` command is the simplest way to run an intent.
+In english it means "An intent (recipe) to make a task note".
 
-<img src="assets/simple.gif" width=800px>
+You can use it straight away by pasting it at the start of any note (**make sure to use Command/Control + Shift + V to preserve formatting**)<br>
+and then using the [command palette](https://help.obsidian.md/Plugins/Command+palette) to run the following command:<br>
+- <code>Create note with intent <strong>from active note</strong></code><br>
 
-To run a note intent, you have to select the note that contains that intent.
+Running this command will create a new note called "task" in the same folder as the original note.
 
-### Selecting a note
-Another plugin called "Filtered Opener" is required to select a note from your vault.
-To select a note, Filtered Opener displays a list of every note in your vault.
-Filtered Opener can also be configured to display a subset of your notes using filters.
-Please install the [Filtered Opener plugin](https://github.com/Balibaloo/obsidian-filtered-opener) as it is required to use this plugin.
-
-After selecting a note, you will be shown its list of intents to chose from.
-If a note only has one intent, that intent will be selected automatically.
-
-### Global intents
-Global intents are intents that are in the global intents note.
-
-Global intents can be ran in the context of any other note.
-A context note is used to resolve relative paths and before running the global intent, it [imports and merges](#importing-intents) the global intents before the resulting merged intent is ran.
-
-The `Run global intent` command runs a global intent in the global context.
-The global context is the note containing global intents.
-Paths relative to the global context are resolved relative to the root folder of your vault.
-
-When global intents are configured, a command is created for each global intent called `Create ${intent.name} for note`.
-This command lets you run a global intent in the context of a note.
-
-#### Configuring global intents
-The global intents note is configured by setting the Global Intents Note Path in the plugin settings.
-This note must be reloaded by using the `Reload global intents` command for changes to apply.
-
-# Templates
-Intents can have many note templates.
-
-A note template contains a path to a note.
-The new note will contain the contents of this template note.
+> [!IMPORTANT]
+> When you paste the recipe into your note correctly Obsidian will show it in a special view.<br>
+> **The default view for Frontmatter makes it impossible to edit recipes**.<br>
+> To fix it [use this documentation](https://help.obsidian.md/Editing+and+formatting/Properties#Display+modes) to **enable source mode** for note properties.
 
 
-<img src="assets/templates.gif" width=800px>
+### Using a recipe for a different note
 
-The properties of templates are:
-| property name | required | Default | description |
-| ---- | ---- | ---- | ---- |
-| `called` | Yes |  | The display name of the template |
-| `at_path` | Yes |  | The path to the template note |
-| `is_disabled` | No | false | see [disabling intents, templates and variables](#disabling-intents-templates-and-variables) |
-|  | |  | Additional properties covered in [New Note Properties](#new-note-properties) |
+If you want to chose a different note as a starting point, use the alternative command:
+- <code>Create note with intent <strong>from note</strong></code>.<br><br>
+
+This command will show you a list of all the notes in your vault so that you can chose a starting note.<br>
+There is also an option to [filter down the list of notes](#filter-the-list-of-notes-shown) to reduce the number of notes shown.
+<!-- - [ ] gif -->
 
 
 
-Example: intents with templates
+# Change output note name
+To set a fixed name for your new note, add the `with_name` property to your intent:
 ```yaml
 ---
 intents_to:
-  - make_a: "task ✅"
-    with_templates: 
-      - called: "default"
-        at_path: "Templates/task template.md"
-      - called: "graded"
-        at_path: "Templates/graded task template.md"
-      - called: "worksheet"
-        at_path: "Templates/worksheet task template.md"
-  - make_a: "meeting 🤝"
-    with_templates: 
-      - called: "default"
-        at_path: "Templates/meeting template.md"
-      - called: "project review"
-        at_path: "Templates/project review meeting template.md"
-      - called: "standup"
-        at_path: "Templates/standup meeting template.md"
-  - make_a: "person 🙋‍♂️"
-    with_templates: 
-      - called: "default"
-        at_path: "Templates/person template.md"
-      - called: "work colleague"
-        at_path: "Templates/work colleague person template.md" 
+  - make_a: "task"
+    with_name: "My new task"
 ---
 ```
 
-# New note properties
-Both intents and templates can have a new note pathname and a list of variables.
+The name of the new note will be "My new task".<br>
+To input the note name when creating it, [add a prompt](#add-a-prompt).
 
-Template new note properties overwrite intent new note properties.
+> [!NOTE]
+> You can also use this property on a template.
+> See [new note properties](#new-note-properties)
 
-Example: Task intent has 3 different templates with different output folders and note names. 
-<img src="assets/new-note-properties.gif" width=800px>
+<!-- - [ ] gif -->
 
-The properties of new notes are:
-| property name | required | Default | description |
-| ---- | ---- | ---- | ---- |
-| `with_name` | No | `{{new_note_name}}` | The name of the new note, see [new_note_name](#new_note_name) |
-| `in_folder` | No | `./` |  The folder in which the new note will be created in  |
-| `with_prompts` | No |  | A list of [variables](#variables) |
-| `is_disabled` | No | false | see [disabling intents, templates and variables](#disabling-intents-templates-and-variables) |
-
-
-
-Example:
-- A task intent that `outputs_to_templated_pathname`.
-- A "graded task" template with an additional `date_released` variable and a custom output pathname.
-- A "worksheet task" template with an additional `worksheet_number` variable and a custom output pathname.
+# Change output folder
+Add the `in_folder` property to your intent:
 ```yaml
 ---
 intents_to:
-  - make_a: task ✅
-    outputs_to_templated_pathname: ./✔ tasks/✅ {{new_note_name}}
-    with_prompts:
-      - called: deadline
-        of_type: natural_date
+  - make_a: "task"
+    in_folder: "./tasks"
+---
+```
+
+The new note will be created in a folder called "tasks" next to your note.
+
+> [!IMPORTANT]
+> Paths to notes beginning with "./" are relative to the current note.
+
+> [!NOTE]
+> You can also use this property on a template.
+> See [new note properties](#new-note-properties)
+<!-- - [ ] gif -->
+
+
+# Use a template
+First create a note and populate it with your template contents.<br>
+Here is a sample note called "Task template note":
+```
+Task todo list:
+- [ ] Example
+```
+
+
+In this example the note is in the same folder as the note with the intent:<br>
+<img src="./assets/example-file-structure-for-template.png" alt="File layout example" width="400"/>
+
+Then add the `with_templates` property to your intent:
+```yaml
+---
+intents_to:
+  - make_a: "task"
     with_templates:
-      - called: default ✅
-        at_path: Templates/task template.md
-      - called: graded 🎓
-        at_path: Templates/graded task template.md
-        outputs_to_templated_pathname: ./✔ tasks/🎓 {{new_note_name}}
-        with_prompts:
-          - called: date_released
-            of_type: natural_date
-          - called: percent
-      - called: worksheet 📃
-        at_path: Templates/worksheet task template.md
-        outputs_to_templated_pathname: "./📃 worksheets/📃 Worksheet #{{worksheet_number}} - {{new_note_name}}"
-        with_prompts:
-          - called: worksheet_number
-            of_type: number
-            is_over: 1
+      - called: "first template"
+        at_path: "./task template"
 ---
 ```
 
-# Variables
-There are multiple types of variables but all variables contain a common set of properties:
+The new note will now contain the contents of the template note.
 
-| property name | required | Default | description |
-| ---- | ---- | ---- | ---- |
-| `called` | Yes |  | The name of the variable, used when inserting values into templates. see [using variable values](#using-variable-values). <br>For the purpose of demonstration this property uses lowercase and underscores instead of spaces but it can contain any characters eg emojis. |
-| `of_type` | No | [text](#text) | The type of the variable. See [variable types](#variable-types). |
-| `is_required` | No | false | If `true`, when you enter an invalid value the note creation process will stop and an error message will be shown. |
-| `that_prompts` | No |  | The text that is displayed when prompting. |
-| `described_as` | No |  | Text that will be shown bellow the prompt. |
-| `is_initially` | No |  | The value that will be in the prompt initially. |
-| `uses_selection` | No | true | See [prepopulating prompts using selection](#prepopulating-prompts-using-selection). |
-| `replaces_selection_with_templated` | No | \[\[{{[new_note_name](#new_note_name)}}\]\] | Template text that replaces the selection if `uses_selection` is enabled |
-| `hinted_as` | No |  | The value displayed inside the prompt when it is empty. |
-| `is_disabled` | No | false | See [disabling intents, templates and variables](#disabling-intents-templates-and-variables) |
+> [!IMPORTANT]
+> Paths to notes beginning with "./" are relative to the current note.
 
-There are multiple ways to use variable values. See [using variable values](#using-variable-values).
+> [!NOTE]
+> For advanced users:<br>
+> The [Templater plugin](https://github.com/SilentVoid13/Templater) is compatible with these templates and its templating will run after > template note contents are inserted into the note.
 
-## Variable types
-Each type of variable has its own parameters and validation.
+## Use multiple templates
+Add another template as shown below:
+```yaml
+---
+intents_to:
+  - make_a: "task"
+    with_templates:
+    - called: "first template"
+      at_path: "./task template"
+    - called: "second template"
+      at_path: "./task template second"
+---
+```
 
-### Text
+When you add multiple templates, you will be prompted to select a template when creating a note.
+
+<!-- - [ ] gif -->
+
+
+# Add a prompt
+A prompt is a customisable dialogue whose value can be used later.  
+
+To add a prompt, add `with_prompts` to your intent:
+```yaml
+---
+intents_to:
+  - make_a: "task"
+    with_prompts:
+      - called: note_name
+    with_name: "✅ {{note_name}}"
+---
+```
+
+You will now be prompted to enter the name of your note when creating a note with this intent.<br>
+Going further you can [customize the prompt appearance](#customizing-prompts), [add validation](#prompt-validation) and prompt for [different types of value](#prompt-types).
+
+
+## Using the prompt value
+To use the value entered into the prompt wrap the prompt name in double squiggly brackets like so "{{variable_name}}".<br>
+Prompt values can be used in the [contents of templates](#using-the-prompt-value-in-a-template), in [intent properties](#using-the-prompt-value-in-intent-properties) and also in [subsequent prompts](#using-the-prompt-value-in-a-subsequent-prompt).
+
+### Using the prompt value in a template
+To use the prompt value in a template, include `{{variable_name}}` in your template note.<br>
+For example, if you have a prompt called `note_name`, you can use `{{note_name}}` in your template and it will be replaced with the value entered.
+
+For advanced users, plugins like [Templater](https://github.com/SilentVoid13/Templater) will run after the template contents are inserted into the new note.
+
+### Using the prompt value in intent properties
+You can use prompt values in intent properties such as `with_name` or `in_folder`. <br>
+For example:
+
+```yaml
+with_name: "Task - {{note_name}}"
+```
+This will set the new note's name using the value entered for `note_name`.
+
+
+### Using the prompt value in a subsequent prompt
+After answering a prompt, it will be available to use in subsequent prompts.
+
+In the example below, the first prompt collects the project name which is then used in the placeholder for the task name.
+
+For example:
+```yaml
+with_prompts:
+  - called: project_name
+  - called: task_name
+    is_initially: "Task for {{project_name}}"
+```
+Here, the placeholder for `task_name` will include the value entered for `project_name`.
+
+
+
+# Filter the list of notes shown
+When creating notes, you must first chose the starting note.<br>
+To reduce number of notes that are shown, you can filter your notes with the
+[Filtered opener plugin](obsidian://show-plugin?id=filtered-opener) ([this repo](https://github.com/Balibaloo/obsidian-filtered-opener))<br>
+After creating a "note filter set" you can use it by selecting it in the dropdown in the settings.
+
+# Create note with a hotkey
+Every method of creating a note has a command in the [Obsidian command palette](https://help.obsidian.md/Plugins/Command+palette).<br>
+Each of these commands can be assigned a hotkey in the [Obsidian hotkey settings](https://help.obsidian.md/hotkeys).
+
+See below the full list of available commands
+## List of available commands to create notes
+
+There are two categories of commands to create notes:<br>
+Local intent commands and Global intent commands.
+
+### Local intent commands
+Local intents are normal intents.<br>
+They are available ONLY in the note that holds them, ie **NOT** [available in every note](#make-an-intent-available-in-all-notes).<br>
+Local intents can be used with:
+- <code>Create note with intent from <strong>active note</strong></code>
+  - Asks you to chose an intent from the currently active note to use to create a new note.
+- <code>Create note with intent from <strong>a note</strong></code>
+  - Lets you chose a starting note from your valut and then does the same as <code>Create note with intent from <strong>active note</strong></code>.
+
+### Global intent commands
+Global intents are different to local notes because they<br>
+ARE [available in every note](#make-an-intent-available-in-all-notes)<br>
+and so have additional global commands
+
+Global intents can be used with the same commands as [Local intents](#local-intent-commands)
+But also have additional commands:
+  - <code>Create note with global intent</code>
+    - Asks you to chose a [global intent](#make-an-intent-available-in-all-notes) to create  
+  - each global intent
+    - <code>Create global XYZ</code>
+    - <code>Create XYZ for note</code>
+
+
+See the section on [making intents available in every note](#make-an-intent-available-in-all-notes) for more details.
+
+
+# Use selected text to populate prompts
+When creating a note, you can use text from your notes to auto-populate prompts.<br>
+You can write out the answers to all your prompts separated by a commas
+
+First select the text and then use any of the [available commands](#list-of-available-commands-to-create-notes) to create a note.<br><br>
+The text that is selected will first be split up using the delimiters defined in the plugin settings.<br>
+Then the split pieces of text will be assigned to your prompts **in the order in which they appear in the intent**.
+
+Prompts that are assigned a valid value ([see prompt validation](#prompt-validation)) will not be shown.
+
+This is behaviour is enabled by default and can be disabled by adding `uses_selection: false` to your prompt.
+
+When [importing intents](#import-intents-from-other-notes), prompts imported from other notes will be inserted after the prompts in the importing note.
+
+
+## Replace selected text
+After creating a note from an intent, the selected text will be replaced with the value of the `replaces_selection_with` property.
+
+By default the selected text is replaced with a link to the new note.
+
+> [!NOTE]
+> You can also use this property on a template.
+> See [new note properties](#new-note-properties)
+
+# Create multiple notes at a time
+To create multiple notes at the same time, use [multiple cursors](https://help.obsidian.md/Editing+and+formatting/Multiple+cursors) to select multiple lines of text,<br>
+each selection will be used to create a note the same as when [using selected text to populate prompts](#use-selected-text-to-populate-prompts).
+
+
+
+# Hiding elements
+You can hide [Intents](#intents-reference), [Templates](#templates-reference) and [Prompts](#prompts-reference) by adding `hidden: true`.
+
+In the example below, the `useless note` intent and the "default" template for the `task` are hidden.
+```YAML
+---
+intents_to:
+  - make_a: "useless note"
+    hidden: true
+  - make_a: "task"
+    with_templates:
+      - called: "default"
+        hidden: true
+      - called: "special"
+        at_path: "./special template"
+---
+```
+
+
+
+# Import intents from other notes
+Add `intents_imported_from` to your note:
+```yaml
+---
+intents_imported_from: "/Some Folder/Note With Intents"
+# or
+intents_imported_from: [ "./Some Folder/First Note With Intents", "/Other Folder/Second Note With Intents"]
+---
+```
+If any imported intents have the same name, their **properties will be merged** according the order in which they were imported.
+
+Intent properties from notes later in the list take priority over intents from earlier notes.<br>
+**Current note intents take priority over all imported intents.**
+
+<!-- - [ ] gif create note with intent from active note -->
+
+# Make an intent available in all notes
+To make intents available globally,<br>
+first place the intents in a note, then set that note as the "global intents note" in the plugin settings.<br>
+**After changing the global intents note you need to use the `Reload global intents` command to load the changes**
+
+
+The intents in the global intents note are available everywhere as they are [imported](#import-intents-from-other-notes) by all notes.<br>
+
+Global intents are imported first meaning that **all other intents will override the global intents**.<br>
+
+
+
+but also you can do intent for note, chose intent first then note, and merge with local intent
+
+To create a note with a global intent use one of the following commands:
+- `Create note with global intent`, `Create global {{intent_name}}`
+- `Create {{intent_name}} for note`
+
+
+This will also [create commands for each global intent](#list-of-available-commands-to-create-notes).
+
+which allows WORKFLOW
+
+# Disabling elements
+This is different to [hiding elements](#hiding-elements).
+When [importing intents](#import-intents-from-other-notes), intents will override properties even when hidden.
+
+To enable them, you have to redefine them and add `hidden: false`
+
+(or using [global intents](#make-an-intent-available-globally))
+
+This means that you can un-hide elements that are hidden in the imported note.
+
+
+
+# Examples
+
+
+
+# Reference
+This section is complete list of all the properties that can be used in the different elements.
+[A concise schema file](./intentsSchema.yaml) is also available.
+
+## Intents reference
+Intents hold all the configuration of how to make a note.
+
+[Intents introduction](#first-recipe)
+
+| Property name | Required | Default | Description |
+|-|-|-|-|
+| `make_a` | Yes | | The name of the intent. |
+| `with_name` | | "{{intent_name}}" | The name of the new note.<br>Defaults to the name of the intent.<br>See [changing output note name](#change-output-note-name) |
+| `in_folder` |  | "./" | The output folder of the new note.<br>By default is the folder of the current note.<br> See [changing output folder](#change-output-folder) |
+| `replaces_selection_with` | | "\[\[{{with_name}}]]" | The text that replaces the selection when [using selected text to populate prompts](#use-selected-text-to-populate-prompts).<br>By default is a link to the new note |
+| `with_templates` | | | A list of [templates](#templates-reference) |
+| `with_prompts` | | | A list of [prompts](#prompts-reference) |
+| `hidden`         |          | false   | Hides the intent.<br>See [hiding elements](#hiding-elements) |
+| `disabled`       |          | false   | Disables the intent.<br>See [disabling elements](#disabling-elements) |
+
+
+
+
+## Templates reference
+
+[Introduction to Templates](#use-a-template)
+
+Templates have properties that can override intent properties when the template is used, eg `with_name`
+
+| Property name | Required | Default | Description |
+|-|-|-|-|
+| `called` | Yes | | The name of the template |
+| `at_path` | Yes | | The path to the template |
+| `with_name` | | "{{intent_name}}" | The name of the new note.<br>Defaults to the name of the intent.<br>See [changing output note name](#change-output-note-name) |
+| `in_folder` |  | "./" | The output folder of the new note.<br>By default is the folder of the current note.<br> See [changing output folder](#change-output-folder) |
+| `replaces_selection_with` | | "\[\[{{with_name}}]]" | The text that replaces the selection when [using selected text to populate prompts](#use-selected-text-to-populate-prompts).<br>By default is a link to the new note |
+| `hidden`         |          | false   | Hides the template.<br>See [hiding elements](#hiding-elements) |
+| `disabled`       |          | false   | Disables the template.<br>See [disabling elements](#disabling-elements) |
+| `with_prompts` | | | A list of [prompts](#prompts-reference) |
+
+
+## Prompts reference 
+[Introduction to prompts](#add-a-prompt)
+
+| Property name    | Required | Default | Description |
+|------------------|----------|---------|------------|
+| `called`         | Yes      |         | The name of the prompt.<br> See [using the prompt value](#using-the-prompt-value)|
+| `of_type`        |          | "text"   | One of [prompt types](#prompt-types)|
+| `is_required`    |          | true    | See [Prompt validation](#prompt-validation) |
+| `that_prompts`   |          | "{{called}}"   | The main text of the prompt.<br>Is the prompt name by default.<br>See [Customising prompts](#customizing-prompts)|
+| `described_as`   |          |         | See [Customising prompts](#customizing-prompts)|
+| `is_initially`   |          |         | The value that will be in the input by default |
+| `hinted_as`      |          |         | See [Customising prompts](#customizing-prompts)|
+| `uses_selection` |          | true    | See [Using selected text to populate prompts](#use-selected-text-to-populate-prompts) |
+| `hidden`         |          | false   | See [Hiding elements](#hiding-elements) |
+| `disabled`       |          | false   | See [Disabling elements](#disabling-elements) |
+
+
+### Customizing prompts
+Prompts can be customized with additional properties.
+These properties also support [using prompt values in subsequent prompts](#using-the-prompt-value-in-a-subsequent-prompt)
+
+- [ ] gif because placeholder text
+
+| Property name | Required | Default | Description |
+|-|-|-|-|
+| `that_prompts`   |          | "{{called}}"   | The main text of the prompt.<br>Is the prompt name by default.<br>See [Customising prompts](#customizing-prompts)|
+| `described_as`   |          |         | See [Customising prompts](#customizing-prompts)|
+| `is_initially`   |          |         | The value that will be in the input by default |
+| `hinted_as`      |          |         | See [Customising prompts]
+
+
+### Prompt validation
+Prompts can validate the values you enter.
+
+By default all prompts require a valid value to proceed to the next step.
+If an invalid value is entered into the prompt, an error message will be shown and you will be asked to enter a value again.
+
+This can be disabled by adding `is_required: false`.
+
+Each type of prompt has its own ways to validate the values which you can see below.
+
+
+### Prompt types
+
+This section is a list of all the types of prompt available.
+
+To chose the type of prompt you want to use, add the `of_type` property to your prompt like so:
+
+```yaml
+---
+with_prompts:
+  - called: my_prompt
+    of_type: number
+---
+```
+
+
+#### Text prompt
 A simple text prompt.
-Text is the default variable type.
+Text is the default prompt type.
 
-| property name | required | Default | description |
+This prompt type is called `text`
+
+| Property name | Required | Default | Description |
 | ---- | ---- | ---- | ---- |
-| `matches_regex`| No| |A regular expression used to validate the text
+| `matches_regex`| | |A regular expression used to validate the text
 
 Example:
 ```yaml
@@ -197,14 +541,16 @@ with_prompts:
 ---
 ```
 
-### Number
+#### Number prompt
 A simple number prompt.
 Any number including integers and floats.
 
-| property name | required | Default | description |
+This prompt type is called `number`
+
+| Property name | Required | Default | Description |
 | ---- | ---- | ---- | ---- |
-|`is_over`| No|| the minimum allowed value|
-|`is_under`| No|| the maximum allowed value|
+|`is_over`| No|| The value must be higher than this number|
+|`is_under`| No|| The value must be less than this value|
 
 Example:
 ```yaml
@@ -217,11 +563,12 @@ with_prompts:
 ---
 ```
 
-### Natural date
-A natural date provided the [natural language dates](https://github.com/argenos/nldates-obsidian) plugin.
+#### Natural date prompt
+A natural date from the [natural language dates](https://github.com/argenos/nldates-obsidian) plugin.
 
+This prompt type is called `natural_date`.
 
-| property name | required | Default | description |
+| Property name | Required | Default | Description |
 | ---- | ---- | ---- | ---- |
 | `format` | No | Defaults to natural date setting | The output format of the natural date |
 |`is_after` | No|| The date must be after this date. A natural language date |
@@ -240,13 +587,31 @@ with_prompts:
 ---
 ```
 
-### Note
-A path to a note chosen from a list of notes. Uses same Filtered Opener plugin as when [selecting a note](#selecting-a-note).
-The Filtered Opener plugin takes the name of the filter set (`note_filter_set_name`) to display a list of notes to chose from.
+#### Note prompt
+Gets a note from a list of notes.
+This prompt uses the [Filtered opener plugin](https://github.com/Balibaloo/obsidian-filtered-opener) to display a list of notes to chose from.
+The selected note can be output as the path to the note or just its name.
 
-| property name | required | Default | description |
+This prompt type is called `note`.
+
+By default all notes will be shown.
+You can filter down the list by specifying a `filter_set_name` from the Filtered Opener plugin settings or by specifying the individual properties of a filter set.
+If both the `filter_set_name` and and other properties are defined, the properties will override the properties in the filter set.
+
+If this overriding behaviour is active, the `filter_set_name` will include a "+" character to show that some of its properties have been overridden.
+
+| Property name | Required | Default | Description |
 | ---- | ---- | ---- | ---- |
-|`note_filter_set_name`| No| Allows all notes| The name of the note filter set.|
+| `filter_set_name`| | Allows all notes| The name of the note filter set.|
+| `include_path_name`| | Allows all notes | Text that the path of the note must include to be shown.<br>If the path begins with "./" it will be treated as a relative path.<br>Eg, a path like "./tasks" will be resolved to the full path of the "tasks" folder next to the current note.<br>Also supports [regex](https://github.com/Balibaloo/obsidian-filtered-opener/blob/master/README.md#regular-expressions). |
+| `exclude_path_name`| | Allows all notes| Same as above but matching notes are removed. |
+| `include_note_name` |  | Allows all notes | Text that the note must contain. <br>Also supports [regex](https://github.com/Balibaloo/obsidian-filtered-opener/blob/master/README.md#regular-expressions). |
+| `exclude_note_name` |  |  Allows all notes| Same as above but matching notes are removed. |
+| `include_tags` |  | Allows all notes | A comma separated list of tags including the `#`.<br>Also supports [regex](https://github.com/Balibaloo/obsidian-filtered-opener/blob/master/README.md#regular-expressions). |
+| `exclude_tags` |  | Allows all notes | Same as above but matching notes are removed. |
+| `note_output_format` |  | `path`  | Can be `path` or `name`.<br>Path is the full path to the note.<br>Name is just the note name. |
+
+
 
 Example:
 ```yaml
@@ -254,22 +619,39 @@ Example:
 with_prompts:
   - called: some_note
     of_type: note
-    note_filter_set_name: maps of content
+    filter_set_name: maps of content
 ---
 ```
 
 
 
-### Folder
-A path to a folder chosen from a list of folders. Uses same Filtered Opener plugin as when [selecting a note](#selecting-a-note).
-The Filtered Opener plugin takes the name of the filter set (`folder_filter_set_name`) to display a list of folders to chose from.
+#### Folder prompt
+Gets a folder from a list of folders.
+This prompt uses the [Filtered opener plugin](https://github.com/Balibaloo/obsidian-filtered-opener) to display a list of folders to chose from.
+The selected folder can be output as the path to the folder or just its name.
 
-| property name | required | Default | description |
+This prompt type is called `folder`.
+
+By default all folders will be shown.
+You can filter down the list by specifying a `filter_set_name` from the Filtered Opener plugin settings or by specifying the individual properties of a filter set.
+If both the `filter_set_name` and and other properties are defined, the properties will override the properties in the filter set.
+
+If this overriding behaviour is active, the `filter_set_name` will include a "+" character to show that some of its properties have been overridden.
+
+
+This prompt type is called `folder`
+
+| Property name | Required | Default | Description |
 | ---- | ---- | ---- | ---- |
-|`in_folder`| No| Vault root folder |A folder to start searching from, defaults to the vault folder.|
-|`at_depth`| No| Depth configured in Filtered Opener  |The depth of folders to include, for a folder structure of `root/inner/leaf`, a depth of 2 will show notes down to the `leaf` level.|
-|`includes_roots`|No| `false` | When `false` notes only at the specified depth are shown. When `true` notes at all levels down to the specified depth are shown.|
-|`folder_filter_set_name`| No |Allows all folders | The name of the folder filter set.|
+| `filter_set_name`| | Allows all folders| The name of the folder filter set.|
+| `include_folder_name` |  | Allows all folders | Text that the folder must contain. <br>Also supports [regex](https://github.com/Balibaloo/obsidian-filtered-opener/blob/master/README.md#regular-expressions). |
+| `exclude_folder_name` |  |  Allows all folders| Same as above but matching folders are removed. |
+| `include_path_name`| | Allows all folders | Text that the path of the folder must include to be shown.<br>If the path begins with "./" it will be treated as a relative path.<br>Eg, a path like "./tasks" will be resolved to the full path of the "tasks" folder next to the current folder.<br>Also supports [regex](https://github.com/Balibaloo/obsidian-filtered-opener/blob/master/README.md#regular-expressions). |
+| `exclude_path_name`| | Allows all folders| Same as above but matching folders are removed. |
+|`in_folder`|  | Vault root folder ("/") |The folder to search in.|
+|`at_depth`|  | 1  |The number of layers of folders to include, for a folder structure of `root/inner/leaf`, a depth of 2 will show folders down to the `leaf` level.|
+|`includes_roots`| | false | When `false` folders only at the specified depth are shown. When `true` folders at all levels down to the specified depth are shown.|
+| `folder_output_format` |  | "path"  | path or name  |
 
 Example:
 ```yaml
@@ -280,278 +662,25 @@ with_prompts:
     in_folder: "/🏗 projects"
     at_depth: 1
     includes_roots: false
-    folder_filter_set_name: default
+    filter_set_name: default
 ---
 ```
 
 
 
-## Using variable values
-When using variables, text in the format of `{{variable_name}}` is replaced with the value of the variable.
-If the variable called `variable_name` is not in the current intent, the `{{variable_name}}` text will not be changed.
+# Troubleshooting
 
-When creating a new note, variables in the [template](#templates) are also replaced before the new file is created.
+invalid yaml formatting -> no intents found
+unrecognized property notice
 
-If you are already familiar with the [Templater](https://github.com/SilentVoid13/Templater) plugin, it will run its templating after the variables of this plugin are replaced.
+Feel free to start a discussion by [clicking this link](https://github.com/Balibaloo/obsidian-local-template-configuration/discussions/new?category=q-a).
 
-All text properties of variables are passed through the templating functionality meaning that you can use variables in prompts. See [existing variable names](#existing-variable-names) for a list of variables you can use.
-
-
-## Advanced variable use
-### new_note_name
-This is a [text](#text) variable that is added to every intent automatically.
-
-It holds the name of the new note and can be used in `outputs_to_templated_pathname` to add other text, including other variables, to the new note name.
-
-See [new note properties](#new-note-properties)
-
-It can also be used with a [folder](#folder) variable to chose the output folder of the new note eg [to create a project](#project)
-
-If an intent [disables](#disabling-intents-templates-and-variables) the `new_note_name` variable and doesn't set `with_name`, by default the name of the new note will be the name of the intent.
-
-### Properties that can be used in templating
-During and after prompting, all [New Note Properties](#new-note-properties) can be used in templating.
-
-Note that properties that use variables wont be replaced until all of their variables are replaced.
-
-
-### Disabling intents, templates and variables
-Intents, templates and variables can be disabled by setting `is_disabled` to `true`.
-- Disabled intents and templates are ignored and not shown when one must be selected.
-- Disabled variables are ignored, their prompts are not shown and they wont be replaced when [using variable values](#using-variable-values).
-
-Disabled items are still [imported](#importing-intents) and can be un-hidden by setting their `is_disabled` property to `false`.
-
-### Prepopulating prompts using selection
-When running an intent, selected text can be used to pre-populate the prompts for variables.
-
-The selection will be split using the delimiters configured in the plugin settings and then assigned to variables by the order that they appear in the variable list.
-
-To enable this for a variable, set `uses_selection` to `true`.
-
-If a variable is assigned a valid value from the selection, the value will be accepted and the variable prompt will be skipped.
-If the value is not valid, the prompt will be shown prepopulated with the selected value.
-
-# Configuration Schema
-The full schema used by this plugin is shown in the [Intents Schema File](./intentsSchema.yaml).
-
-When debugging intents, check the [developer console](https://forum.obsidian.md/t/how-to-access-the-console/16703).
-If an intent has properties that aren't in this schema, an error will be shown.
-
-# Importing intents
-Notes can import intents from other notes using the `intents_imported_from` property.
-
-The `intents_imported_from` property accepts any number of paths to configuration notes.
-Example: Import single note
-```yaml
----
-intents_imported_from: "some/configuration note.md"
----
-```
-
-Example: Import a list of notes
-```yaml
----
-intents_imported_from: ["some/configuration note.md", "other/configuration note.md" ]
----
-```
-
-The intents of the imported notes are loaded first and are then merged with note intents.
-
-**If a note with an intent imports an intent with the same name, the current note intent properties will overwrite the properties of the imported intent.**
-
-Overwriting properties of imported intents is useful to:
-- add and change templates
-  - eg: use a template in the same folder by overwriting the template path with a relative one
-- add variables
-- [enabling and disabling intents, templates and variables](#disabling-intents-templates-and-variables)
-
-
-# You should use this plugin if
-- you use templates to create notes
-- you want to insert variables into your templates and use prompts to capture their values
-- you want to group your templates by intent
-	- eg: a task, a meeting, …
-- some of your intents have multiple templates
-	- tasks: a normal task, a graded task, a research task
-	- meetings: daily stand-up meeting, project catch-up meeting, catch-up with a colleague
-- you want to extend/override your prompts and templates on a note by note basis
-	- use a template note next to your note (relative path)
-	- add prompts to an existing intent/template
-	- add more intents/templates
-	- …
-
-## Additional features:
-- auto-populate variable prompts with selected text
-	- use multiple cursors to create multiple notes
-  - replace the selected text with a link to the new note
-    - use a template to change the replacement text
-- supports many variable types eg text, number
-	- and other types of variable providers eg: natural date, note, folder
-- import other config notes
-
-## Other plugins with overlapping functionality
+# Similar plugins
 Contextual Note Templating (CNT) functionality compared to:
 - [Note from template](https://github.com/mo-seph/obsidian-note-from-template): Both plugins show prompts and use the selection to pre-populate fields that can be inserted into many note properties eg output folder, name, note title and body.
   - The major difference is that CNT shows one field at a time and extends the functionality of a single field.
-  - CNT extends fields into [Variables](#variables). 
+  - CNT extends fields into [Prompts](#add-a-prompt). 
     - Each variable has its own configurable prompt and its type adds validation and post processing.
 - [Hotkeys for templates](https://github.com/Vinzent03/obsidian-hotkeys-for-templates):
-  - Instead of creating hotkeys (commands) for each template, this plugin creates commands for each [Intent](#intents).
+  - Instead of creating hotkeys (commands) for each template, this plugin creates commands for each [Intent](#intents-reference).
 <!-- I don't understand what [Metatemplates](https://github.com/avirut/obsidian-metatemplates) does -->
-
-
-# Examples
-## Simplest runnable intent
-```yaml
----
-intents_to:
-  - make_a: task
----
-```
-
-This intent will create an empty note named the value of [new_note_name](#new_note_name) in the same folder as the context note.
-
-## Creating in a folder
-Create an empty note in a folder called `tasks` next to the context note.
-```yaml
----
-intents_to:
-  - make_a: task
-    outputs_to_templated_pathname: "./tasks/{{new_note_name}}"
----
-```
-
-
-Create an empty note in a folder in the root of the vault called `vault tasks`.
-```yaml
----
-intents_to:
-  - make_a: task
-    outputs_to_templated_pathname: "/vault tasks/{{new_note_name}}"
----
-```
-
-Chose a folder and place a task in its own folder in that folder.
-```yaml
----
-intents_to:
-  - make_a: task
-    with_prompts:
-      - called: output_folder
-        is_required: true
-        of_type: folder
-        in_folder: ✅ tasks
-        at_depth: 1
-        includes_roots: false
-        folder_filter_set_name: default
-    outputs_to_templated_pathname: "{{output_folder}}/{{new_note_name}}/{{new_note_name}}"
----
-```
-
-
-## Adding templates
-Adding a simple template.
-```yaml
----
-intents_to:
-  - make_a: task
-    with_templates:
-      - called: simple task
-        at_path: "/path /to /templates folder /simple task template.md"
----
-```
-
-Using a template next to a context note.
-```yaml
----
-intents_to:
-  - make_a: task
-    with_templates:
-      - called: simple task
-        at_path: "./simple task template.md"
----
-```
-
-## Create a note with its own intents
-This intent creates a project note with an emoji in the project note name.
-This intent disables `new_note_name` and replaces it with a `new_project_name` variable so that it doesn't replace `new_note_name` in the project note.
-```yaml
----
-intents_to:
-  - make_a: project
-    with_prompts:
-      - called: new_note_name
-        is_disabled: true
-      - called: new_project_name
-    outputs_to_templated_pathname: "./{{new_project_name}}/🏗 {{new_project_name}}"
-    with_templates:
-      - called: default
-        at_path: "/path /to /templates /project template.md"
----
-```
-
-This creates a project note with an intent that contains the project name in the task name template.
-Because `new_note_name` is disabled, it wont be replaced but `new_project_name` will.
-Project note template:
-```yaml
----
-intents_to:
-  - make_a: task
-    outputs_to_templated_pathname: "./tasks/{{new_project_name}}-{{new_note_name}}"
-    with_templates:
-      - called: simple task
-        at_path: "./simple task template.md"
----
-
-# Note for {{new_note_name}} project!
-Contents of the project note template!
-```
-
-
-## Project
-This intent creates a project note with an intent that has the project name in the task name, created in its own folder in a category folder.
-
-In this case the `🏗 projects` folder contains subfolders that categorize projects.
-This intent disables `new_note_name` and replaces it with a `new_project_name` variable so that it doesn't replace `new_note_name` in the project note.
-```yaml
----
-intents_to:
-  - make_a: project
-    with_prompts:
-      - called: new_note_name
-        is_disabled: true
-      - called: new_project_name
-      - called: output_folder
-        is_required: true
-        of_type: folder
-        in_folder: 🏗 projects
-        at_depth: 1
-        includes_roots: false
-    outputs_to_templated_pathname: "{{output_folder}}/{{new_project_name}}/🏗 {{new_project_name}}"
-    with_templates:
-      - called: default
-        at_path: "/path /to /templates /project template.md"
----
-```
-
-Because `new_note_name` is disabled, it wont be replaced but `new_project_name` will.
-Project note template:
-```yaml
----
-intents_to:
-  - make_a: task
-    outputs_to_templated_pathname: "./tasks/{{new_project_name}}-{{new_note_name}}"
-    with_templates:
-      - called: simple task
-        at_path: "./simple task template.md"
----
-
-# Note for {{new_project_name}} project!
-```
-
-# Attributions
-This repository uses code from the following projects:
-- https://github.com/chhoumann/quickadd
-
-Code credits are also placed in comments above code.

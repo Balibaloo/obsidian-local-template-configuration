@@ -46,12 +46,12 @@ export class PTSettingTab extends PluginSettingTab {
     
 
     new Setting(containerEl)
-        .setName("Intent note filter set name")
-        .setDesc("The name of the Filtered Opener File Filter Set used to display a list of notes with intents.")
+        .setName("List of starting notes")
+        .setDesc("To make changes to this list, the Filtered Opener plugin.")
         .addDropdown(async dropdown => {
           dropdown.setValue(this.plugin.settings.intentNotesFilterSetName);
 
-          // Get filtered opener plugin
+          // Get options from filtered opener plugin
           const filteredOpener = (this.app as any).plugins.plugins["filtered-opener"];
           const options : [string, string][] = ( filteredOpener?.api_getListOfNoteFilterSets() || [] )
             .map( (option: { name: any; }) => [option.name, option.name])
