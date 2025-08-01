@@ -58,6 +58,8 @@ intents_to:
         note_output_format: "path|name (path)"
 
         ## Folder only
+        include_folder_name: "text"
+        exclude_folder_name: "text"
         in_folder: "text (/)"
         at_depth: "number (Depth configured in Filtered Opener)"
         includes_roots: "true/false (false)"
